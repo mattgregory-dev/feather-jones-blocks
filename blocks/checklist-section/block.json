@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/checklist-section",
+	"version": "1.0.0",
+	"title": "Checklist Section",
+	"category": "theme",
+	"icon": "yes-alt",
+	"description": "Centered header over a two-column checklist band. The two lists are edited inline; the block owns the layout.",
+	"keywords": [ "checklist", "list", "included", "features" ],
+	"textdomain": "starter-blocks",
+	"supports": {
+		"align": [ "full" ],
+		"anchor": true,
+		"html": false,
+		"color": false
+	},
+	"attributes": {
+		"align": { "type": "string", "default": "full" },
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"level": { "type": "string", "default": "h2" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

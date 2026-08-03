@@ -1,0 +1,172 @@
+// ---------------------------------------------------------------------------
+// Hero block — a spotlight split plus a full-cover background + overlay tint
+// (starter-blocks/hero). A sibling of Spotlight, deliberately its own namespace
+// so the background/overlay machinery (and any future hero-only needs —
+// min-height, focal point, text inversion) can land here without conditionals
+// in the spotlight partial. Starts as a near-clone; that duplication is the
+// point. Extract a shared partial only when a shared change hits both.
+//
+//   > 1160px    : side-by-side, text-55 / image-45. Vertical alignment follows
+//                 the block's `verticalAlignment` attribute (centered by
+//                 default; `is-valign-top` top-aligns).
+//   800–1160px  : columns go equal-width (≈50/50) and top-align.
+//   <= 800px    : columns stack, with tighter vertical padding.
+//
+// The column image side is flipped with flex-direction, never duplicated
+// markup: DOM order is always text-then-media.
+// ---------------------------------------------------------------------------
+
+.wp-block-starter-blocks-hero {
+  padding-block: var(--wp--preset--spacing--80);
+
+  .hero__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--wp--preset--spacing--60);
+    box-sizing: content-box;
+    max-width: var(--wp--style--global--content-size);
+    margin-inline: auto;
+    padding-inline: var(--wp--style--root--padding-right);
+  }
+
+  .hero__text {
+    flex: 0 1 55%;
+    min-width: 0;
+  }
+
+  .hero__media {
+    flex: 0 1 45%;
+    min-width: 0;
+    margin: 0;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+  }
+
+  // Vertical rhythm inside the text column and the inner-block body: one
+  // block-gap step between every element (eyebrow → heading → body → …).
+  .hero__text > * { margin-block: 0; }
+  .hero__text > * + * { margin-block-start: var(--wp--preset--spacing--50); }
+  .hero__body > * { margin-block: 0; }
+  .hero__body > * + * { margin-block-start: var(--wp--preset--spacing--50); }
+
+  .hero__eyebrow {
+    font-size: var(--wp--preset--font-size--x-small);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  // Column image on the left.
+  &.is-position-left .hero__inner { flex-direction: row-reverse; }
+
+  // Top alignment above the breakpoint.
+  &.is-valign-top .hero__inner { align-items: flex-start; }
+
+  // Diverges from spotlight: with no column image the text keeps its 55% basis
+  // (not full-width), so a cover hero shows the background beside the text
+  // instead of letting the copy span the whole band.
+
+  // Cover background + optional overlay tint. The background image (and
+  // --hero-overlay custom property) are set inline by render.php; sizing and
+  // the tint layer live here.
+  &.has-cover-background {
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    // Own stacking context, so the overlay/content z-indexes below are scoped
+    // to this section and never interact with other page layers.
+    isolation: isolate;
+
+    // Overlay tint — above the background image, below the content. Only present
+    // when has-overlay is set (and --hero-overlay carries the value).
+    &.has-overlay::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: var(--hero-overlay);
+    }
+
+    // The columns (text + optional image) sit above the overlay tint.
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Text color schemes — a per-instance legibility preset (Default / Light /
+  // Dark). One uniform color across all hero text (eyebrow, heading, body,
+  // fine print), mapped to theme tokens so palette changes propagate. `default`
+  // emits no class and is untouched here. Applies with or without a background.
+  // -------------------------------------------------------------------------
+
+  // Light — for dark background images: near-white text throughout.
+  &.has-text-light {
+    --hero-text: var(--wp--preset--color--base);
+
+    color: var(--hero-text);
+
+    .hero__eyebrow,
+    .hero__title,
+    .hero__body :is(h1, h2, h3, p, li) {
+      color: var(--hero-text);
+    }
+
+    // Content links (not buttons) — light and underlined against the backdrop.
+    // Buttons are deliberately left on their standard styles, scheme or not.
+    .hero__body a:not(.wp-block-button__link) {
+      color: var(--hero-text);
+      text-decoration: underline;
+    }
+  }
+
+  // Dark — for light background images: force strong dark text. (Distinct from
+  // the default scheme, which inherits the softer `contrast` text color.) Links
+  // keep their normal color and buttons keep their standard styles.
+  &.has-text-dark {
+    --hero-text: var(--wp--preset--color--contrast-2);
+
+    color: var(--hero-text);
+
+    .hero__eyebrow,
+    .hero__title,
+    .hero__body :is(h1, h2, h3, p, li) {
+      color: var(--hero-text);
+    }
+  }
+}
+
+// 800–1160px: equal-width columns (50/50), top-aligned — otherwise the shorter
+// column floats in the extra space.
+@media (width <= 1160px) {
+  .wp-block-starter-blocks-hero {
+    .hero__inner { align-items: flex-start; }
+
+    .hero__text,
+    .hero__media { flex: 1 1 0; }
+  }
+}
+
+// <= 800px: stack full-width, with tighter vertical padding.
+@media (width <= 800px) {
+  .wp-block-starter-blocks-hero {
+    padding-block: var(--wp--preset--spacing--40);
+
+    .hero__inner { flex-direction: column; }
+
+    // Image-left heroes keep the column image on top when stacked.
+    &.is-position-left .hero__inner { flex-direction: column-reverse; }
+
+    .hero__text,
+    .hero__media {
+      flex: none;
+      width: 100%;
+    }
+  }
+}

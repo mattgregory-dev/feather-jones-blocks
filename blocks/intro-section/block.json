@@ -1,0 +1,32 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/intro-section",
+	"version": "1.0.0",
+	"title": "Intro Section",
+	"category": "theme",
+	"icon": "cover-image",
+	"description": "Page intro band — optional eyebrow, title, and subtitle. Use as a page hero (H1) or a mid-page intro (H2).",
+	"keywords": [ "hero", "intro", "banner", "eyebrow" ],
+	"textdomain": "starter-blocks",
+	"supports": {
+		"anchor": true,
+		"html": false
+	},
+	"attributes": {
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"subtitle": { "type": "string", "default": "" },
+		"level": { "type": "string", "default": "h2" },
+		"titleBalance": { "type": "boolean", "default": false },
+		"subtitleBalance": { "type": "boolean", "default": false },
+		"titleWidth": { "type": "string", "default": "default" },
+		"subtitleWidth": { "type": "string", "default": "default" }
+	},
+	"styles": [
+		{ "name": "centered", "label": "Centered", "isDefault": true },
+		{ "name": "standard", "label": "Standard" }
+	],
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

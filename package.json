@@ -1,0 +1,35 @@
+{
+  "name": "starter-blocks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build:css": "sass src/style.scss dist/assets/main.css --load-path=node_modules --source-map --style=compressed && postcss dist/assets/main.css --replace",
+    "build:blocks": "wp-scripts build --webpack-src-dir=blocks --output-path=build",
+    "start:blocks": "wp-scripts start --webpack-src-dir=blocks --output-path=build",
+    "build": "vite build && npm run build:css && npm run build:blocks",
+    "preview": "vite preview",
+    "lint:js": "eslint src",
+    "lint:js:fix": "eslint src --fix",
+    "lint:css": "stylelint \"src/styles/**/*.scss\" \"src/style.scss\"",
+    "lint:css:fix": "stylelint \"src/styles/**/*.scss\" \"src/style.scss\" --fix",
+    "lint:php": "vendor/bin/phpcs",
+    "lint:php:fix": "vendor/bin/phpcbf",
+    "lint:blocks": "node scripts/block-audit.js",
+    "lint": "npm run lint:js && npm run lint:css && npm run lint:php && npm run lint:blocks"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@wordpress/scripts": "^34.0.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "postcss": "^8.5.6",
+    "postcss-cli": "^11.0.1",
+    "sass": "^1.97.3",
+    "stylelint": "^17.11.0",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "vite": "^5.0.0",
+    "vite-plugin-full-reload": "^1.2.0"
+  }
+}

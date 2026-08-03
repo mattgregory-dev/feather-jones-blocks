@@ -1,0 +1,52 @@
+// ---------------------------------------------------------------------------
+// Back-to-top button — fixed-position chrome, revealed once the page scrolls.
+// Markup: inc/scroll-top.php. Behavior: src/scripts/scroll-top.js (toggles
+// .is-visible). visibility (not just opacity) is transitioned so the button
+// also leaves the tab order / pointer surface when hidden — important for
+// keyboard users. Reduced-motion is handled globally in _accessibility.scss.
+// ---------------------------------------------------------------------------
+
+.back-to-top {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+
+  // Border is always present (invisible on the dark button) so hovering to the
+  // inverted state does not change the box size — no shift.
+  border: 1px solid var(--wp--preset--color--contrast-2);
+  border-radius: 50%;
+  background-color: var(--wp--preset--color--contrast-2);
+  color: var(--wp--preset--color--base);
+  box-shadow: var(--wp--preset--shadow--lifted);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5rem);
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--wp--preset--color--base);
+    color: var(--wp--preset--color--contrast-2);
+
+    // border stays 1px solid, now visible against the inverted fill.
+  }
+}

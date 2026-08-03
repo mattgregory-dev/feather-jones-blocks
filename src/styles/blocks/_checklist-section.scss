@@ -1,0 +1,56 @@
+// ---------------------------------------------------------------------------
+// Checklist Section block (starter-blocks/checklist-section). Centered header
+// over a two-column checklist band. This partial owns only the section band and
+// the two-column layout; the ✓ checklist marker lives in _lists.scss
+// (is-style-checklist) and is not duplicated here.
+//
+// Two child core/list blocks map to the two columns via CSS grid — no
+// core/columns. Columns collapse to one at <= 781px, matching core's own
+// stacking breakpoint (min-width:782px).
+// ---------------------------------------------------------------------------
+
+.wp-block-starter-blocks-checklist-section {
+  padding-block: var(--wp--preset--spacing--80);
+  background-color: var(--wp--preset--color--surface-2);
+  text-align: center;
+
+  .checklist-section__inner {
+    box-sizing: content-box;
+    max-width: var(--wp--style--global--content-size);
+    margin-inline: auto;
+    padding-inline: var(--wp--style--root--padding-right);
+  }
+
+  // One block-gap step between eyebrow → heading → list grid.
+  .checklist-section__inner > * { margin-block: 0; }
+  .checklist-section__inner > * + * { margin-block-start: var(--wp--preset--spacing--50); }
+
+  .checklist-section__eyebrow {
+    font-size: var(--wp--preset--font-size--x-small);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  // Two equal columns; each child is one core/list. Left-aligned prose under the
+  // centered header. Column gap matches the spacing-60 blockGap.
+  .checklist-section__lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--wp--preset--spacing--60);
+    text-align: left;
+  }
+}
+
+// Collapse to a single column on narrow screens (core's columns breakpoint).
+// Drop the column gap and any list margin so the two stacked lists butt together
+// as one continuous list.
+@media (width <= 781px) {
+  .wp-block-starter-blocks-checklist-section .checklist-section__lists {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .wp-block-starter-blocks-checklist-section .checklist-section__lists > .wp-block-list {
+    margin-block: 0;
+  }
+}

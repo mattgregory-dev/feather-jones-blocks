@@ -1,0 +1,22 @@
+// ---------------------------------------------------------------------------
+// Pricing cards — divider lines between the checklist items. The checklist
+// marker itself comes from _lists.scss; spacing is driven by even padding here
+// (the list block-gap is neutralised) so the rules sit centred between rows.
+// The fine-print note below the columns is a dashed callout box.
+// ---------------------------------------------------------------------------
+
+.pricing-cards {
+  .is-style-checklist li {
+    margin-block: 0;
+    padding-block: 0.65rem;
+    border-bottom: 1px solid var(--wp--preset--color--border);
+  }
+}
+
+.pricing-note {
+  max-width: 700px;
+  margin-inline: auto;
+  padding: 1rem;
+  border: 1px dashed var(--wp--preset--color--muted);
+  border-radius: 5px;
+}

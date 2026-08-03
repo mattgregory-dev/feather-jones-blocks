@@ -1,0 +1,97 @@
+// ---------------------------------------------------------------------------
+// Spotlight block — two-column image + text split (starter-blocks/spotlight).
+// Layout is owned here (tokens only); content and settings live in the block.
+//
+//   > 1160px    : side-by-side, text-55 / image-45. Vertical alignment follows
+//                 the block's `verticalAlignment` attribute (centered by
+//                 default; `is-valign-top` top-aligns).
+//   800–1160px  : columns go equal-width (≈50/50) and top-align, regardless of
+//                 the attribute — otherwise the shorter column floats awkwardly.
+//   <= 800px    : columns stack, with tighter vertical padding.
+//
+// The image side is flipped with flex-direction (row-reverse / column-reverse),
+// never duplicated markup: DOM order is always text-then-media.
+// ---------------------------------------------------------------------------
+
+.wp-block-starter-blocks-spotlight {
+  padding-block: var(--wp--preset--spacing--80);
+
+  .spotlight__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--wp--preset--spacing--60);
+    box-sizing: content-box;
+    max-width: var(--wp--style--global--content-size);
+    margin-inline: auto;
+    padding-inline: var(--wp--style--root--padding-right);
+  }
+
+  .spotlight__text {
+    flex: 0 1 55%;
+    min-width: 0;
+  }
+
+  .spotlight__media {
+    flex: 0 1 45%;
+    min-width: 0;
+    margin: 0;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+  }
+
+  // Vertical rhythm inside the text column and the inner-block body: one
+  // block-gap step between every element (eyebrow → heading → body → …).
+  .spotlight__text > * { margin-block: 0; }
+  .spotlight__text > * + * { margin-block-start: var(--wp--preset--spacing--50); }
+  .spotlight__body > * { margin-block: 0; }
+  .spotlight__body > * + * { margin-block-start: var(--wp--preset--spacing--50); }
+
+  .spotlight__eyebrow {
+    font-size: var(--wp--preset--font-size--x-small);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  // Image on the left.
+  &.is-position-left .spotlight__inner { flex-direction: row-reverse; }
+
+  // Top alignment above the breakpoint.
+  &.is-valign-top .spotlight__inner { align-items: flex-start; }
+
+  // No image selected — text spans the full width, no empty column.
+  &.has-no-media .spotlight__text { flex: 1 1 100%; }
+}
+
+// 800–1160px: equal-width columns (50/50), top-aligned — otherwise the shorter
+// column floats in the extra space.
+@media (width <= 1160px) {
+  .wp-block-starter-blocks-spotlight {
+    .spotlight__inner { align-items: flex-start; }
+
+    .spotlight__text,
+    .spotlight__media { flex: 1 1 0; }
+  }
+}
+
+// <= 800px: stack full-width, with tighter vertical padding.
+@media (width <= 800px) {
+  .wp-block-starter-blocks-spotlight {
+    padding-block: var(--wp--preset--spacing--40);
+
+    .spotlight__inner { flex-direction: column; }
+
+    // Image-left spotlights keep the image on top when stacked.
+    &.is-position-left .spotlight__inner { flex-direction: column-reverse; }
+
+    .spotlight__text,
+    .spotlight__media {
+      flex: none;
+      width: 100%;
+    }
+  }
+}

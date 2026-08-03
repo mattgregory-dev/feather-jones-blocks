@@ -1,0 +1,81 @@
+// ---------------------------------------------------------------------------
+// FAQ accordion — square 2px-bordered items, question on the left with a boxed
+// toggle on the right, hover tint, and a full-width separator above an inset
+// answer when open. Built on core <details>/<summary>, so the block's own
+// border/radius/padding are overridden.
+// ---------------------------------------------------------------------------
+
+.faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .wp-block-details {
+    padding: 0 !important;
+    background: var(--wp--preset--color--base);
+    border: 2px solid var(--wp--preset--color--border) !important;
+    border-radius: 0 !important;
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 2rem;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--wp--preset--font-family--heading);
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--wp--preset--color--contrast);
+    transition: background-color 0.2s ease;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    // Boxed toggle on the right (+ when closed, − when open).
+    &::after {
+      content: "+";
+      flex: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 2px solid var(--wp--preset--color--contrast);
+      font-size: 1.1rem;
+      line-height: 1;
+      color: var(--wp--preset--color--contrast);
+    }
+  }
+
+  details[open] > summary {
+    border-bottom: 2px solid var(--wp--preset--color--border);
+
+    &::after {
+      content: "−";
+    }
+  }
+
+  // Hover is a "click to open" cue, so it only applies to closed items: darken
+  // the card border and fill the summary so it doesn't read as see-through
+  // against the page canvas. Open items don't react to hover.
+  .wp-block-details:not([open]):hover {
+    border-color: var(--wp--preset--color--muted) !important;
+  }
+
+  details:not([open]) > summary:hover {
+    background: var(--wp--preset--color--base);
+  }
+
+  // Answer — inset to line up under the question, with room top and bottom.
+  .wp-block-details > :not(summary) {
+    padding-inline: 2rem;
+  }
+
+  .wp-block-details > :not(summary):last-child {
+    padding-bottom: 1.5rem;
+  }
+}

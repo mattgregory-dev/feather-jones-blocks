@@ -1,0 +1,30 @@
+// ---------------------------------------------------------------------------
+// Link cards (link-cards pattern): centred card content, rounded card images,
+// extra breathing room above each heading, and links that use the contrast
+// colour and deepen to the link-hover colour (in place of the global link
+// colour, so the whole card reads as one quiet target).
+// ---------------------------------------------------------------------------
+
+.link-cards {
+  .wp-block-column {
+    text-align: center;
+  }
+
+  .wp-block-image img {
+    border-radius: 10px;
+  }
+
+  // A little more space between the image and the heading.
+  h3 {
+    margin-top: 1.25rem;
+  }
+
+  p a {
+    color: var(--wp--preset--color--contrast);
+
+    &:hover,
+    &:focus {
+      color: var(--wp--preset--color--link-hover);
+    }
+  }
+}

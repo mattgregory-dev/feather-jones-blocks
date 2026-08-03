@@ -1,0 +1,50 @@
+// ---------------------------------------------------------------------------
+// List style variations.
+// `is-style-checklist` — replaces the default bullet with a bordered checkbox
+// marker (✓). Registered in inc/block-styles.php. The marker is a ::before
+// pseudo-element (theme.json can't express it), so it lives here; all values
+// reference theme.json tokens.
+// ---------------------------------------------------------------------------
+
+// Categories block (sidebar "Topics") — no bullets or indent, so the links sit
+// flush like the other sidebar boxes.
+.wp-block-categories {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.wp-block-list.is-style-checklist {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    // Bordered ✓ marker. flex-start keeps it aligned to the first text line
+    // even when an item wraps to multiple lines.
+    &::before {
+      content: "\2713";
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.4rem;
+      height: 1.4rem;
+
+      // Nudge down so the box centers against the first text line (em-relative,
+      // so it holds across font sizes: checklist-section large text + pricing).
+      margin-top: 0.36em;
+      border: 1px solid var(--wp--preset--color--surface-dark);
+
+      // Light fill inside the ✓ box so the marker reads against the band.
+      background-color: var(--wp--preset--color--base);
+      color: var(--wp--preset--color--surface-dark);
+      font-size: 0.8em;
+      line-height: 1;
+    }
+  }
+}

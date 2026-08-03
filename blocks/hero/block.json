@@ -1,0 +1,32 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/hero",
+	"version": "1.0.0",
+	"title": "Hero",
+	"category": "theme",
+	"icon": "cover-image",
+	"description": "Full-width hero — a spotlight-style split with an optional full-cover background image and overlay tint.",
+	"keywords": [ "hero", "cover", "banner", "background", "overlay" ],
+	"textdomain": "starter-blocks",
+	"supports": {
+		"align": [ "full" ],
+		"anchor": true,
+		"html": false,
+		"color": false
+	},
+	"attributes": {
+		"imageId": { "type": "number" },
+		"imageAlt": { "type": "string", "default": "" },
+		"imagePosition": { "type": "string", "default": "right" },
+		"verticalAlignment": { "type": "string", "default": "center" },
+		"eyebrow": { "type": "string", "default": "" },
+		"level": { "type": "string", "default": "h2" },
+		"title": { "type": "string", "default": "" },
+		"backgroundImageId": { "type": "number", "default": 0 },
+		"overlayColor": { "type": "string", "default": "" },
+		"textScheme": { "type": "string", "default": "default" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

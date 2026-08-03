@@ -1,0 +1,23 @@
+{
+  "extends": ["stylelint-config-standard-scss"],
+  "rules": {
+    "no-descending-specificity": null,
+    "no-empty-source": null,
+    "scss/operator-no-newline-after": null,
+    "scss/comment-no-empty": null,
+    "custom-property-pattern": ["^([a-z][a-z0-9]*)((-{1,2})[a-z0-9]+)*$", {
+      "message": "Custom property names are kebab-case; WordPress preset vars (--wp--preset--*) use double hyphens between segments."
+    }],
+    "property-no-deprecated": [true, {
+      "ignoreProperties": ["clip"]
+    }],
+    "selector-class-pattern": ["^[a-z][a-z0-9_-]*$", {
+      "message": "Class names must be lowercase, may contain digits, hyphens, or underscores (underscores accommodate WordPress core classes like .current_page_item)."
+    }]
+  },
+  "ignoreFiles": [
+    "dist/**",
+    "node_modules/**",
+    "src/public/**"
+  ]
+}
