@@ -8,7 +8,7 @@
 	"icon": "cover-image",
 	"description": "Full-width hero — a spotlight-style split with an optional full-cover background image and overlay tint.",
 	"keywords": [ "hero", "cover", "banner", "background", "overlay" ],
-	"textdomain": "starter-blocks",
+	"textdomain": "fj-blocks",
 	"supports": {
 		"align": [ "full" ],
 		"anchor": true,

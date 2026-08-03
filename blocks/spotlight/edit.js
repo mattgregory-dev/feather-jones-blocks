@@ -20,7 +20,7 @@ import { useSelect } from '@wordpress/data';
  */
 
 const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons' ];
-const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add spotlight text…', 'starter-blocks' ) } ] ];
+const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add spotlight text…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { imageId, imageAlt, imagePosition, verticalAlignment, eyebrow, level, title } = attributes;
@@ -52,7 +52,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			) : (
 				<MediaPlaceholder
 					icon="format-image"
-					labels={ { title: __( 'Spotlight image', 'starter-blocks' ) } }
+					labels={ { title: __( 'Spotlight image', 'fj-blocks' ) } }
 					accept="image/*"
 					allowedTypes={ [ 'image' ] }
 					onSelect={ onSelectImage }
@@ -64,17 +64,17 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Layout', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Layout', 'fj-blocks' ) }>
 					{ /* Framed around the always-present content column, not the optional
 					     image. Stored as `imagePosition` (the image side), so the control
 					     works in the inverse: content-left ⇄ image-right. */ }
 					<SelectControl
-						label={ __( 'Content position', 'starter-blocks' ) }
-						help={ __( 'Which side the text column sits on. An image, if set, takes the other side.', 'starter-blocks' ) }
+						label={ __( 'Content position', 'fj-blocks' ) }
+						help={ __( 'Which side the text column sits on. An image, if set, takes the other side.', 'fj-blocks' ) }
 						value={ 'left' === imagePosition ? 'right' : 'left' }
 						options={ [
-							{ label: __( 'Left', 'starter-blocks' ), value: 'left' },
-							{ label: __( 'Right', 'starter-blocks' ), value: 'right' },
+							{ label: __( 'Left', 'fj-blocks' ), value: 'left' },
+							{ label: __( 'Right', 'fj-blocks' ), value: 'right' },
 						] }
 						onChange={ ( value ) =>
 							setAttributes( { imagePosition: 'left' === value ? 'right' : 'left' } )
@@ -82,47 +82,47 @@ export default function Edit( { attributes, setAttributes } ) {
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Vertical alignment', 'starter-blocks' ) }
-						help={ __( 'Applies above 1160px; narrower screens stack and top-align.', 'starter-blocks' ) }
+						label={ __( 'Vertical alignment', 'fj-blocks' ) }
+						help={ __( 'Applies above 1160px; narrower screens stack and top-align.', 'fj-blocks' ) }
 						value={ verticalAlignment }
 						options={ [
-							{ label: __( 'Center', 'starter-blocks' ), value: 'center' },
-							{ label: __( 'Top', 'starter-blocks' ), value: 'top' },
+							{ label: __( 'Center', 'fj-blocks' ), value: 'center' },
+							{ label: __( 'Top', 'fj-blocks' ), value: 'top' },
 						] }
 						onChange={ ( value ) => setAttributes( { verticalAlignment: value } ) }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Content', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Content', 'fj-blocks' ) }>
 					<TextControl
-						label={ __( 'Eyebrow (optional)', 'starter-blocks' ) }
+						label={ __( 'Eyebrow (optional)', 'fj-blocks' ) }
 						value={ eyebrow }
 						onChange={ ( value ) => setAttributes( { eyebrow: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<TextControl
-						label={ __( 'Title', 'starter-blocks' ) }
+						label={ __( 'Title', 'fj-blocks' ) }
 						value={ title }
 						onChange={ ( value ) => setAttributes( { title: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Title heading level', 'starter-blocks' ) }
-						help={ __( 'Sets the heading tag only: H1 for a page hero, H2 for a mid-page feature.', 'starter-blocks' ) }
+						label={ __( 'Title heading level', 'fj-blocks' ) }
+						help={ __( 'Sets the heading tag only: H1 for a page hero, H2 for a mid-page feature.', 'fj-blocks' ) }
 						value={ level }
 						options={ [
-							{ label: __( 'H2 — in-page feature', 'starter-blocks' ), value: 'h2' },
-							{ label: __( 'H1 — page hero', 'starter-blocks' ), value: 'h1' },
+							{ label: __( 'H2 — in-page feature', 'fj-blocks' ), value: 'h2' },
+							{ label: __( 'H1 — page hero', 'fj-blocks' ), value: 'h1' },
 						] }
 						onChange={ ( value ) => setAttributes( { level: value } ) }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
 				{ imageId && (
-					<PanelBody title={ __( 'Image', 'starter-blocks' ) }>
+					<PanelBody title={ __( 'Image', 'fj-blocks' ) }>
 						<TextControl
-							label={ __( 'Alt text', 'starter-blocks' ) }
-							help={ __( 'Describe the image for screen readers.', 'starter-blocks' ) }
+							label={ __( 'Alt text', 'fj-blocks' ) }
+							help={ __( 'Describe the image for screen readers.', 'fj-blocks' ) }
 							value={ imageAlt }
 							onChange={ ( value ) => setAttributes( { imageAlt: value } ) }
 							__nextHasNoMarginBottom
@@ -132,7 +132,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							isDestructive
 							onClick={ () => setAttributes( { imageId: undefined, imageAlt: '' } ) }
 						>
-							{ __( 'Remove image', 'starter-blocks' ) }
+							{ __( 'Remove image', 'fj-blocks' ) }
 						</Button>
 					</PanelBody>
 				) }

@@ -8,7 +8,7 @@
 	"icon": "megaphone",
 	"description": "Centered call-to-action band — optional eyebrow, heading, and buttons on a full-width band.",
 	"keywords": [ "cta", "call to action", "band", "banner" ],
-	"textdomain": "starter-blocks",
+	"textdomain": "fj-blocks",
 	"supports": {
 		"align": [ "full" ],
 		"anchor": true,

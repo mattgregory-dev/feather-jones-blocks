@@ -8,7 +8,7 @@
 	"icon": "align-pull-left",
 	"description": "Two-column split — an image beside a text column (eyebrow, heading, and rich content). Use as a page hero (H1) or a mid-page feature (H2).",
 	"keywords": [ "spotlight", "split", "hero", "feature", "image" ],
-	"textdomain": "starter-blocks",
+	"textdomain": "fj-blocks",
 	"supports": {
 		"align": [ "full" ],
 		"anchor": true,

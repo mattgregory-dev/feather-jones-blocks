@@ -20,7 +20,7 @@ import { useSelect } from '@wordpress/data';
  */
 
 const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons', 'core/social-links' ];
-const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add bio…', 'starter-blocks' ) } ] ];
+const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add bio…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
 	const { imageId, imageAlt, imagePosition, verticalAlignment, eyebrow, title } = attributes;
@@ -50,7 +50,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			) : (
 				<MediaPlaceholder
 					icon="format-image"
-					labels={ { title: __( 'Portrait', 'starter-blocks' ) } }
+					labels={ { title: __( 'Portrait', 'fj-blocks' ) } }
 					accept="image/*"
 					allowedTypes={ [ 'image' ] }
 					onSelect={ onSelectImage }
@@ -62,49 +62,49 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Layout', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Layout', 'fj-blocks' ) }>
 					<SelectControl
-						label={ __( 'Image position', 'starter-blocks' ) }
+						label={ __( 'Image position', 'fj-blocks' ) }
 						value={ imagePosition }
 						options={ [
-							{ label: __( 'Left', 'starter-blocks' ), value: 'left' },
-							{ label: __( 'Right', 'starter-blocks' ), value: 'right' },
+							{ label: __( 'Left', 'fj-blocks' ), value: 'left' },
+							{ label: __( 'Right', 'fj-blocks' ), value: 'right' },
 						] }
 						onChange={ ( value ) => setAttributes( { imagePosition: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Vertical alignment', 'starter-blocks' ) }
-						help={ __( 'Applies above 1160px; narrower screens stack and top-align.', 'starter-blocks' ) }
+						label={ __( 'Vertical alignment', 'fj-blocks' ) }
+						help={ __( 'Applies above 1160px; narrower screens stack and top-align.', 'fj-blocks' ) }
 						value={ verticalAlignment }
 						options={ [
-							{ label: __( 'Top', 'starter-blocks' ), value: 'top' },
-							{ label: __( 'Center', 'starter-blocks' ), value: 'center' },
+							{ label: __( 'Top', 'fj-blocks' ), value: 'top' },
+							{ label: __( 'Center', 'fj-blocks' ), value: 'center' },
 						] }
 						onChange={ ( value ) => setAttributes( { verticalAlignment: value } ) }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
-				<PanelBody title={ __( 'Content', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Content', 'fj-blocks' ) }>
 					<TextControl
-						label={ __( 'Role', 'starter-blocks' ) }
-						help={ __( 'The eyebrow line, e.g. “Founder” or “Lead Designer.”', 'starter-blocks' ) }
+						label={ __( 'Role', 'fj-blocks' ) }
+						help={ __( 'The eyebrow line, e.g. “Founder” or “Lead Designer.”', 'fj-blocks' ) }
 						value={ eyebrow }
 						onChange={ ( value ) => setAttributes( { eyebrow: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<TextControl
-						label={ __( 'Name', 'starter-blocks' ) }
+						label={ __( 'Name', 'fj-blocks' ) }
 						value={ title }
 						onChange={ ( value ) => setAttributes( { title: value } ) }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
 				{ imageId && (
-					<PanelBody title={ __( 'Image', 'starter-blocks' ) }>
+					<PanelBody title={ __( 'Image', 'fj-blocks' ) }>
 						<TextControl
-							label={ __( 'Alt text', 'starter-blocks' ) }
-							help={ __( 'Describe the portrait for screen readers.', 'starter-blocks' ) }
+							label={ __( 'Alt text', 'fj-blocks' ) }
+							help={ __( 'Describe the portrait for screen readers.', 'fj-blocks' ) }
 							value={ imageAlt }
 							onChange={ ( value ) => setAttributes( { imageAlt: value } ) }
 							__nextHasNoMarginBottom
@@ -114,7 +114,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							isDestructive
 							onClick={ () => setAttributes( { imageId: undefined, imageAlt: '' } ) }
 						>
-							{ __( 'Remove portrait', 'starter-blocks' ) }
+							{ __( 'Remove portrait', 'fj-blocks' ) }
 						</Button>
 					</PanelBody>
 				) }

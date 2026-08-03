@@ -8,7 +8,7 @@
 	"icon": "businessperson",
 	"description": "Person bio — a portrait beside a role, name, and biography. A sibling of Spotlight, scoped for people.",
 	"keywords": [ "bio", "person", "founder", "team", "profile" ],
-	"textdomain": "starter-blocks",
+	"textdomain": "fj-blocks",
 	"supports": {
 		"align": [ "full" ],
 		"anchor": true,

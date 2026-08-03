@@ -8,7 +8,7 @@
 	"icon": "yes-alt",
 	"description": "Centered header over a two-column checklist band. The two lists are edited inline; the block owns the layout.",
 	"keywords": [ "checklist", "list", "included", "features" ],
-	"textdomain": "starter-blocks",
+	"textdomain": "fj-blocks",
 	"supports": {
 		"align": [ "full" ],
 		"anchor": true,

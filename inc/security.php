@@ -11,7 +11,7 @@ add_filter( 'xmlrpc_enabled', '__return_false' );
 // incorrect" / "the password is wrong", which both leak information about
 // whether a username exists.
 function sb_generic_login_error() {
-	return __( 'Invalid login. Please try again.', 'starter-blocks' );
+	return __( 'Invalid login. Please try again.', 'fj-blocks' );
 }
 add_filter( 'login_errors', 'sb_generic_login_error' );
 

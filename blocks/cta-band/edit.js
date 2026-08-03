@@ -17,7 +17,7 @@ import { PanelBody, TextControl, SelectControl } from '@wordpress/components';
 
 const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons' ];
 const TEMPLATE = [
-	[ 'core/paragraph', { align: 'center', placeholder: __( 'Call-to-action text…', 'starter-blocks' ) } ],
+	[ 'core/paragraph', { align: 'center', placeholder: __( 'Call-to-action text…', 'fj-blocks' ) } ],
 	[ 'core/buttons', { layout: { type: 'flex', justifyContent: 'center' } }, [ [ 'core/button', {} ] ] ],
 ];
 
@@ -38,22 +38,22 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Content', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Content', 'fj-blocks' ) }>
 					<TextControl
-						label={ __( 'Eyebrow (optional)', 'starter-blocks' ) }
+						label={ __( 'Eyebrow (optional)', 'fj-blocks' ) }
 						value={ eyebrow }
 						onChange={ ( value ) => setAttributes( { eyebrow: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<TextControl
-						label={ __( 'Heading', 'starter-blocks' ) }
+						label={ __( 'Heading', 'fj-blocks' ) }
 						value={ title }
 						onChange={ ( value ) => setAttributes( { title: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Heading level', 'starter-blocks' ) }
-						help={ __( 'A CTA is never the page’s top heading, so H1 is not offered.', 'starter-blocks' ) }
+						label={ __( 'Heading level', 'fj-blocks' ) }
+						help={ __( 'A CTA is never the page’s top heading, so H1 is not offered.', 'fj-blocks' ) }
 						value={ level }
 						options={ [
 							{ label: 'H2', value: 'h2' },

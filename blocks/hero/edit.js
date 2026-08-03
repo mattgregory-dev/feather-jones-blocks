@@ -27,7 +27,7 @@ import { useSelect } from '@wordpress/data';
  */
 
 const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons' ];
-const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add hero text…', 'starter-blocks' ) } ] ];
+const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add hero text…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
 	const {
@@ -91,7 +91,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			) : (
 				<MediaPlaceholder
 					icon="format-image"
-					labels={ { title: __( 'Column image', 'starter-blocks' ) } }
+					labels={ { title: __( 'Column image', 'fj-blocks' ) } }
 					accept="image/*"
 					allowedTypes={ [ 'image' ] }
 					onSelect={ onSelectImage }
@@ -103,17 +103,17 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Layout', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Layout', 'fj-blocks' ) }>
 					{ /* Framed around the always-present content column, not the optional
 					     image. Stored as `imagePosition` (the image side), so the control
 					     works in the inverse: content-left ⇄ image-right. */ }
 					<SelectControl
-						label={ __( 'Content position', 'starter-blocks' ) }
-						help={ __( 'Which side the text column sits on. A column image, if set, takes the other side.', 'starter-blocks' ) }
+						label={ __( 'Content position', 'fj-blocks' ) }
+						help={ __( 'Which side the text column sits on. A column image, if set, takes the other side.', 'fj-blocks' ) }
 						value={ 'left' === imagePosition ? 'right' : 'left' }
 						options={ [
-							{ label: __( 'Left', 'starter-blocks' ), value: 'left' },
-							{ label: __( 'Right', 'starter-blocks' ), value: 'right' },
+							{ label: __( 'Left', 'fj-blocks' ), value: 'left' },
+							{ label: __( 'Right', 'fj-blocks' ), value: 'right' },
 						] }
 						onChange={ ( value ) =>
 							setAttributes( { imagePosition: 'left' === value ? 'right' : 'left' } )
@@ -121,19 +121,19 @@ export default function Edit( { attributes, setAttributes } ) {
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Vertical alignment', 'starter-blocks' ) }
-						help={ __( 'Applies above 1160px; narrower screens stack and top-align.', 'starter-blocks' ) }
+						label={ __( 'Vertical alignment', 'fj-blocks' ) }
+						help={ __( 'Applies above 1160px; narrower screens stack and top-align.', 'fj-blocks' ) }
 						value={ verticalAlignment }
 						options={ [
-							{ label: __( 'Center', 'starter-blocks' ), value: 'center' },
-							{ label: __( 'Top', 'starter-blocks' ), value: 'top' },
+							{ label: __( 'Center', 'fj-blocks' ), value: 'center' },
+							{ label: __( 'Top', 'fj-blocks' ), value: 'top' },
 						] }
 						onChange={ ( value ) => setAttributes( { verticalAlignment: value } ) }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Background', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Background', 'fj-blocks' ) }>
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( selected ) => setAttributes( { backgroundImageId: selected.id } ) }
@@ -143,8 +143,8 @@ export default function Edit( { attributes, setAttributes } ) {
 								<BaseControl __nextHasNoMarginBottom>
 									<Button variant="secondary" onClick={ open } __next40pxDefaultSize>
 										{ backgroundImageId
-											? __( 'Replace background image', 'starter-blocks' )
-											: __( 'Set background image', 'starter-blocks' ) }
+											? __( 'Replace background image', 'fj-blocks' )
+											: __( 'Set background image', 'fj-blocks' ) }
 									</Button>
 									{ hasBackground && (
 										<Button
@@ -154,7 +154,7 @@ export default function Edit( { attributes, setAttributes } ) {
 												setAttributes( { backgroundImageId: 0, overlayColor: '' } )
 											}
 										>
-											{ __( 'Remove', 'starter-blocks' ) }
+											{ __( 'Remove', 'fj-blocks' ) }
 										</Button>
 									) }
 								</BaseControl>
@@ -165,8 +165,8 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ /* An overlay over nothing is meaningless — only offer it with a background. */ }
 					{ hasBackground && (
 						<BaseControl
-							label={ __( 'Overlay tint', 'starter-blocks' ) }
-							help={ __( 'Semi-transparent tint over the background. Adjust the alpha for strength.', 'starter-blocks' ) }
+							label={ __( 'Overlay tint', 'fj-blocks' ) }
+							help={ __( 'Semi-transparent tint over the background. Adjust the alpha for strength.', 'fj-blocks' ) }
 							__nextHasNoMarginBottom
 						>
 							<ColorPalette
@@ -182,39 +182,39 @@ export default function Edit( { attributes, setAttributes } ) {
 					{ /* Applies with or without a background — a legibility response to the
 					     backdrop, not gated on has-cover-background. */ }
 					<SelectControl
-						label={ __( 'Text color scheme', 'starter-blocks' ) }
-						help={ __( 'Light for dark backgrounds, Dark to force standard colors over a light one.', 'starter-blocks' ) }
+						label={ __( 'Text color scheme', 'fj-blocks' ) }
+						help={ __( 'Light for dark backgrounds, Dark to force standard colors over a light one.', 'fj-blocks' ) }
 						value={ textScheme }
 						options={ [
-							{ label: __( 'Default', 'starter-blocks' ), value: 'default' },
-							{ label: __( 'Light', 'starter-blocks' ), value: 'light' },
-							{ label: __( 'Dark', 'starter-blocks' ), value: 'dark' },
+							{ label: __( 'Default', 'fj-blocks' ), value: 'default' },
+							{ label: __( 'Light', 'fj-blocks' ), value: 'light' },
+							{ label: __( 'Dark', 'fj-blocks' ), value: 'dark' },
 						] }
 						onChange={ ( value ) => setAttributes( { textScheme: value } ) }
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
 
-				<PanelBody title={ __( 'Content', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Content', 'fj-blocks' ) }>
 					<TextControl
-						label={ __( 'Eyebrow (optional)', 'starter-blocks' ) }
+						label={ __( 'Eyebrow (optional)', 'fj-blocks' ) }
 						value={ eyebrow }
 						onChange={ ( value ) => setAttributes( { eyebrow: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<TextControl
-						label={ __( 'Title', 'starter-blocks' ) }
+						label={ __( 'Title', 'fj-blocks' ) }
 						value={ title }
 						onChange={ ( value ) => setAttributes( { title: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Title heading level', 'starter-blocks' ) }
-						help={ __( 'Sets the heading tag only: H1 for a page hero, H2 for a mid-page feature.', 'starter-blocks' ) }
+						label={ __( 'Title heading level', 'fj-blocks' ) }
+						help={ __( 'Sets the heading tag only: H1 for a page hero, H2 for a mid-page feature.', 'fj-blocks' ) }
 						value={ level }
 						options={ [
-							{ label: __( 'H2 — in-page feature', 'starter-blocks' ), value: 'h2' },
-							{ label: __( 'H1 — page hero', 'starter-blocks' ), value: 'h1' },
+							{ label: __( 'H2 — in-page feature', 'fj-blocks' ), value: 'h2' },
+							{ label: __( 'H1 — page hero', 'fj-blocks' ), value: 'h1' },
 						] }
 						onChange={ ( value ) => setAttributes( { level: value } ) }
 						__nextHasNoMarginBottom
@@ -222,10 +222,10 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				{ imageId && (
-					<PanelBody title={ __( 'Column image', 'starter-blocks' ) }>
+					<PanelBody title={ __( 'Column image', 'fj-blocks' ) }>
 						<TextControl
-							label={ __( 'Alt text', 'starter-blocks' ) }
-							help={ __( 'Describe the column image for screen readers.', 'starter-blocks' ) }
+							label={ __( 'Alt text', 'fj-blocks' ) }
+							help={ __( 'Describe the column image for screen readers.', 'fj-blocks' ) }
 							value={ imageAlt }
 							onChange={ ( value ) => setAttributes( { imageAlt: value } ) }
 							__nextHasNoMarginBottom
@@ -235,7 +235,7 @@ export default function Edit( { attributes, setAttributes } ) {
 							isDestructive
 							onClick={ () => setAttributes( { imageId: undefined, imageAlt: '' } ) }
 						>
-							{ __( 'Remove column image', 'starter-blocks' ) }
+							{ __( 'Remove column image', 'fj-blocks' ) }
 						</Button>
 					</PanelBody>
 				) }

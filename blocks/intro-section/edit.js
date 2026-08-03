@@ -28,10 +28,10 @@ import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
 const ALLOWED_BLOCKS = [ 'core/paragraph' ];
 
 const WIDTH_OPTIONS = [
-	{ label: __( 'Default', 'starter-blocks' ), value: 'default' },
-	{ label: __( 'Narrow', 'starter-blocks' ), value: 'narrow' },
-	{ label: __( 'Narrower', 'starter-blocks' ), value: 'narrower' },
-	{ label: __( 'Narrowest', 'starter-blocks' ), value: 'narrowest' },
+	{ label: __( 'Default', 'fj-blocks' ), value: 'default' },
+	{ label: __( 'Narrow', 'fj-blocks' ), value: 'narrow' },
+	{ label: __( 'Narrower', 'fj-blocks' ), value: 'narrower' },
+	{ label: __( 'Narrowest', 'fj-blocks' ), value: 'narrowest' },
 ];
 
 // Build an element's class list from its balance + width settings. `prefix` is
@@ -73,30 +73,30 @@ export default function Edit( { attributes, setAttributes } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Intro settings', 'starter-blocks' ) }>
+				<PanelBody title={ __( 'Intro settings', 'fj-blocks' ) }>
 					<SelectControl
-						label={ __( 'Title heading level', 'starter-blocks' ) }
+						label={ __( 'Title heading level', 'fj-blocks' ) }
 						help={ __(
 							'Use H1 only when this is the page hero; H2 for a mid-page intro.',
-							'starter-blocks'
+							'fj-blocks'
 						) }
 						value={ level }
 						options={ [
-							{ label: __( 'H2 — in-page intro', 'starter-blocks' ), value: 'h2' },
-							{ label: __( 'H1 — page hero', 'starter-blocks' ), value: 'h1' },
+							{ label: __( 'H2 — in-page intro', 'fj-blocks' ), value: 'h2' },
+							{ label: __( 'H1 — page hero', 'fj-blocks' ), value: 'h1' },
 						] }
 						onChange={ ( value ) => setAttributes( { level: value } ) }
 						__nextHasNoMarginBottom
 					/>
 
 					<ToggleControl
-						label={ __( 'Balance title lines', 'starter-blocks' ) }
+						label={ __( 'Balance title lines', 'fj-blocks' ) }
 						checked={ !! titleBalance }
 						onChange={ ( value ) => setAttributes( { titleBalance: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Title width', 'starter-blocks' ) }
+						label={ __( 'Title width', 'fj-blocks' ) }
 						value={ titleWidth }
 						options={ WIDTH_OPTIONS }
 						onChange={ ( value ) => setAttributes( { titleWidth: value } ) }
@@ -104,13 +104,13 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 
 					<ToggleControl
-						label={ __( 'Balance subtitle lines', 'starter-blocks' ) }
+						label={ __( 'Balance subtitle lines', 'fj-blocks' ) }
 						checked={ !! subtitleBalance }
 						onChange={ ( value ) => setAttributes( { subtitleBalance: value } ) }
 						__nextHasNoMarginBottom
 					/>
 					<SelectControl
-						label={ __( 'Subtitle width', 'starter-blocks' ) }
+						label={ __( 'Subtitle width', 'fj-blocks' ) }
 						value={ subtitleWidth }
 						options={ WIDTH_OPTIONS }
 						onChange={ ( value ) => setAttributes( { subtitleWidth: value } ) }
@@ -126,7 +126,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						className="intro-section__eyebrow"
 						value={ eyebrow }
 						onChange={ ( value ) => setAttributes( { eyebrow: value } ) }
-						placeholder={ __( 'Eyebrow (optional)', 'starter-blocks' ) }
+						placeholder={ __( 'Eyebrow (optional)', 'fj-blocks' ) }
 						allowedFormats={ [] }
 					/>
 					<RichText
@@ -134,7 +134,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						className={ elementClass( 'intro-section__title', titleBalance, titleWidth, 'title' ) }
 						value={ title }
 						onChange={ ( value ) => setAttributes( { title: value } ) }
-						placeholder={ __( 'Title', 'starter-blocks' ) }
+						placeholder={ __( 'Title', 'fj-blocks' ) }
 						allowedFormats={ [] }
 					/>
 					<RichText
@@ -142,7 +142,7 @@ export default function Edit( { attributes, setAttributes } ) {
 						className={ elementClass( 'intro-section__subtitle', subtitleBalance, subtitleWidth, 'subtitle' ) }
 						value={ subtitle }
 						onChange={ ( value ) => setAttributes( { subtitle: value } ) }
-						placeholder={ __( 'Subtitle (optional)', 'starter-blocks' ) }
+						placeholder={ __( 'Subtitle (optional)', 'fj-blocks' ) }
 						allowedFormats={ [ 'core/bold', 'core/italic' ] }
 					/>
 					<div { ...innerBlocksProps } />
