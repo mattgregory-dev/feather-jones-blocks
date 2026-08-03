@@ -21,7 +21,7 @@ function sb_register_block_styles() {
 		'core/button',
 		array(
 			'name'  => 'secondary',
-			'label' => __( 'Secondary', 'starter-blocks' ),
+			'label' => __( 'Secondary', 'fj-blocks' ),
 		)
 	);
 
@@ -32,7 +32,7 @@ function sb_register_block_styles() {
 		'core/list',
 		array(
 			'name'  => 'checklist',
-			'label' => __( 'Checklist', 'starter-blocks' ),
+			'label' => __( 'Checklist', 'fj-blocks' ),
 		)
 	);
 }

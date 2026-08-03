@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 //   register_post_type(
 //     'example',
 //     array(
-//       'label'         => __( 'Examples', 'starter-blocks' ),
+//       'label'         => __( 'Examples', 'fj-blocks' ),
 //       'public'        => true,
 //       'menu_icon'     => 'dashicons-admin-post',
 //       'supports'      => array( 'title', 'editor', 'thumbnail', 'excerpt' ),

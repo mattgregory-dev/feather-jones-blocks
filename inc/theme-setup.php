@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function sb_setup() {
-	load_theme_textdomain( 'starter-blocks', get_template_directory() . '/languages' );
+	load_theme_textdomain( 'fj-blocks', get_template_directory() . '/languages' );
 
 	// Block themes provide title-tag, post-thumbnails, responsive-embeds and
 	// HTML5 automatically, but declaring the ones we rely on is harmless and explicit.
@@ -40,7 +40,7 @@ add_action( 'after_setup_theme', 'sb_setup' );
 function sb_register_pattern_categories() {
 	register_block_pattern_category(
 		'starter-blocks',
-		array( 'label' => __( 'Starter Blocks', 'starter-blocks' ) )
+		array( 'label' => __( 'Starter Blocks', 'fj-blocks' ) )
 	);
 }
 add_action( 'init', 'sb_register_pattern_categories' );

@@ -8,7 +8,7 @@
 	"icon": "cover-image",
 	"description": "Page intro band — optional eyebrow, title, and subtitle. Use as a page hero (H1) or a mid-page intro (H2).",
 	"keywords": [ "hero", "intro", "banner", "eyebrow" ],
-	"textdomain": "starter-blocks",
+	"textdomain": "fj-blocks",
 	"supports": {
 		"anchor": true,
 		"html": false
