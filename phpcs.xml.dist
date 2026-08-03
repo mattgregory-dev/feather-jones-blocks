@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ruleset name="Starter Blocks Theme">
+  <description>PHPCS ruleset for the Starter Blocks theme.</description>
+
+  <!-- Scan the theme root by default. -->
+  <file>./</file>
+
+  <!-- Exclude generated, vendored, and runtime content. -->
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/dist/*</exclude-pattern>
+  <exclude-pattern>*/build/*</exclude-pattern>
+  <exclude-pattern>*/languages/*</exclude-pattern>
+  <exclude-pattern>*/src/public/*</exclude-pattern>
+
+  <!-- PHP files only. -->
+  <arg name="extensions" value="php"/>
+
+  <!-- Output: progress + sniff codes, colors. -->
+  <arg value="ps"/>
+  <arg name="colors"/>
+
+  <!-- Cache for performance on repeat runs. -->
+  <arg name="cache" value=".phpcs-cache"/>
+
+  <!-- Run sniffs in parallel where possible. -->
+  <arg name="parallel" value="8"/>
+
+  <!--
+    Use the WordPress-Extra ruleset: Core formatting + best-practices
+    (escaping, security, deprecated functions). Does NOT include the
+    DocBlock-pedantry rules from WordPress-Docs.
+  -->
+  <rule ref="WordPress-Extra">
+    <!-- Theme partials and templates don't follow class-{name}.php naming. -->
+    <exclude name="WordPress.Files.FileName"/>
+
+    <!-- Allow short ternary `?:`. -->
+    <exclude name="Universal.Operators.DisallowShortTernary"/>
+
+    <!-- Don't enforce Yoda conditions. -->
+    <exclude name="WordPress.PHP.YodaConditions"/>
+  </rule>
+
+  <!-- Tell the i18n sniff which text-domain is valid for this theme. -->
+  <rule ref="WordPress.WP.I18n">
+    <properties>
+      <property name="text_domain" type="array">
+        <element value="starter-blocks"/>
+      </property>
+    </properties>
+  </rule>
+
+  <!--
+    sb_image_block() builds canonical core/image markup with every value run
+    through esc_url()/esc_attr() internally, so its return is already safe to
+    echo. Declare it auto-escaped so `echo sb_image_block( … )` in patterns
+    doesn't trip the output-escaping sniff.
+  -->
+  <rule ref="WordPress.Security.EscapeOutput">
+    <properties>
+      <property name="customAutoEscapedFunctions" type="array">
+        <element value="sb_image_block"/>
+      </property>
+    </properties>
+  </rule>
+
+  <!-- Declare the prefix used by theme global functions. -->
+  <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+    <properties>
+      <property name="prefixes" type="array">
+        <element value="sb"/>
+      </property>
+    </properties>
+    <!-- "sb" is the theme's deliberate short namespace; allow it while keeping
+         the rest of the prefix enforcement. -->
+    <exclude name="WordPress.NamingConventions.PrefixAllGlobals.ShortPrefixPassed"/>
+  </rule>
+
+  <!-- Targets the "deprecated since" checks. -->
+  <config name="minimum_supported_wp_version" value="6.5"/>
+</ruleset>

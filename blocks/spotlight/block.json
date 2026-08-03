@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/spotlight",
+	"version": "1.0.0",
+	"title": "Spotlight",
+	"category": "theme",
+	"icon": "align-pull-left",
+	"description": "Two-column split — an image beside a text column (eyebrow, heading, and rich content). Use as a page hero (H1) or a mid-page feature (H2).",
+	"keywords": [ "spotlight", "split", "hero", "feature", "image" ],
+	"textdomain": "starter-blocks",
+	"supports": {
+		"align": [ "full" ],
+		"anchor": true,
+		"html": false
+	},
+	"attributes": {
+		"imageId": { "type": "number" },
+		"imageAlt": { "type": "string", "default": "" },
+		"imagePosition": { "type": "string", "default": "right" },
+		"verticalAlignment": { "type": "string", "default": "center" },
+		"eyebrow": { "type": "string", "default": "" },
+		"level": { "type": "string", "default": "h2" },
+		"title": { "type": "string", "default": "" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

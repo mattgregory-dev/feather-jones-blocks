@@ -1,0 +1,32 @@
+// ---------------------------------------------------------------------------
+// Layout — page `main` spacing and the trailing full-width band flush behavior.
+// ---------------------------------------------------------------------------
+
+// page.html's <main> owns the page's bottom padding. It lives here (not as an
+// inline template style) so it can be tokenized: the band-flush rule below
+// cancels exactly this value, and the two can never drift apart.
+.page-main {
+  --sb-main-pad-end: var(--wp--preset--spacing--80);
+
+  padding-block-end: var(--sb-main-pad-end);
+}
+
+// A full-width band (.sb-band — intro-section, checklist-section, cta-band, and
+// any future band that adds the class) that ends the page sits flush to the
+// footer by canceling main's bottom padding, so the colored band meets the
+// footer with no page-background gap. Mid-page bands are not :last-child, so they
+// keep normal flow.
+//
+// The band is the last child of .wp-block-post-content, NOT of <main> — the
+// post-content wrapper has only horizontal (has-global-padding) padding, so the
+// negative bottom margin propagates up through it to close main's gap.
+//
+// The rule is gated on --sb-main-pad-end rather than a scoping selector: the
+// token is only defined inside a main that opts in (page.html via .page-main
+// today). Under any other main the var() is undefined, the calc() is invalid at
+// computed-value time, and margin-block-end falls back to 0 — so a trailing band
+// on, say, the full-width template is left untouched until that main defines the
+// token too.
+.wp-block-post-content > .sb-band:last-child {
+  margin-block-end: calc(-1 * var(--sb-main-pad-end));
+}

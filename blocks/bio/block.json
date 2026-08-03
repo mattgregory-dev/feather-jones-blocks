@@ -1,0 +1,27 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/bio",
+	"version": "1.0.0",
+	"title": "Bio",
+	"category": "theme",
+	"icon": "businessperson",
+	"description": "Person bio — a portrait beside a role, name, and biography. A sibling of Spotlight, scoped for people.",
+	"keywords": [ "bio", "person", "founder", "team", "profile" ],
+	"textdomain": "starter-blocks",
+	"supports": {
+		"align": [ "full" ],
+		"anchor": true,
+		"html": false
+	},
+	"attributes": {
+		"imageId": { "type": "number" },
+		"imageAlt": { "type": "string", "default": "" },
+		"imagePosition": { "type": "string", "default": "left" },
+		"verticalAlignment": { "type": "string", "default": "center" },
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

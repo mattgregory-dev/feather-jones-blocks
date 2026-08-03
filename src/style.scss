@@ -1,0 +1,48 @@
+// ---------------------------------------------------------------------------
+// Custom CSS, ESCAPE HATCH ONLY.
+// In this theme, design lives in theme.json (colors, typography, spacing,
+// element + block styles) and in block markup / patterns. Reach for this file
+// only for things theme.json genuinely cannot express:
+//   - pseudo-elements (::before / ::after), :has(), complex selectors
+//   - keyframe animations & scroll/hover micro-interactions
+//   - styling tied to JS-added state classes
+// Always reference the theme.json custom properties (var(--wp--preset--…)) so
+// nothing drifts out of sync with the editor. Do NOT redefine design tokens
+// here; theme.json is the single source of truth.
+//
+// Partials are @use'd below as features land (accessibility, layout, buttons,
+// block styles, and so on).
+// ---------------------------------------------------------------------------
+
+// Baseline accessibility utilities: skip-link theming, keyboard focus rings,
+// reduced-motion. See src/styles/_accessibility.scss.
+@use "./styles/accessibility";
+
+// Page main spacing + trailing full-width band flush-to-footer. See _layout.scss.
+@use "./styles/layout";
+
+// Button style variations (is-style-secondary). See _buttons.scss.
+@use "./styles/buttons";
+
+// List style variations (is-style-checklist). See _lists.scss.
+@use "./styles/lists";
+
+// Custom block styles (blocks/*). See src/styles/blocks/.
+@use "./styles/blocks/intro-section";
+@use "./styles/blocks/cta-band";
+@use "./styles/blocks/checklist-section";
+@use "./styles/blocks/spotlight";
+@use "./styles/blocks/bio";
+@use "./styles/blocks/hero";
+
+// Back-to-top button (fixed-position chrome). See src/styles/_scroll-top.scss.
+@use "./styles/scroll-top";
+
+// Small utility classes applied via block className. See _utilities.scss.
+@use "./styles/utilities";
+
+// Core-block pattern support (styling that patterns apply via className, where
+// theme.json / block markup can't reach). See the matching patterns/.
+@use "./styles/pricing"; // Pricing Cards
+@use "./styles/faq"; // FAQ Accordion
+@use "./styles/link-cards"; // Link Cards

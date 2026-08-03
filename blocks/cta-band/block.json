@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/cta-band",
+	"version": "1.0.0",
+	"title": "CTA Band",
+	"category": "theme",
+	"icon": "megaphone",
+	"description": "Centered call-to-action band — optional eyebrow, heading, and buttons on a full-width band.",
+	"keywords": [ "cta", "call to action", "band", "banner" ],
+	"textdomain": "starter-blocks",
+	"supports": {
+		"align": [ "full" ],
+		"anchor": true,
+		"html": false,
+		"color": false
+	},
+	"attributes": {
+		"align": { "type": "string", "default": "full" },
+		"eyebrow": { "type": "string", "default": "" },
+		"title": { "type": "string", "default": "" },
+		"level": { "type": "string", "default": "h2" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

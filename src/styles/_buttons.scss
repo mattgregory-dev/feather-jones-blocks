@@ -1,0 +1,33 @@
+// ---------------------------------------------------------------------------
+// Button variations.
+// The DEFAULT (primary) button lives in theme.json → styles.elements.button:
+// a dark fill with light text, a 2px border, 5px radius, and an invert on hover.
+// Registered in inc/block-styles.php.
+// Here we only define the `is-style-secondary` variation, the resting inverse
+// of the primary (light fill / dark text), and flip it back to the primary look
+// on hover. Border + radius are inherited from the theme.json default, so we
+// never restate them — only the fill/text swap. Tokens come from theme.json so
+// nothing drifts.
+// ---------------------------------------------------------------------------
+
+// Smooth the fill/text swap on hover for every button (default + variations).
+// prefers-reduced-motion neutralises this globally in _accessibility.scss.
+.wp-block-button__link {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.wp-block-button.is-style-secondary {
+  .wp-block-button__link {
+    background-color: var(--wp--preset--color--base);
+    color: var(--wp--preset--color--contrast-2);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: var(--wp--preset--color--contrast-2);
+      color: var(--wp--preset--color--base);
+    }
+  }
+}

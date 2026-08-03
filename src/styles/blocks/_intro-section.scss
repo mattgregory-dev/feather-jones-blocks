@@ -1,0 +1,105 @@
+// ---------------------------------------------------------------------------
+// Intro Section block (starter-blocks/intro-section) — a full-bleed band with a
+// constrained inner column. Base look is the "Centered" style variation; the
+// "Standard" variation (.is-style-standard) left-aligns it and mutes the
+// subtitle. The eyebrow and subtitle are optional (render.php omits them when
+// empty). All values reference theme.json tokens. Loaded on the front end and
+// (via add_editor_style) inside the editor canvas.
+// ---------------------------------------------------------------------------
+
+.wp-block-starter-blocks-intro-section {
+  padding-block: var(--wp--preset--spacing--80);
+  text-align: center;
+  background-color: var(--wp--preset--color--surface-2);
+
+  // Measure presets for the title/subtitle width controls — fixed px (so caps
+  // never drift with the fluid h1/h2 clamp), one shared scale for both elements,
+  // stepping down from the 760px inner. A narrowest title and subtitle line up
+  // at the same measure.
+  --intro-width-narrow: 660px;
+  --intro-width-narrower: 560px;
+  --intro-width-narrowest: 460px;
+
+  // 760px text column centered in the full-bleed section, matching the page
+  // body's contentSize so the band lines up with the content below it. The
+  // inner is content-box, so max-width IS the text width; padding-inline just
+  // keeps text off the screen edges on narrow viewports.
+  .intro-section__inner {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  // The title carries the inter-element rhythm (gap to the eyebrow above and the
+  // subtitle below); the eyebrow and subtitle contribute no margin of their own.
+  .intro-section__eyebrow {
+    margin-block: 0;
+    font-size: var(--wp--preset--font-size--x-small);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .intro-section__title {
+    margin-block: var(--wp--preset--spacing--50) 0;
+  }
+
+  // Subtitle sits 1.5rem below the title (spacing-50 == the theme blockGap), to
+  // match the lede paragraph rhythm on the rest of the site.
+  .intro-section__subtitle {
+    margin-block: var(--wp--preset--spacing--50) 0;
+    color: var(--wp--preset--color--contrast);
+    font-size: var(--wp--preset--font-size--large);
+  }
+
+  // Optional per-instance measure caps (title/subtitle width controls). Capped
+  // elements center within the band by default (the Standard variation keeps
+  // them left).
+  .has-title-width-narrow,
+  .has-subtitle-width-narrow    { max-width: var(--intro-width-narrow); }
+
+  .has-title-width-narrower,
+  .has-subtitle-width-narrower  { max-width: var(--intro-width-narrower); }
+
+  .has-title-width-narrowest,
+  .has-subtitle-width-narrowest { max-width: var(--intro-width-narrowest); }
+
+  [class*="has-title-width-"],
+  [class*="has-subtitle-width-"] { margin-inline: auto; }
+
+  // Optional inner-block body — left-aligned prose at body size, so a centered
+  // header can sit above left-reading paragraphs. text-align is reset because
+  // the band centers by default; the width is already the 760px inner measure.
+  // One block-gap step between paragraphs.
+  .intro-section__body {
+    margin-block-start: var(--wp--preset--spacing--50);
+    text-align: left;
+
+    > * { margin-block: 0; }
+    > * + * { margin-block-start: var(--wp--preset--spacing--50); }
+  }
+
+  // Standard look — left-aligned, muted subtitle.
+  &.is-style-standard {
+    text-align: left;
+
+    .intro-section__subtitle {
+      color: var(--wp--preset--color--muted);
+    }
+
+    // Capped elements stay flush-left — no centering drift.
+    [class*="has-title-width-"],
+    [class*="has-subtitle-width-"] { margin-inline: 0; }
+  }
+
+  // Content sits flush inside the band's padding: whichever element is first
+  // loses its top margin and whichever is last loses its bottom margin — so an
+  // absent eyebrow/subtitle never leaves a gap, and a present one keeps the
+  // title's default rhythm. (Placed last to keep specificity ascending.)
+  .intro-section__inner > :first-child {
+    margin-block-start: 0;
+  }
+
+  .intro-section__inner > :last-child {
+    margin-block-end: 0;
+  }
+}

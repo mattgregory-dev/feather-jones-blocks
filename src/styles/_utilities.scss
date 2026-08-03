@@ -1,0 +1,10 @@
+// ---------------------------------------------------------------------------
+// Small utility classes applied via a block's className.
+// ---------------------------------------------------------------------------
+
+// Even out line lengths for short headings/ledes (intro-section balance
+// toggles). Browsers ignore text-wrap: balance past ~6 lines, degrading to
+// normal wrapping — fine for headings and subtitles.
+.has-balanced-text {
+  text-wrap: balance;
+}
