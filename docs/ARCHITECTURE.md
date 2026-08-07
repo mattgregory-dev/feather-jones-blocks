@@ -63,6 +63,26 @@ Two rules keep this stable across projects and are treated as permanent:
   lightest neutral, `surface-3` the darkest of the light set; `surface-dark` is
   the dark surface). New surfaces slot into that order.
 
+### Alpha variants without new slugs
+
+When you need a token at reduced opacity — a hairline divider, a subtle fill, an
+overlay tint — mix it with `transparent` instead of minting a new alpha-variant
+slug:
+
+```scss
+// the border token at 60% alpha
+border-bottom: 1px solid var(--wp--preset--color--border); // fallback
+border-bottom: 1px solid color-mix(in srgb, var(--wp--preset--color--border) 60%, transparent);
+```
+
+`color-mix()` is the widely-supported way (Baseline 2023) to alpha a CSS custom
+property whose value is a hex — `rgba()` can't, because there are no separate
+channel variables to feed it. Keep the plain-token declaration first as a
+fallback: engines that can't parse the `color-mix` line discard it and keep the
+solid one. Because the mix references the token, the alpha variant tracks any
+palette reseed automatically — which is the point of not adding a `border-soft`
+slug just to get one transparency.
+
 The block namespace (`starter-blocks/*`), the generated class prefix
 (`wp-block-starter-blocks-*`), the PHP prefix (`sb_*`), and the text domain
 (`starter-blocks`) are likewise permanent and shared across every cloned
