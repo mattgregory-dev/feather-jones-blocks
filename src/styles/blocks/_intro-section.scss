@@ -34,9 +34,12 @@
   // subtitle below); the eyebrow and subtitle contribute no margin of their own.
   .intro-section__eyebrow {
     margin-block: 0;
-    font-size: var(--wp--preset--font-size--x-small);
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--xx-small);
+    font-weight: 700;
+    color: var(--wp--preset--color--brand);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16rem;
   }
 
   .intro-section__title {
@@ -73,6 +76,7 @@
   .intro-section__body {
     margin-block-start: var(--wp--preset--spacing--50);
     text-align: left;
+    font-size: var(--wp--preset--font-size--medium);
 
     > * { margin-block: 0; }
     > * + * { margin-block-start: var(--wp--preset--spacing--50); }

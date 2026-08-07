@@ -1,81 +1,72 @@
 // ---------------------------------------------------------------------------
-// FAQ accordion — square 2px-bordered items, question on the left with a boxed
-// toggle on the right, hover tint, and a full-width separator above an inset
-// answer when open. Built on core <details>/<summary>, so the block's own
-// border/radius/padding are overridden.
+// FAQ accordion — a minimal disclosure list matching the site design: no boxes
+// or card borders, just a hairline divider under each item, a plain +/- toggle
+// on the right (no box around it), a Lato-bold question in dark-brown, and a
+// muted answer. Built on core <details>/<summary>, so the block's own
+// border/radius/padding/gap are overridden. Native disclosure — opens instantly
+// (no expand animation for now).
 // ---------------------------------------------------------------------------
 
 .faq-accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  max-width: 750px;
+  margin-inline: auto;
 
+  // Strip the block's card look; items are separated only by a bottom divider,
+  // stacked flush (the pattern's blockGap is neutralised).
   .wp-block-details {
+    margin-block: 0 !important;
     padding: 0 !important;
-    background: var(--wp--preset--color--base);
-    border: 2px solid var(--wp--preset--color--border) !important;
+    background: transparent !important;
+    border: 0 !important;
+
+    // Divider: the border token at 60% alpha via color-mix, plain-token
+    // fallback line first. See docs/ARCHITECTURE.md (alpha variants).
+    border-bottom: 1px solid var(--wp--preset--color--border) !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--wp--preset--color--border) 60%, transparent) !important;
     border-radius: 0 !important;
   }
 
   summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.25rem 2rem;
+    position: relative;
+    display: block;
+    padding: 1.29rem 2.35rem 1.29rem 0;
     cursor: pointer;
     list-style: none;
-    font-family: var(--wp--preset--font-family--heading);
-    font-size: 1.25rem;
-    font-weight: 400;
-    color: var(--wp--preset--color--contrast);
-    transition: background-color 0.2s ease;
+    font-family: var(--wp--preset--font-family--body);
+    font-size: 0.94rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--wp--preset--color--contrast-2);
 
     &::-webkit-details-marker {
       display: none;
     }
 
-    // Boxed toggle on the right (+ when closed, − when open).
+    // Plain +/- toggle on the right — thin weight, no box.
     &::after {
       content: "+";
-      flex: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 1.5rem;
-      height: 1.5rem;
-      border: 2px solid var(--wp--preset--color--contrast);
-      font-size: 1.1rem;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      font-size: 1.29rem;
+      font-weight: 300;
       line-height: 1;
-      color: var(--wp--preset--color--contrast);
+      color: var(--wp--preset--color--brand);
+      color: color-mix(in srgb, var(--wp--preset--color--brand) 60%, transparent);
     }
   }
 
-  details[open] > summary {
-    border-bottom: 2px solid var(--wp--preset--color--border);
-
-    &::after {
-      content: "−";
-    }
+  details[open] > summary::after {
+    content: "\2212"; // minus
   }
 
-  // Hover is a "click to open" cue, so it only applies to closed items: darken
-  // the card border and fill the summary so it doesn't read as see-through
-  // against the page canvas. Open items don't react to hover.
-  .wp-block-details:not([open]):hover {
-    border-color: var(--wp--preset--color--muted) !important;
-  }
-
-  details:not([open]) > summary:hover {
-    background: var(--wp--preset--color--base);
-  }
-
-  // Answer — inset to line up under the question, with room top and bottom.
+  // Answer — muted, sits below the question with room before the divider.
   .wp-block-details > :not(summary) {
-    padding-inline: 2rem;
-  }
-
-  .wp-block-details > :not(summary):last-child {
-    padding-bottom: 1.5rem;
+    margin: 0;
+    padding: 0 0 1.29rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: var(--wp--preset--color--muted);
   }
 }
