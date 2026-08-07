@@ -37,6 +37,11 @@ color does, not what it is. A clone changes the *values*, never the *slugs*.
   and `var(--wp--preset--*)` values — no literal hex, no raw px. This holds even
   in throwaway prototype markup, because prototype markup becomes production
   markup in this pipeline.
+- **Alpha variants via `color-mix`, not new slugs.** For a token at reduced
+  opacity, use `color-mix(in srgb, var(--wp--preset--color--X) N%, transparent)`
+  with a plain-token fallback line above it — keeps the palette append-only
+  instead of sprouting alpha-variant slugs. See
+  [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 The font families are roles too (a serif heading stack, a sans body stack); swap
 values, keep roles.
