@@ -1,7 +1,22 @@
-<!-- wp:group {"tagName":"header","className":"site-header","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40"}}},"layout":{"type":"constrained"}} -->
-<header class="wp-block-group site-header" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40)"><!-- wp:group {"layout":{"type":"flex","justifyContent":"space-between","flexWrap":"wrap"}} -->
-<div class="wp-block-group"><!-- wp:site-title {"level":0} /-->
+<!-- wp:group {"tagName":"header","className":"site-header","align":"full","style":{"spacing":{"padding":{"top":"var:preset|spacing|40","bottom":"var:preset|spacing|40","left":"var:preset|spacing|50","right":"var:preset|spacing|50"}}},"layout":{"type":"default"}} -->
+<header class="wp-block-group alignfull site-header" style="padding-top:var(--wp--preset--spacing--40);padding-bottom:var(--wp--preset--spacing--40);padding-left:var(--wp--preset--spacing--50);padding-right:var(--wp--preset--spacing--50)"><!-- wp:site-logo /-->
 
-<!-- wp:navigation {"overlayMenu":"mobile","layout":{"type":"flex","justifyContent":"right"}} /--></div>
+<!-- wp:navigation {"overlayMenu":"mobile","layout":{"type":"flex","justifyContent":"center","flexWrap":"wrap"},"fontSize":"x-small","style":{"spacing":{"blockGap":"10px"}}} -->
+<!-- wp:navigation-link {"label":"Courses","url":"/courses/","kind":"custom","isTopLevelLink":true} /-->
+
+<!-- wp:navigation-link {"label":"Live Group Classes","url":"/live-group-classes/","kind":"custom","isTopLevelLink":true} /-->
+
+<!-- wp:navigation-link {"label":"Study With Feather","url":"/study-with-feather/","kind":"custom","isTopLevelLink":true} /-->
+
+<!-- wp:navigation-link {"label":"Field Trip","url":"/field-trips/","kind":"custom","isTopLevelLink":true} /-->
+
+<!-- wp:navigation-link {"label":"About","url":"/about/","kind":"custom","isTopLevelLink":true} /-->
+<!-- /wp:navigation -->
+
+<!-- wp:group {"className":"site-header__actions","style":{"spacing":{"blockGap":"var:preset|spacing|30"}},"layout":{"type":"flex","flexWrap":"nowrap","verticalAlignment":"center"}} -->
+<div class="wp-block-group site-header__actions"><!-- wp:woocommerce/mini-cart /-->
+
+<!-- wp:woocommerce/customer-account {"displayStyle":"icon_only","iconStyle":"line","iconClass":"wc-block-customer-account__account-icon"} /-->
+</div>
 <!-- /wp:group --></header>
 <!-- /wp:group -->

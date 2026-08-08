@@ -1,0 +1,43 @@
+// ---------------------------------------------------------------------------
+// Site header — a full-width bar: logo left, primary nav in the middle, and the
+// cart/account icons right, distributed with space-between so the two gaps
+// (logo↔nav and nav↔icons) stay even. Wraps on narrow screens; the Navigation
+// block brings its own mobile overlay.
+// ---------------------------------------------------------------------------
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--40);
+
+  // The header uses flow layout, which adds vertical margins between children;
+  // neutralise them so the row stays tight.
+  > * {
+    margin-block: 0;
+  }
+
+  // Logo constrained by height; width follows the image's aspect ratio.
+  .wp-block-site-logo img {
+    height: 86px;
+    width: auto;
+  }
+
+  // The Woo account block renders as a link (or a dropdown toggle), so it takes
+  // the global blue link colour; recolour it — and its currentColor SVG icon —
+  // to contrast so it matches the cart icon beside it.
+  .wc-block-customer-account__link,
+  .wc-block-customer-account__toggle {
+    color: var(--wp--preset--color--contrast);
+  }
+
+  // Nav items as pills: the darker of the two light surfaces, bold, rounded.
+  .wp-block-navigation-item__content {
+    padding: 8px 24px;
+    border-radius: 5px;
+
+    // background-color: var(--wp--preset--color--surface-2);
+    font-weight: 700;
+  }
+}
