@@ -88,7 +88,7 @@ assembled + copy-filled in the editor and diffed against production.
 | 5 | **Events / Field Trip** | — | `hero`, `spotlight`, `day-cards`, `faq-accordion`, `cta-band`, `testimonials` |
 | 6 | **Live Group Classes** | `feature-cards`, `label-value`, `curriculum-agenda`, `botanical-divider` | `hero`, `intro-section`, `spotlight`, `pricing-cards`, `faq-accordion`, `cta-band`, `testimonials` |
 | 7 | **Study With Feather / Private** | `comparison-table`, `single-price-box` | `hero`, `spotlight`, `steps-cards`, `feature-cards`, `label-value`, `faq-accordion`, `cta-band`, `testimonials` |
-| 8 | **Courses** (marketing shell) | `featured-course-card`, `stat-bar`? | `hero`, `intro-section`, `feature-cards`; LearnDash catalog = phase-2 placeholder |
+| 8 | **Courses** (marketing shell) | `featured-course-card` | `hero`, `intro-section`, `feature-cards`; LearnDash catalog = phase-2 placeholder |
 | 9 | **Home** — ⚑ First-Light checkpoint | `stat-bar` | everything above; offer banners = phase-2 placeholder |
 
 ## Media
