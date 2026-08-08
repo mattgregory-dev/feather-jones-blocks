@@ -99,6 +99,20 @@ assembled + copy-filled in the editor and diffed against production.
 | 8 | **Courses** (marketing shell) | `featured-course-card` | `hero`, `intro-section`, `feature-cards`; LearnDash catalog = phase-2 placeholder |
 | 9 | **Home** — ⚑ First-Light checkpoint | `stat-bar` | everything above; offer banners = phase-2 placeholder |
 
+## End-of-phase passes
+
+After all pages are built and verified against production, two passes close out
+phase 1 — in this order:
+
+1. **Mobile optimization** — a dedicated responsive sweep across the chrome and
+   every page (breakpoints, nav overlay, stacking, spacing, tap targets). The
+   header and patterns are built desktop-first during the rebuild; this pass tunes
+   them for small screens in one focused go, rather than piecemeal per page.
+2. **Final touches** — animations and micro-interactions layered on last (e.g. the
+   nav-pill hover, reveal-on-scroll), so they never complicate the structural work.
+   Elements are built with their hooks ready (the nav pills already carry their
+   padding/background for a hover state).
+
 ## Media
 
 Seed the real production images (Feather portrait, farm/approach photos, book
