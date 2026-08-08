@@ -16,12 +16,18 @@ WooCommerce, Forminator, and the offer banners.
 - **Rhythm:** per-commit staged review on the git work (chrome, patterns), as
   always. **First-Light checkpoints** after the smoke test, after the first full
   marketing page (About), and after Home.
+- **Per-page verification gate** (the two that bit us on Lumina): (1) **exactly one
+  `<h1>` per page** — the hero heading is h1, every other section heading is h2; and
+  (2) the **flush-band behavior** on a trailing CTA band (`.sb-band:last-child`
+  pulling into the footer). Most FJ pages end in a CTA band, so this gets exercised
+  nearly everywhere — verify it holds in FJ's DOM nesting the first time, then
+  spot-check.
 
-> **One call to confirm (method):** I recommend patterns ship **generic
-> (placeholder copy)** and the real Feather copy goes into each page's
-> `post_content` via the editor — this yields client-editable pages *and* a reusable
-> starter library in one pass. The alternative is baking real copy into
-> page-specific patterns. I'm assuming the generic-pattern approach below.
+> **Method (confirmed):** patterns ship **generic (placeholder copy)**; the real
+> Feather copy enters each page's `post_content` through the editor, exactly once.
+> This is the pipeline in its mature form — prose is locked on production, so
+> patterns are born generic and there's no copy-in-pattern divergence to unwind
+> later (that was Lumina's Stage-3 grind; the lesson lives in GOTCHAS).
 
 ## Component work (what git gets)
 
@@ -31,14 +37,16 @@ WooCommerce, Forminator, and the offer banners.
   built from the 5 links (Courses, Live Group Classes, Study With Feather, Field
   Trip, About). The Navigation block gives responsive/hamburger behavior natively.
   Drop: dual/sticky-duplicate header, per-page variant args, font preload, the
-  animated dual-span nav (deferred), the cart-count layout (Woo phase). Account/Cart
-  links: **static placeholder or omit until the Woo phase** — your call.
+  animated dual-span nav (deferred), the cart-count layout (Woo phase). Account/Cart:
+  **static links** to `/cart` and `/my-account` (the Woo pages exist in the DB) —
+  only the *live* behavior (cart count, login/account label flip) is deferred.
 - **Footer**: brand, footer nav, social SVGs, the **medical/legal disclosure**
   (keep — it's a real compliance element), scroll-to-top (we have `scroll-top`),
   and an **evergreen copyright year**. Drop: offer popups (deferred).
 - **Evergreen year**: register a small `sb_`-prefixed `[current_year]` shortcode in
-  `inc/` and place it via a Shortcode block in the footer — simplest, zero upkeep.
-  (Alternative: a tiny dynamic block. Shortcode is lighter.)
+  `inc/` and place it via a Shortcode block in the footer — lighter than a block,
+  and it wires in what the old theme registered but never used. **Promote to
+  starter-blocks at phase end** (a dynamic copyright year is a universal utility).
 
 ### Catalog reuse — no new code, just adapt/insert
 
@@ -105,14 +113,22 @@ LearnDash course catalog · WooCommerce (account/cart/checkout/shop, add-to-cart
 Forminator forms (contact + offers) · offer banners + popups · animated nav ·
 cart-count header behavior.
 
-## Calls I'd like your read on before I start
+## Settled decisions
 
-1. **Page-content method** — generic patterns + real copy assembled in the editor
-   (my recommendation), or page-specific patterns with real copy baked in?
-2. **Header Cart/Account** — static placeholder links now, or omit entirely until the
-   Woo phase?
-3. **Evergreen year** — `[current_year]` shortcode (my rec) vs. a tiny dynamic block?
-4. **`feature-cards` consolidation** — good to merge profile/support/curriculum info
-   cards into one pattern with optional icon, or keep any of them distinct?
-5. **Legal copy** — pull the real Privacy/Terms text from production for the smoke
-   test, or start with the `legal-page-starter` lorem and swap copy later?
+1. **Page-content method** — generic patterns, real copy in the editor. Confirmed
+   (see the Method note above).
+2. **Header Cart/Account** — **static links** to `/cart` and `/my-account`; don't
+   omit. Only the live behavior (cart count, login/account label flip) is deferred.
+3. **Evergreen year** — `[current_year]` **shortcode** via the Shortcode block;
+   promote to starter-blocks at phase end.
+4. **`feature-cards` consolidation** — **merge** on matching anatomy (icon-or-plain
+   + heading + copy, **no link**); keep `link-cards` distinct because the link *is*
+   the anatomy difference. **Boundary:** if the merged pattern starts needing many
+   optional knobs to serve all three uses, that's pattern bloat — the cure is two
+   patterns, not more options. Merge on matching anatomy; split the moment the
+   anatomy diverges.
+5. **Legal copy** — enter the **real** Privacy/Terms text immediately, no lorem
+   stage. Real prose end-to-end is the point of the smoke test, and entering it now
+   *is* the migration for those pages.
+6. **Per-page verification** — the explicit gate (one `<h1>`; trailing-band
+   flush-to-footer) is under "How phase 1 runs" above.
