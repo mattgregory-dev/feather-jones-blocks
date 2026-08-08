@@ -18,11 +18,13 @@
     margin-block: 0;
   }
 
-  // Logo constrained by height; width follows the image's aspect ratio.
-  .wp-block-site-logo img {
-    height: 86px;
-    width: auto;
-  }
+  // Logo size is set natively on the block (width attribute, 328px ≈ 86px tall at
+  // the logo's 500×131 aspect). CSS deliberately does NOT constrain it: the Site
+  // Logo editor component re-asserts its width inline with !important priority
+  // after mount, which no external rule can beat — so a CSS height constraint
+  // renders correct then snaps back to squished in the editor. Keeping the size
+  // on the block keeps the editor WYSIWYG. Responsive shrink lives in the mobile
+  // pass (override the front-end inline width there, where no JS re-asserts it).
 
   // The Woo account block renders as a link (or a dropdown toggle), so it takes
   // the global blue link colour; recolour it — and its currentColor SVG icon —
@@ -32,12 +34,21 @@
     color: var(--wp--preset--color--contrast);
   }
 
-  // Nav items as pills: the darker of the two light surfaces, bold, rounded.
+  // Nav items as pills: bold, rounded, transparent until hover/focus.
   .wp-block-navigation-item__content {
     padding: 8px 24px;
     border-radius: 5px;
-
-    // background-color: var(--wp--preset--color--surface-2);
     font-weight: 700;
+    transition: background-color 0.2s ease;
+  }
+
+  // Pill fills on hover/focus. Scoping to the item (<li>) rather than the anchor
+  // keeps the parent lit while the pointer or keyboard focus is inside its open
+  // submenu — the submenu <li> is a descendant of the parent item, so the parent
+  // stays :hover / :focus-within. The child combinator limits the fill to that
+  // item's own anchor, so each submenu link still lights independently.
+  .wp-block-navigation-item:hover > .wp-block-navigation-item__content,
+  .wp-block-navigation-item:focus-within > .wp-block-navigation-item__content {
+    background-color: var(--wp--preset--color--surface-2);
   }
 }
