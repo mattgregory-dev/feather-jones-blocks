@@ -1,0 +1,82 @@
+// ---------------------------------------------------------------------------
+// Site footer — a dark (deep-teal / surface-dark) band: brand, nav, socials, the
+// medical/legal disclosure, and an evergreen copyright line. Light text on dark,
+// so links and social icons are recoloured off the global (blue) link colour,
+// and the disclosure is a quiet, italic fine print.
+// ---------------------------------------------------------------------------
+
+.site-footer {
+  text-align: center;
+
+  // Footer nav + legal links: light, brightening on hover — not the global blue.
+  a {
+    color: var(--wp--preset--color--surface-3);
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: var(--wp--preset--color--surface-1);
+    }
+  }
+
+  // Inline link groups need a little breathing room between items.
+  &__nav a,
+  &__legal a {
+    margin-inline: 0.6rem;
+  }
+
+  // Brand eyebrow: uppercase, tracked-out, slightly dimmed off the light tone.
+  &__tagline {
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 700;
+    color: var(--wp--preset--color--surface-3);
+    color: color-mix(in srgb, var(--wp--preset--color--surface-3) 65%, transparent);
+  }
+
+  // Social icons follow the same light tone (logos-only uses currentColor), each
+  // ringed in a hairline circle that solidifies on hover. Selector matches the
+  // block's own `.is-style-logos-only .wp-social-link` specificity so our padding
+  // isn't reset to 0 by core.
+  .wp-block-social-links.is-style-logos-only {
+    color: var(--wp--preset--color--surface-3);
+
+    .wp-social-link {
+      padding: 8px;
+      border-radius: 50%;
+      border: 1px solid var(--wp--preset--color--surface-3);
+      border: 1px solid color-mix(in srgb, var(--wp--preset--color--surface-3) 50%, transparent);
+      transition: border-color 0.2s ease;
+
+      &:hover,
+      &:focus-within {
+        border-color: var(--wp--preset--color--surface-3);
+      }
+    }
+  }
+
+  // Disclosure + bottom bar are set off by a hairline divider (the light tone at
+  // reduced alpha via color-mix — only expressible here, not as a block attribute).
+  // All spacing lives on the blocks: the footer's blockGap supplies the margin
+  // above, and each block's own padding-top clears its text from the line.
+  &__disclosure {
+    border-top: 1px solid var(--wp--preset--color--surface-3);
+    border-top: 1px solid color-mix(in srgb, var(--wp--preset--color--surface-3) 18%, transparent);
+  }
+
+  &__disclosure p {
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--wp--preset--color--surface-3);
+    color: color-mix(in srgb, var(--wp--preset--color--surface-3) 75%, transparent);
+  }
+
+  // Bottom bar: a hairline divider above the copyright + legal row.
+  &__bottom {
+    width: 100%;
+    max-width: 900px;
+    margin-inline: auto;
+    border-top: 1px solid var(--wp--preset--color--surface-3);
+    border-top: 1px solid color-mix(in srgb, var(--wp--preset--color--surface-3) 18%, transparent);
+  }
+}

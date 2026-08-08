@@ -24,6 +24,9 @@
 // Site header bar: logo left, nav optically centered, cart/account right.
 @use "./styles/header";
 
+// Site footer: dark band with brand, nav, socials, disclosure, copyright.
+@use "./styles/footer";
+
 // Button style variations (is-style-secondary). See _buttons.scss.
 @use "./styles/buttons";
 

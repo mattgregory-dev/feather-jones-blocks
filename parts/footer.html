@@ -1,11 +1,47 @@
-<!-- wp:group {"tagName":"footer","className":"site-footer","align":"full","style":{"border":{"top":{"color":"var:preset|color|border","width":"1px"}},"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|60"}}},"layout":{"type":"constrained"}} -->
-<footer class="wp-block-group alignfull site-footer" style="border-top-color:var(--wp--preset--color--border);border-top-width:1px;padding-top:var(--wp--preset--spacing--70);padding-bottom:var(--wp--preset--spacing--60)"><!-- wp:site-title {"level":0} /-->
-
-<!-- wp:paragraph {"textColor":"muted","fontSize":"small"} -->
-<p class="has-muted-color has-text-color has-small-font-size">A short tagline describing your site.</p>
+<!-- wp:group {"tagName":"footer","className":"site-footer","align":"full","backgroundColor":"surface-dark","textColor":"surface-3","style":{"spacing":{"padding":{"top":"var:preset|spacing|70","bottom":"var:preset|spacing|60","left":"var:preset|spacing|50","right":"var:preset|spacing|50"},"blockGap":"var:preset|spacing|60"}},"layout":{"type":"constrained"}} -->
+<footer class="wp-block-group alignfull site-footer has-surface-3-color has-surface-dark-background-color has-text-color has-background" style="padding-top:var(--wp--preset--spacing--70);padding-right:var(--wp--preset--spacing--50);padding-bottom:var(--wp--preset--spacing--60);padding-left:var(--wp--preset--spacing--50)"><!-- wp:group {"style":{"spacing":{"blockGap":"6px"}},"layout":{"type":"constrained"}} -->
+<div class="wp-block-group"><!-- wp:paragraph {"align":"center","textColor":"surface-1","fontFamily":"heading","style":{"typography":{"fontSize":"1.3rem"}}} -->
+<p class="has-text-align-center has-surface-1-color has-text-color has-heading-font-family" style="font-size:1.3rem">Feather Jones</p>
 <!-- /wp:paragraph -->
 
-<!-- wp:paragraph {"align":"center","textColor":"muted","fontSize":"x-small","style":{"spacing":{"margin":{"top":"var:preset|spacing|60"}}}} -->
-<p class="has-text-align-center has-muted-color has-text-color has-x-small-font-size" style="margin-top:var(--wp--preset--spacing--60)">© Your Site Name</p>
-<!-- /wp:paragraph --></footer>
+<!-- wp:paragraph {"align":"center","className":"site-footer__tagline","fontSize":"xx-small","fontFamily":"eyebrow"} -->
+<p class="has-text-align-center site-footer__tagline has-eyebrow-font-family has-xx-small-font-size">Herbalist</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:paragraph {"align":"center","className":"site-footer__nav","fontSize":"small"} -->
+<p class="has-text-align-center site-footer__nav has-small-font-size"><a href="/contact/">Contact</a><a href="/blog/">Blog</a><a href="/about/">About</a></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:social-links {"iconColor":"surface-3","iconColorValue":"#c3dbc5","className":"is-style-logos-only","layout":{"type":"flex","justifyContent":"center"}} -->
+<ul class="wp-block-social-links has-icon-color is-style-logos-only"><!-- wp:social-link {"url":"https://www.facebook.com/profile.php?id=100064034190506","service":"facebook"} /-->
+
+<!-- wp:social-link {"url":"https://www.instagram.com/jones.feather/","service":"instagram"} /-->
+
+<!-- wp:social-link {"url":"https://www.youtube.com/@featherjonescanyonspiritbo5336","service":"youtube"} /--></ul>
+<!-- /wp:social-links -->
+
+<!-- wp:group {"className":"site-footer__disclosure","style":{"spacing":{"blockGap":"var:preset|spacing|20","padding":{"top":"var:preset|spacing|60"}}},"layout":{"type":"constrained","contentSize":"760px"}} -->
+<div class="wp-block-group site-footer__disclosure" style="padding-top:var(--wp--preset--spacing--60)"><!-- wp:paragraph {"align":"center","fontSize":"x-small"} -->
+<p class="has-text-align-center has-x-small-font-size">Feather Jones provides educational courses and resources focused on herbal traditions, plant knowledge, and practical preparation skills such as teas, tinctures, and topical applications. The information shared is intended for learning and personal growth, and individual results may vary.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"align":"center","fontSize":"x-small"} -->
+<p class="has-text-align-center has-x-small-font-size">Feather Jones does not provide medical diagnosis or treatment. Content on this site and within courses is not a substitute for professional medical advice, diagnosis, or care from a licensed healthcare provider.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"align":"center","fontSize":"x-small"} -->
+<p class="has-text-align-center has-x-small-font-size">If you are pregnant, nursing, taking medications, or managing a medical condition, consult a qualified healthcare professional before using herbal products or protocols.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"site-footer__bottom","style":{"spacing":{"blockGap":"var:preset|spacing|20","padding":{"top":"var:preset|spacing|60"}}},"layout":{"type":"flex","flexWrap":"wrap","justifyContent":"center"},"fontSize":"xx-small"} -->
+<div class="wp-block-group site-footer__bottom has-xx-small-font-size" style="padding-top:var(--wp--preset--spacing--60)"><!-- wp:shortcode -->
+&copy; [current_year] Feather Jones. All rights reserved.
+<!-- /wp:shortcode -->
+
+<!-- wp:paragraph {"className":"site-footer__legal"} -->
+<p class="site-footer__legal"><a href="/terms/">Terms &amp; Refund Policy</a><a href="/privacy/">Privacy</a></p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group --></footer>
 <!-- /wp:group -->
