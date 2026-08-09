@@ -1,32 +1,37 @@
 // ---------------------------------------------------------------------------
-// Layout — page `main` spacing and the trailing full-width band flush behavior.
+// Layout — page `main` spacing and full-width band flush behavior.
 // ---------------------------------------------------------------------------
 
-// page.html's <main> owns the page's bottom padding. It lives here (not as an
-// inline template style) so it can be tokenized: the band-flush rule below
-// cancels exactly this value, and the two can never drift apart.
-.page-main {
-  --sb-main-pad-end: var(--wp--preset--spacing--80);
-
-  padding-block-end: var(--sb-main-pad-end);
+// Chrome + main butt flush. The root .wp-site-blocks is a flow layout, and its
+// blockGap otherwise drops a margin above the footer (and between header and
+// main) — the classic "gap above the footer." Zero it so chrome meets content
+// with no page-background gap; spacing before the footer is owned by main's
+// padding / the band's own padding below, not by this root gap.
+.wp-site-blocks > .wp-block-template-part,
+.wp-site-blocks > .page-main {
+  margin-block: 0;
 }
 
-// A full-width band (.sb-band — intro-section, checklist-section, cta-band, and
-// any future band that adds the class) that ends the page sits flush to the
-// footer by canceling main's bottom padding, so the colored band meets the
-// footer with no page-background gap. Mid-page bands are not :last-child, so they
-// keep normal flow.
-//
-// The band is the last child of .wp-block-post-content, NOT of <main> — the
-// post-content wrapper has only horizontal (has-global-padding) padding, so the
-// negative bottom margin propagates up through it to close main's gap.
-//
-// The rule is gated on --sb-main-pad-end rather than a scoping selector: the
-// token is only defined inside a main that opts in (page.html via .page-main
-// today). Under any other main the var() is undefined, the calc() is invalid at
-// computed-value time, and margin-block-end falls back to 0 — so a trailing band
-// on, say, the full-width template is left untouched until that main defines the
-// token too.
-.wp-block-post-content > .sb-band:last-child {
-  margin-block-end: calc(-1 * var(--sb-main-pad-end));
+// page.html's <main> owns the page's bottom padding — breathing room before the
+// footer on prose-ending pages.
+.page-main {
+  padding-block-end: var(--wp--preset--spacing--80);
+}
+
+// Adjacent full-width sections stack flush: the bands (.sb-band) and any
+// full-width divider between them drop their blockGap margins, so colored
+// sections meet edge-to-edge (a botanical divider, when present, sits right on
+// the seam) and the first band meets the header. Body blocks after a band keep
+// their normal spacing — only full-width sections are zeroed, not prose.
+.wp-block-post-content > .sb-band,
+.wp-block-post-content > .wp-block-separator.alignfull {
+  margin-block: 0;
+}
+
+// When the page ends in a full-width band, drop main's bottom padding so the band
+// meets the footer flush — the band brings its own bottom padding and color to the
+// seam. :has() keeps prose-ending pages (no trailing band) padded as normal. This
+// replaces a negative-margin trick that relied on fragile margin-collapsing.
+.page-main:has(> .wp-block-post-content > .sb-band:last-child) {
+  padding-block-end: 0;
 }
