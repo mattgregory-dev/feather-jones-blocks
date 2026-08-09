@@ -39,6 +39,9 @@
 // Framed video — core Embed with max-width, rounded corners, shadow. See _video.scss.
 @use "./styles/video";
 
+// Card panel (sb-card) — white padded panel used on the contact layout. See _card.scss.
+@use "./styles/card";
+
 // Custom block styles (blocks/*). See src/styles/blocks/.
 @use "./styles/blocks/intro-section";
 @use "./styles/blocks/cta-band";
