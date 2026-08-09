@@ -54,10 +54,15 @@
   .hero__body > * { margin-block: 0; }
   .hero__body > * + * { margin-block-start: var(--wp--preset--spacing--50); }
 
+  // Eyebrow — matches the shared sb-eyebrow treatment (Montserrat, brand, tracked).
   .hero__eyebrow {
-    font-size: var(--wp--preset--font-size--x-small);
+    margin: 0;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--xx-small);
+    font-weight: 700;
+    color: var(--wp--preset--color--brand);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16rem;
   }
 
   // Column image on the left.
@@ -83,13 +88,24 @@
     isolation: isolate;
 
     // Overlay tint — above the background image, below the content. Only present
-    // when has-overlay is set (and --hero-overlay carries the value).
+    // when has-overlay is set (and --hero-overlay carries the value). A horizontal
+    // left→right gradient: near-opaque overlay on the text side (a sliver of the
+    // image still bleeds through), fading to transparent so the background reads
+    // on the right. The alpha comes from color-mix on the token (see
+    // docs/ARCHITECTURE.md), so the overlay colour stays the block's overlayColor.
+    // Stops and opacities are tunable.
     &.has-overlay::before {
       content: "";
       position: absolute;
       inset: 0;
       z-index: 0;
-      background: var(--hero-overlay);
+      background: linear-gradient(90deg, var(--hero-overlay) 0%, var(--hero-overlay) 45%, transparent 85%); // fallback
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--hero-overlay) 98%, transparent) 0%,
+        color-mix(in srgb, var(--hero-overlay) 94%, transparent) 45%,
+        transparent 85%
+      );
     }
 
     // The columns (text + optional image) sit above the overlay tint.
@@ -139,6 +155,38 @@
     .hero__body :is(h1, h2, h3, p, li) {
       color: var(--hero-text);
     }
+  }
+}
+
+// Generic gradient overlay for a band that ISN'T the hero block (the About hero
+// stays a core columns layout). Add `has-hero-overlay` for the left→right cream
+// fade — same as the hero block's overlay, content above. The band's background
+// image rides on the core group Background attribute (editor-swappable), which
+// renders it inline; this class only lays the tint. Alpha via color-mix on the
+// token (see docs/ARCHITECTURE.md).
+.has-hero-overlay {
+  position: relative;
+  isolation: isolate;
+  background-size: cover;
+  background-position: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(90deg, var(--wp--preset--color--surface-1) 0%, var(--wp--preset--color--surface-1) 45%, transparent 85%); // fallback
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--wp--preset--color--surface-1) 98%, transparent) 0%,
+      color-mix(in srgb, var(--wp--preset--color--surface-1) 94%, transparent) 45%,
+      color-mix(in srgb, var(--wp--preset--color--surface-1) 50%, transparent) 85%
+    );
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
