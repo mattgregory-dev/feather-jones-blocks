@@ -1,0 +1,51 @@
+// ---------------------------------------------------------------------------
+// Card — a light panel (white surface, padded, softly rounded, hairline border)
+// that lifts off a coloured band. Applied via the `sb-card` class; used on the
+// contact layout (form + sidebar) and reusable elsewhere.
+// ---------------------------------------------------------------------------
+
+.sb-card {
+  background-color: var(--wp--preset--color--base);
+  padding: var(--wp--preset--spacing--60);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 12px;
+}
+
+// Quick-links list inside a card: unbulleted rows with a soft divider between.
+.sb-quick-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li + li {
+    border-top: 1px solid var(--wp--preset--color--border);
+  }
+
+  a {
+    display: block;
+    padding-block: 0.6rem;
+    text-decoration: none;
+  }
+}
+
+// Eyebrow — the small uppercase kicker above a heading, for core-block sections
+// (the custom blocks style their own). Applied via the sb-eyebrow class.
+.sb-eyebrow {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--xx-small);
+  font-weight: 700;
+  color: var(--wp--preset--color--brand);
+  text-transform: uppercase;
+  letter-spacing: 0.16rem;
+}
+
+// Credential pill — a small rounded tag; sits in a flex-wrap group.
+.sb-pill {
+  margin: 0;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background-color: var(--wp--preset--color--surface-2);
+  font-size: var(--wp--preset--font-size--x-small);
+  font-weight: 600;
+}
