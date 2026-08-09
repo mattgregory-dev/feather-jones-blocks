@@ -26,7 +26,7 @@ import { useSelect } from '@wordpress/data';
  * no column image is set (not hidden).
  */
 
-const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons' ];
+const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons', 'core/separator' ];
 const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add hero text…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
