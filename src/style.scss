@@ -33,6 +33,12 @@
 // List style variations (is-style-checklist). See _lists.scss.
 @use "./styles/lists";
 
+// Botanical divider — core Separator restyled as a gradient rule. See _separator.scss.
+@use "./styles/separator";
+
+// Framed video — core Embed with max-width, rounded corners, shadow. See _video.scss.
+@use "./styles/video";
+
 // Custom block styles (blocks/*). See src/styles/blocks/.
 @use "./styles/blocks/intro-section";
 @use "./styles/blocks/cta-band";
