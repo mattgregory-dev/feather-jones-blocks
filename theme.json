@@ -192,7 +192,7 @@
       },
       "core/quote": {
         "border": {
-          "left": { "color": "var(--wp--preset--color--link)", "width": "3px" }
+          "left": { "color": "var(--wp--preset--color--brand)", "width": "3px" }
         },
         "spacing": { "padding": { "left": "1.5rem" } },
         "typography": { "fontStyle": "italic" }

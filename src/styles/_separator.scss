@@ -1,0 +1,33 @@
+// ---------------------------------------------------------------------------
+// Botanical divider — a Separator block *style* (is-style-botanical): a soft,
+// gradient rule, sage-green (brand) → warm-taupe (muted) → sage-green, fading to
+// transparent at both edges. Scoped to the style so plain separators (e.g. on the
+// legal pages) keep the default core look. Pair with full-width alignment for a
+// band seam. The fade is baked into the gradient stops with color-mix (see
+// docs/ARCHITECTURE.md) rather than an `opacity` property, because core's
+// `.has-alpha-channel-opacity` class would out-specify a plain opacity rule.
+// ---------------------------------------------------------------------------
+
+.wp-block-separator.is-style-botanical {
+  height: 3px;
+  border: 0;
+  margin-block: 0;
+  background: var(--wp--preset--color--border); // fallback: a faint solid rule
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--wp--preset--color--brand) 35%, transparent),
+    color-mix(in srgb, var(--wp--preset--color--muted) 35%, transparent),
+    color-mix(in srgb, var(--wp--preset--color--brand) 35%, transparent),
+    transparent
+  );
+}
+
+// Full width: core caps the default separator at 100px via a 3-class selector
+// (`:not(.is-style-wide):not(.is-style-dots)`, specificity 0,3,0), which the
+// alignfull width alone can't beat. Scope to the full-width botanical divider and
+// out-specify it (0,4,0, single :not) so it spans its container.
+.wp-block-separator.is-style-botanical.alignfull:not(.is-style-dots) {
+  width: 100%;
+  max-width: none;
+}

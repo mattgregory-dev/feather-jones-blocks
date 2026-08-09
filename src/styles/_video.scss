@@ -1,0 +1,22 @@
+// ---------------------------------------------------------------------------
+// Framed video — a core Embed given a max width, rounded corners, and a soft
+// drop shadow, holding a 16:9 frame. Applied via the `sb-video` class on the
+// Embed block; scoped so plain embeds elsewhere are untouched.
+// ---------------------------------------------------------------------------
+
+.wp-block-embed.sb-video {
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+
+  .wp-block-embed__wrapper {
+    aspect-ratio: 16 / 9;
+    overflow: hidden; // clip the iframe to the rounded corners
+    border-radius: 10px;
+    box-shadow: 0 25px 50px -12px rgb(0 0 0 / 25%);
+  }
+
+  iframe {
+    border-radius: 10px;
+  }
+}

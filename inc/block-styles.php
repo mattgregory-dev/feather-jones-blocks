@@ -35,5 +35,16 @@ function sb_register_block_styles() {
 			'label' => __( 'Checklist', 'fj-blocks' ),
 		)
 	);
+
+	// Botanical — the decorative full-width gradient divider (sage/taupe fade).
+	// Scoped as a style so plain separators keep the core look. Styled in
+	// src/styles/_separator.scss. Best paired with full-width alignment.
+	register_block_style(
+		'core/separator',
+		array(
+			'name'  => 'botanical',
+			'label' => __( 'Botanical', 'fj-blocks' ),
+		)
+	);
 }
 add_action( 'init', 'sb_register_block_styles' );
