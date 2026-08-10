@@ -54,6 +54,11 @@
   .hero__body > * { margin-block: 0; }
   .hero__body > * + * { margin-block-start: var(--wp--preset--spacing--50); }
 
+  // CTA separation: buttons sit one spacing step past the text rhythm above, so
+  // the call to action reads as its own moment. Single source of truth — replaces
+  // the per-instance bottom margins pages used to hang on the last paragraph.
+  .hero__body > .wp-block-buttons { margin-block-start: var(--wp--preset--spacing--60); }
+
   // Eyebrow — matches the shared sb-eyebrow treatment (Montserrat, brand, tracked).
   .hero__eyebrow {
     margin: 0;
