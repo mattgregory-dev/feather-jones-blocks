@@ -42,6 +42,9 @@
 // Card panel (sb-card) — white padded panel used on the contact layout. See _card.scss.
 @use "./styles/card";
 
+// Quote citation — kicker-style attribution for core/quote. See _quote.scss.
+@use "./styles/quote";
+
 // Custom block styles (blocks/*). See src/styles/blocks/.
 @use "./styles/blocks/intro-section";
 @use "./styles/blocks/cta-band";

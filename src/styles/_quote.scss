@@ -1,0 +1,23 @@
+// ---------------------------------------------------------------------------
+// Quote citation. The core/quote base (left brand border, padding, italic)
+// lives in theme.json; the citation can't be targeted there, so it lives here.
+// The attribution gets the shared eyebrow treatment (Montserrat, tracked,
+// uppercase, muted) so a quote's "— Name" reads as a kicker — the same look the
+// hero achieves with a manually-styled paragraph, now automatic for any quote
+// with a Citation. Non-italic, so it stands apart from the italic quote body.
+// ---------------------------------------------------------------------------
+
+.wp-block-quote cite {
+  display: block;
+  margin-block-start: var(--wp--preset--spacing--30);
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--xx-small);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+
+  // Auto-dash: the Citation field only needs the name (e.g. "Julia" → "— JULIA").
+  &::before { content: "— "; }
+}
