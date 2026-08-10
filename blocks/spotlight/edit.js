@@ -19,7 +19,7 @@ import { useSelect } from '@wordpress/data';
  * is no page-title binding — spotlight headlines never match the page title.
  */
 
-const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons' ];
+const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/heading', 'core/list', 'core/quote', 'core/buttons', 'core/separator', 'core/group' ];
 const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add spotlight text…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
