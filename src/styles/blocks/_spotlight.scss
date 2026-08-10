@@ -27,12 +27,12 @@
   }
 
   .spotlight__text {
-    flex: 0 1 55%;
+    flex: 0 1 58%;
     min-width: 0;
   }
 
   .spotlight__media {
-    flex: 0 1 45%;
+    flex: 0 1 42%;
     min-width: 0;
     margin: 0;
 
@@ -51,10 +51,19 @@
   .spotlight__body > * { margin-block: 0; }
   .spotlight__body > * + * { margin-block-start: var(--wp--preset--spacing--50); }
 
+  // Buttons take the larger CTA gap above (spacing--60), matching the hero.
+  .spotlight__body > .wp-block-buttons { margin-block-start: var(--wp--preset--spacing--60); }
+
+  // Eyebrow — matches the shared sb-eyebrow / hero__eyebrow treatment
+  // (Montserrat, brand, tracked).
   .spotlight__eyebrow {
-    font-size: var(--wp--preset--font-size--x-small);
+    margin: 0;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--xx-small);
+    font-weight: 700;
+    color: var(--wp--preset--color--brand);
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.16rem;
   }
 
   // Image on the left.
