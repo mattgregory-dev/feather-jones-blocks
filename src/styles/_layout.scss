@@ -24,6 +24,7 @@
 // the seam) and the first band meets the header. Body blocks after a band keep
 // their normal spacing — only full-width sections are zeroed, not prose.
 .wp-block-post-content > .sb-band,
+.wp-block-post-content > .wp-block-starter-blocks-spotlight,
 .wp-block-post-content > .wp-block-separator.alignfull {
   margin-block: 0;
 }
@@ -32,6 +33,7 @@
 // meets the footer flush — the band brings its own bottom padding and color to the
 // seam. :has() keeps prose-ending pages (no trailing band) padded as normal. This
 // replaces a negative-margin trick that relied on fragile margin-collapsing.
-.page-main:has(> .wp-block-post-content > .sb-band:last-child) {
+.page-main:has(> .wp-block-post-content > .sb-band:last-child),
+.page-main:has(> .wp-block-post-content > .wp-block-starter-blocks-spotlight:last-child) {
   padding-block-end: 0;
 }
