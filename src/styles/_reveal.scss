@@ -5,31 +5,64 @@
 // ---------------------------------------------------------------------------
 
 .sb-reveal {
-  // Closed: a centered toggle line with a chevron affordance (the default
-  // disclosure marker is removed so the text can truly centre).
+  // Closed: styled as a secondary button — a brand (green) outline with
+  // uppercase Montserrat that fills green on hover, matching .is-style-secondary.
+  // Hugs its text and centres. The default disclosure marker is removed.
   > summary {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    width: fit-content;
+    margin-inline: auto;
     cursor: pointer;
-    color: var(--wp--preset--color--brand);
-    font-weight: 600;
     list-style: none; // Firefox marker
+
+    padding: 1.18em 2.65em;
+    border: 2px solid var(--wp--preset--color--brand);
+    border-radius: 5px;
+    background-color: transparent;
+    color: var(--wp--preset--color--brand);
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--x-small);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
 
     &::-webkit-details-marker {
       display: none; // Safari/Chrome marker
+    }
+
+    &:hover,
+    &:focus {
+      background-color: var(--wp--preset--color--brand);
+      color: var(--wp--preset--color--base);
     }
 
     // Chevron — points down when closed, flips up when open.
     &::after {
       content: "";
       display: inline-block;
-      width: 0.5em;
-      height: 0.5em;
-      margin-left: 0.45em;
+      width: 0.45em;
+      height: 0.45em;
       border-right: 2px solid currentColor;
       border-bottom: 2px solid currentColor;
       transform: translateY(-0.12em) rotate(45deg);
       transition: transform 0.2s ease;
     }
+  }
+
+  // Intro note — the first paragraph reads as a soft callout, set apart from the
+  // month-by-month list below it.
+  > p:first-of-type {
+    margin-bottom: var(--wp--preset--spacing--50);
+    padding: var(--wp--preset--spacing--30) var(--wp--preset--spacing--40);
+    background-color: var(--wp--preset--color--surface-2);
+    border: 1px dashed var(--wp--preset--color--muted);
+    border-radius: 8px;
   }
 
   // Open: the whole block becomes a white card panel that lifts off the band.
