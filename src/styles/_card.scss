@@ -31,18 +31,16 @@
   }
 }
 
-// Quote card — a testimonial card marked with a large, soft opening quotation
-// glyph in its top-left corner (decorative, non-selectable). Applied via the
-// "Quote" block style (is-style-quote) on a card group. Sized in rem so it
-// scales with the root type; colour starts at surface-3.
-.sb-card.is-style-quote {
+// Quote treatment — a large, soft opening quotation glyph in the top-left
+// corner (decorative, non-selectable). Applied via the "Quote" block style
+// (is-style-quote) on a card OR any group (e.g. a homepage testimonial band).
+// Sized in rem so it scales with the root type; colour starts at surface-3.
+.is-style-quote {
   position: relative;
 
   &::before {
     content: "\201C"; // “ left double quotation mark
     position: absolute;
-    top: 0.4rem;
-    left: 1rem;
     font-family: var(--wp--preset--font-family--heading);
     font-size: 4rem;
     line-height: 1;
@@ -51,6 +49,19 @@
     color: color-mix(in srgb, var(--wp--preset--color--surface-3) 70%, transparent);
     pointer-events: none;
   }
+}
+
+// Position is context-specific — same glyph, different DOM. Inside a padded
+// card it tucks into the top-left padding; on a bare group (e.g. a testimonial
+// band) it hangs off the top-left corner.
+.sb-card.is-style-quote::before {
+  top: 0.4rem;
+  left: 1rem;
+}
+
+.is-style-quote:not(.sb-card)::before {
+  top: -0.8rem;
+  left: -0.5rem;
 }
 
 // Quick-links list inside a card: unbulleted rows with a soft divider between.
