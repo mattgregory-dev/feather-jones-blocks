@@ -1,0 +1,50 @@
+// ---------------------------------------------------------------------------
+// Reveal — a core/details block that reads as a centered, clickable toggle when
+// closed and becomes a card panel when opened. Applied via the `sb-reveal`
+// class. Used for the "View the Full Curriculum" expander on Live Group Classes.
+// ---------------------------------------------------------------------------
+
+.sb-reveal {
+  // Closed: a centered toggle line with a chevron affordance (the default
+  // disclosure marker is removed so the text can truly centre).
+  > summary {
+    text-align: center;
+    cursor: pointer;
+    color: var(--wp--preset--color--brand);
+    font-weight: 600;
+    list-style: none; // Firefox marker
+
+    &::-webkit-details-marker {
+      display: none; // Safari/Chrome marker
+    }
+
+    // Chevron — points down when closed, flips up when open.
+    &::after {
+      content: "";
+      display: inline-block;
+      width: 0.5em;
+      height: 0.5em;
+      margin-left: 0.45em;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: translateY(-0.12em) rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+  }
+
+  // Open: the whole block becomes a white card panel that lifts off the band.
+  &[open] {
+    background-color: var(--wp--preset--color--base);
+    border: 1px solid var(--wp--preset--color--border);
+    border-radius: 12px;
+    padding: var(--wp--preset--spacing--60);
+
+    > summary {
+      margin-bottom: var(--wp--preset--spacing--40);
+
+      &::after {
+        transform: translateY(0.12em) rotate(-135deg);
+      }
+    }
+  }
+}
