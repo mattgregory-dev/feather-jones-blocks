@@ -63,21 +63,49 @@
     background-color: var(--wp--preset--color--surface-2);
     border: 1px dashed var(--wp--preset--color--muted);
     border-radius: 8px;
+    text-align: center;
   }
 
-  // Open: the whole block becomes a white card panel that lifts off the band.
+  // Open (experiment) — the button stays put in its closed position (floating,
+  // centred at the top) and the panel drops in below it with a gap. The panel is
+  // drawn as a ::before behind the revealed content, so the button reads as
+  // sitting OUTSIDE the panel. --reveal-btn reserves the button height + the gap
+  // above the panel; because the details still starts at the same Y, top:0 on
+  // the absolute summary lands it exactly where it was when closed.
   &[open] {
-    background-color: var(--wp--preset--color--base);
-    border: 1px solid var(--wp--preset--color--border);
-    border-radius: 12px;
-    padding: var(--wp--preset--spacing--60);
+    --reveal-btn: 5rem;
+    position: relative;
+    padding: calc(var(--reveal-btn) + var(--wp--preset--spacing--50))
+      var(--wp--preset--spacing--60) var(--wp--preset--spacing--60);
 
+    // The panel card, behind the content, starting below the button + gap.
+    &::before {
+      content: "";
+      position: absolute;
+      inset: var(--reveal-btn) 0 0;
+      background-color: var(--wp--preset--color--base);
+      border: 1px solid var(--wp--preset--color--border);
+      border-radius: 12px;
+      z-index: 0;
+    }
+
+    // Button pinned to the top-centre — its closed position — above the panel.
     > summary {
-      margin-bottom: var(--wp--preset--spacing--40);
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
 
       &::after {
         transform: translateY(0.12em) rotate(-135deg);
       }
+    }
+
+    // Revealed content layers above the panel background.
+    > *:not(summary) {
+      position: relative;
+      z-index: 1;
     }
   }
 }
