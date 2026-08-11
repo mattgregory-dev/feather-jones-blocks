@@ -20,3 +20,81 @@
   border: 1px dashed var(--wp--preset--color--muted);
   border-radius: 5px;
 }
+
+// ---------------------------------------------------------------------------
+// Tiered plan cards (sb-pricing) — a row of sb-card plans, one `is-featured`.
+// Each card is a flex column so the price block pins to the top and the button
+// to the bottom (grid stretches the cards to equal height, so buttons align
+// across the row). The featured plan carries a "Best Value" badge straddling
+// its top border.
+// ---------------------------------------------------------------------------
+
+.sb-pricing {
+  .sb-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--wp--preset--spacing--50);
+    position: relative; // anchor for the featured badge
+    // Half the default card padding — these plan cards hold little content and
+    // read tighter. Derived from the token so it tracks the scale.
+    padding: calc(var(--wp--preset--spacing--60) / 2);
+
+    // Let the flex gap own the vertical rhythm between the price block, pill and
+    // button (neutralise WP's block-gap margins so they don't stack with it).
+    > * {
+      margin-block: 0;
+    }
+
+    // A little breathing room above the price block (eyebrow / price / payment).
+    > .wp-block-group {
+      margin-block-start: var(--wp--preset--spacing--30);
+    }
+  }
+
+  // Pills hug their text and centre (a flex item that doesn't stretch), instead
+  // of filling the card width.
+  .sb-pill {
+    align-self: center;
+  }
+
+  // Buttons fill the card width at every level (wrapper, block, link).
+  .wp-block-buttons,
+  .wp-block-button,
+  .wp-block-button__link {
+    width: 100%;
+  }
+
+  // Featured plan — "Best Value" pill becomes a badge centred on the top border.
+  .is-featured {
+    // A little extra headroom (over the halved padding) so the badge clears the
+    // "Full Year" label.
+    padding-top: var(--wp--preset--spacing--50);
+
+    > .sb-pill:first-child {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      white-space: nowrap;
+    }
+
+    // Enroll button — solid brand with a white label; hover deepens to
+    // surface-dark-2 rather than the theme's default accent. Styled here (not
+    // via preset colour classes) so the hover isn't fighting a preset
+    // !important.
+    .wp-block-button__link {
+      background-color: var(--wp--preset--color--brand);
+      border-color: var(--wp--preset--color--brand);
+      color: var(--wp--preset--color--base);
+
+      &:hover,
+      &:focus {
+        background-color: var(--wp--preset--color--surface-dark-2);
+        border-color: var(--wp--preset--color--surface-dark-2);
+        color: var(--wp--preset--color--base);
+      }
+    }
+  }
+}
