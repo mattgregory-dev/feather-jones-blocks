@@ -45,6 +45,9 @@
 // Quote citation — kicker-style attribution for core/quote. See _quote.scss.
 @use "./styles/quote";
 
+// Specs table — borderless key/value table (is-style-specs). See _table.scss.
+@use "./styles/table";
+
 // Custom block styles (blocks/*). See src/styles/blocks/.
 @use "./styles/blocks/intro-section";
 @use "./styles/blocks/cta-band";

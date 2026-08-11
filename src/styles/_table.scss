@@ -1,0 +1,117 @@
+// ---------------------------------------------------------------------------
+// Specs table — a borderless key/value table (is-style-specs). Rows are split
+// by a hairline divider (no divider under the last row); the first cell in each
+// row is a Montserrat/brand kicker label, the second is the value in body text.
+// Applied via the "Specs" block style on a core/table with no header row.
+// ---------------------------------------------------------------------------
+
+.wp-block-table.is-style-specs {
+  border: 0;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  // Reset core's per-cell grid; keep only a bottom hairline per row (dropped on
+  // the last row). Border sits on the cells, not the <tr>, for reliable
+  // rendering under border-collapse across browsers.
+  td {
+    border: 0;
+    border-bottom: 1px solid var(--wp--preset--color--border);
+    padding: 0.85rem 0;
+    font-size: var(--wp--preset--font-size--small);
+    vertical-align: baseline;
+  }
+
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  // Label column — kicker treatment: Montserrat, brand, small, tracked caps.
+  // Shrinks to its content so the value column takes the remaining width.
+  td:first-child {
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 1.5rem;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--xx-small);
+    color: var(--wp--preset--color--brand);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Comparison table — a two-option comparison (is-style-comparison). A header
+// row of tinted column caps (surface-2 / surface-3) sits above bold
+// first-column labels; the featured (right) column carries a soft green wash
+// down the body. Rows are split by hairline dividers. Applied via the
+// "Comparison" block style on a core/table WITH a header row — an empty first
+// header cell, then the two option names.
+// ---------------------------------------------------------------------------
+
+.wp-block-table.is-style-comparison {
+  border: 0;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 0;
+    padding: 0.85rem 1.25rem;
+    font-size: var(--wp--preset--font-size--small);
+    text-align: left;
+    vertical-align: baseline;
+  }
+
+  // The label column (and the empty top-left cell) hangs to the content edge.
+  th:first-child,
+  td:first-child {
+    padding-left: 0;
+  }
+
+  // Header underline — overrides core's `.wp-block-table thead` 3px rule (put on
+  // the thead element, not the cells); our compound class out-ranks it.
+  thead {
+    border-bottom: 2px solid var(--wp--preset--color--border);
+  }
+
+  // Header row — kicker caps over the two tinted option columns. The featured
+  // (green) cap is the darker surface-3; the other is surface-2.
+  thead th {
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--xx-small);
+    color: var(--wp--preset--color--contrast-2);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    vertical-align: middle;
+  }
+  thead th:nth-child(2) { background-color: var(--wp--preset--color--surface-2); }
+  thead th:nth-child(3) { background-color: var(--wp--preset--color--surface-3); }
+
+  // Body — hairline row dividers (dropped on the last row).
+  tbody td {
+    border-bottom: 1px solid var(--wp--preset--color--border);
+  }
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  // Featured column keeps a soft green wash — surface-3 lightened toward the
+  // page. Solid fallback first (engines without color-mix), mix override second.
+  tbody td:nth-child(3) {
+    background-color: var(--wp--preset--color--surface-1);
+    background-color: color-mix(in srgb, var(--wp--preset--color--surface-3) 30%, var(--wp--preset--color--base));
+  }
+
+  // First-column labels — bold Montserrat at the default text color.
+  td:first-child {
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--x-small);
+    font-weight: 700;
+  }
+}
