@@ -68,5 +68,15 @@ function sb_register_block_styles() {
 			'label' => __( 'Comparison', 'fj-blocks' ),
 		)
 	);
+
+	// Quote — a card marked with a large soft quotation glyph in its top-left
+	// corner, for testimonials. Pairs with sb-card. Styled in _card.scss.
+	register_block_style(
+		'core/group',
+		array(
+			'name'  => 'quote',
+			'label' => __( 'Quote', 'fj-blocks' ),
+		)
+	);
 }
 add_action( 'init', 'sb_register_block_styles' );
