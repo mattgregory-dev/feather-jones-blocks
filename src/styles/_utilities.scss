@@ -19,3 +19,7 @@
   color: var(--wp--preset--color--surface-3);
   color: color-mix(in srgb, var(--wp--preset--color--surface-3) 72%, transparent);
 }
+
+.sb-band-link a {
+  color: var(--wp--preset--color--base);
+}
