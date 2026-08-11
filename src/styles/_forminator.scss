@@ -1,0 +1,139 @@
+// ---------------------------------------------------------------------------
+// Forminator forms on a CTA band — restyle the plugin's default form into a
+// compact inline signup (email + accent button) matching the theme's button
+// system. Scoped to `.sb-band` so only CTA-band forms are touched; other
+// Forminator forms (e.g. the contact page) keep their own layout.
+//
+// Forminator's JS renders a stable class structure:
+//   form.forminator-custom-form
+//     > .forminator-response-message                 (empty until submit)
+//     > .forminator-row                              (email field)
+//         .forminator-col .forminator-field  input.forminator-input
+//     > .forminator-row.forminator-action-buttons    (submit)
+//         button.forminator-button-submit
+//
+// The form class is doubled (.forminator-custom-form.forminator-custom-form,
+// (0,2,0)) so these overrides out-rank Forminator's own design CSS regardless of
+// enqueue order. On narrow screens the row wraps so the button drops below the
+// input (matching production).
+// ---------------------------------------------------------------------------
+
+.sb-band .forminator-custom-form.forminator-custom-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; // centre the pill on the flex line, not just the form
+  gap: 0;
+  max-width: 500px;
+  margin-inline: auto;
+
+  // Notice/response line sits full-width above the row (empty until submit).
+  .forminator-response-message {
+    flex: 1 1 100%;
+    margin: 0 0 0.75rem;
+  }
+
+  // Neutralise Forminator's own row/column/field spacing so each row is a clean
+  // cell in the flex layout.
+  .forminator-row {
+    margin: 0;
+    padding: 0;
+  }
+  .forminator-col,
+  .forminator-field {
+    margin: 0;
+    padding: 0;
+  }
+
+  // Email field sits at a stable width (no growing to fill the band); the submit
+  // row (Forminator's `.forminator-row-last`) hugs the button so there's no dead
+  // space beside it. Both centre as a pill via justify-content above.
+  > .forminator-row {
+    flex: 0 1 300px;
+  }
+  > .forminator-row.forminator-row-last {
+    flex: 0 0 auto;
+  }
+
+  // Input — white field, dark text, muted placeholder; rounded on the left so it
+  // reads as one pill with the button flush on its right.
+  .forminator-input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 3.25rem;
+    padding: 0 1.1rem;
+    background-color: var(--wp--preset--color--base);
+    border: 1px solid transparent;
+    border-radius: 6px 0 0 6px;
+    color: var(--wp--preset--color--contrast);
+    font-family: var(--wp--preset--font-family--body);
+    font-size: var(--wp--preset--font-size--small);
+    line-height: 1.2;
+
+    &::placeholder {
+      color: var(--wp--preset--color--muted);
+      opacity: 1;
+    }
+    &:focus {
+      outline: none;
+      border-color: var(--wp--preset--color--accent);
+    }
+  }
+
+  // Submit — the theme's button treatment (accent, Montserrat, uppercase caps),
+  // dark text on the accent to match the CTA screenshot; rounded on the right.
+  .forminator-button-submit {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.25rem;
+    padding: 0 1.75rem;
+    background-color: var(--wp--preset--color--accent);
+    border: 2px solid var(--wp--preset--color--accent);
+    border-radius: 0 6px 6px 0;
+    color: var(--wp--preset--color--contrast-2);
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--x-small);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+
+    &:hover,
+    &:focus {
+      background-color: var(--wp--preset--color--accent-strong);
+      border-color: var(--wp--preset--color--accent-strong);
+    }
+  }
+
+  // Small screens: the field and button each take the full width — the button
+  // drops below the input, both fully rounded, with a gap between them.
+  @media (width <= 600px) {
+    > .forminator-row,
+    > .forminator-row.forminator-row-last {
+      flex: 1 1 100%;
+    }
+    // Let the button's column/field span the row so width:100% fills it.
+    .forminator-col,
+    .forminator-field {
+      width: 100%;
+    }
+    .forminator-input {
+      border-radius: 6px;
+    }
+    .forminator-button-submit {
+      width: 100%;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+// Hide Forminator's admin-only "Edit form" link so the logged-in view matches
+// the public one. Global (not band-scoped) — admins still edit via wp-admin.
+.forminator-edit-module {
+  display: none;
+}
