@@ -21,6 +21,7 @@
     color-mix(in srgb, var(--wp--preset--color--brand) 35%, transparent),
     transparent
   );
+  opacity: 0.8;
 }
 
 // Full width: core caps the default separator at 100px via a 3-class selector
