@@ -14,6 +14,10 @@
 // same way in both places.
 .sb-card.sb-card {
   background-color: var(--wp--preset--color--base);
+  // A white panel carries its own dark text, so a card stays readable on any
+  // band — including a dark CTA band that sets its own text to a light colour
+  // (which the card would otherwise inherit onto its white surface).
+  color: var(--wp--preset--color--contrast);
   padding: var(--wp--preset--spacing--60);
   border: 1px solid var(--wp--preset--color--border);
   border-radius: 12px;
@@ -24,6 +28,28 @@
   figure.wp-block-image img {
     background-color: var(--wp--preset--color--surface-3);
     border-radius: 100%;
+  }
+}
+
+// Quote card — a testimonial card marked with a large, soft opening quotation
+// glyph in its top-left corner (decorative, non-selectable). Applied via the
+// "Quote" block style (is-style-quote) on a card group. Sized in rem so it
+// scales with the root type; colour starts at surface-3.
+.sb-card.is-style-quote {
+  position: relative;
+
+  &::before {
+    content: "\201C"; // “ left double quotation mark
+    position: absolute;
+    top: 0.4rem;
+    left: 1rem;
+    font-family: var(--wp--preset--font-family--heading);
+    font-size: 4rem;
+    line-height: 1;
+    // surface-3 at 70% alpha — solid fallback first, color-mix override second.
+    color: var(--wp--preset--color--surface-3);
+    color: color-mix(in srgb, var(--wp--preset--color--surface-3) 70%, transparent);
+    pointer-events: none;
   }
 }
 
