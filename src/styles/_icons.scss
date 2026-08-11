@@ -1,0 +1,51 @@
+// ---------------------------------------------------------------------------
+// Icon + label rows (sb-trust) — a line of reassurance items, each with a
+// semantic line icon. The icon is an inline SVG rendered through a CSS mask on
+// ::before, so it's coloured by `background-color` (brand here) with no external
+// icon library and no <svg> blobs in the page content. Add `.sb-trust` plus a
+// modifier (--shield / --trip / --award) to a paragraph.
+//
+// Icons are Lucide line icons (ISC-licensed); as masks the stroke colour is
+// irrelevant, so they use a literal `black` stroke and the mask supplies shape.
+// ---------------------------------------------------------------------------
+
+$sb-icon-shield: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/><path d='m9 12 2 2 4-4'/></svg>";
+
+$sb-icon-trip: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m8 3 4 8 5-5 5 15H2L8 3z'/></svg>";
+
+$sb-icon-award: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='8' r='6'/><path d='M15.477 12.89 17 21l-5-3-5 3 1.523-8.11'/></svg>";
+
+.sb-trust {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+
+  &::before {
+    content: "";
+    flex: none;
+    width: 1.15em;
+    height: 1.15em;
+    background-color: var(--wp--preset--color--brand);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+  }
+}
+
+.sb-trust--shield::before {
+  -webkit-mask-image: url($sb-icon-shield);
+  mask-image: url($sb-icon-shield);
+}
+
+.sb-trust--trip::before {
+  -webkit-mask-image: url($sb-icon-trip);
+  mask-image: url($sb-icon-trip);
+}
+
+.sb-trust--award::before {
+  -webkit-mask-image: url($sb-icon-award);
+  mask-image: url($sb-icon-award);
+}
