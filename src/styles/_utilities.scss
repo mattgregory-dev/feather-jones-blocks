@@ -8,3 +8,14 @@
 .has-balanced-text {
   text-wrap: balance;
 }
+
+// Softened surface-3 for secondary text on a dark band (eyebrow, attribution,
+// fine print) — the dark-background cousin of the `muted` token. Derived from
+// the token at ~72% alpha via color-mix (solid fallback first) so a reseeded
+// surface-3 still ripples; never a hardcoded rgba/hex or an opacity-variant
+// token. Loads after _card.scss, so on a shared element it out-ranks
+// `.sb-eyebrow`'s brand colour on source order — the two classes work in tandem.
+.sb-band-note {
+  color: var(--wp--preset--color--surface-3);
+  color: color-mix(in srgb, var(--wp--preset--color--surface-3) 72%, transparent);
+}
