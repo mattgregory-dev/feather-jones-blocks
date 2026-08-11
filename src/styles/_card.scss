@@ -4,11 +4,27 @@
 // contact layout (form + sidebar) and reusable elsewhere.
 // ---------------------------------------------------------------------------
 
-.sb-card {
+// Doubled class (0,2,0) on purpose: a nested card also carries WP's
+// `has-global-padding` class (root-padding-aware alignments), whose
+// `.has-global-padding { padding-inline: root }` is an equal (0,1,0) match on
+// the inline axes. On the front end our bundle enqueues last (priority 999) so
+// a single `.sb-card` wins the source-order tie; in the editor the
+// global-styles inline CSS loads AFTER our bundle and would win instead,
+// wiping the card's left/right padding. Out-ranking it settles the cascade the
+// same way in both places.
+.sb-card.sb-card {
   background-color: var(--wp--preset--color--base);
   padding: var(--wp--preset--spacing--60);
   border: 1px solid var(--wp--preset--color--border);
   border-radius: 12px;
+
+  // Icon well — a card's line-art icon sits on a soft circular surface-3
+  // background (the homepage feature cards). Colour + a full round; the icon's
+  // own size and whitespace do the rest.
+  figure.wp-block-image img {
+    background-color: var(--wp--preset--color--surface-3);
+    border-radius: 100%;
+  }
 }
 
 // Quick-links list inside a card: unbulleted rows with a soft divider between.
@@ -38,6 +54,16 @@
   color: var(--wp--preset--color--brand);
   text-transform: uppercase;
   letter-spacing: 0.16rem;
+}
+
+// The heading after an eyebrow sits a full rhythm step below — spacing--50,
+// matching the spotlight/hero — regardless of a tighter block-gap on a
+// centered-header group. Keeps the gap on TOP of the heading (the theme's
+// margin-on-top convention), never on the eyebrow. Two classes (0,2,0)
+// deliberately outrank WP's layout block-gap rule `.wp-container-… > * + *`
+// (0,1,0), which loads later and would otherwise win a specificity tie.
+.sb-eyebrow + .wp-block-heading {
+  margin-block-start: var(--wp--preset--spacing--50);
 }
 
 // Credential pill — a small rounded tag; sits in a flex-wrap group.
