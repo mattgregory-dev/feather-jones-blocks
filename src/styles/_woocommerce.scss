@@ -1,0 +1,426 @@
+// WooCommerce — cart, checkout, my-account. Ported from the classic fj theme's
+// layout/_woocommerce.scss and re-scoped to what our block-theme DOM actually
+// renders. `.woocommerce-page` (and `.woocommerce-cart/-account/-checkout`) are
+// body classes WooCommerce adds regardless of theme, so they carry over. Raw
+// hex / old-theme vars are swapped for theme.json tokens.
+//
+// Dropped from the port (dead or unused here):
+//   - single-product + product-archive layouts — no Woo product pages (LD
+//     add-to-cart goes straight to checkout).
+//   - `.checkout-cart` / `.checkout-myaccount` / `.login-btn` — classic-theme
+//     custom checkout markup our block checkout doesn't produce.
+//   - `.sticky-active` — no sticky header yet.
+//   - `main article` bordered card — our Woo pages have no <article>; they're
+//     already `is-layout-constrained`.
+
+.woocommerce-page {
+  // Page card — prod wrapped cart/checkout/account in a bordered white panel
+  // (`main article`). Our block Woo pages have no <article>, so the card lives
+  // on the page <main> itself. Flattens to full-bleed on mobile like prod.
+  &.woocommerce-cart main,
+  &.woocommerce-checkout main,
+  &.woocommerce-account main,
+  &.single-product main {
+    max-width: 1120px;
+    margin: 2rem auto 3rem;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    background-color: var(--wp--preset--color--base);
+    border: 1px solid var(--wp--preset--color--border);
+    border-radius: 8px;
+    box-shadow: var(--wp--preset--shadow--soft);
+
+    @media (max-width: 768px) {
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+
+  // Let the account content fill the card. The entry-content is a constrained
+  // layout, which caps its direct child (`.my-account-login`) to contentSize —
+  // un-constrain it so the 2-col account layout fills the card width.
+  &.woocommerce-account .my-account-login {
+    max-width: none;
+    width: 100%;
+  }
+  // The account entry-content carries `has-global-padding`, which adds root
+  // padding inside the card (doubling up). Zero it — the card supplies padding.
+  &.woocommerce-account .entry-content {
+    padding-inline: 0;
+  }
+
+  // Checkout tweaks.
+  &.woocommerce-checkout {
+    .wc-block-components-payment-methods__save-card-info {
+      margin-top: 1.2rem;
+    }
+    .wc-block-components-checkbox__label a {
+      text-decoration: underline;
+    }
+    // Prod hid the footer on checkout to keep focus on the form.
+    footer {
+      display: none;
+    }
+
+    // Distraction-free header: drop only the primary nav. The logo, mini-cart
+    // and account icon stay — the cart icon is the one deliberate "exit" back to
+    // the cart (matching prod's single cart link). Checkout uses our
+    // page-checkout.html template, which still pulls the shared header part — we
+    // trim it here rather than fork a second header.
+    .site-header .wp-block-navigation {
+      display: none;
+    }
+
+    // Constrain the (full-bleed) header bar to the card's width and centre it,
+    // so the logo + account icon line up over the checkout card below.
+    .site-header {
+      max-width: 1120px;
+      margin-inline: auto;
+    }
+
+    // Shrink the (otherwise large) logo on checkout. Front-end only, so no JS
+    // re-asserts the block's inline width — max-width caps it cleanly.
+    .site-header .wp-block-site-logo img {
+      max-width: 250px;
+      height: auto;
+    }
+
+    // Pull the card up toward the header (the shared card rule sets a 2rem top
+    // margin; tighten to a spacing token). Later source order wins at equal
+    // specificity — no !important needed.
+    main {
+      margin-top: var(--wp--preset--spacing--50);
+    }
+  }
+
+  .woocommerce-notices-wrapper {
+    .woocommerce-message,
+    .woocommerce-error {
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+
+  // Cart (WooCommerce block cart).
+  &.woocommerce-cart {
+    @media (max-width: 800px) {
+      .wc-block-cart-item__total {
+        display: none;
+      }
+    }
+
+    table.wc-block-cart-items {
+      td.wc-block-cart-item__image img {
+        border-radius: 6px;
+      }
+      .wc-block-cart-items__row {
+        .wc-block-components-product-name,
+        .wc-block-components-formatted-money-amount {
+          font-size: 1.2rem;
+        }
+        .wc-block-components-product-details__payment-type {
+          font-size: 1rem;
+        }
+      }
+    }
+
+    // Empty-cart "browse" button.
+    .browse-retreats {
+      margin: 1rem 0;
+    }
+  }
+
+  // Coupon form — appears on BOTH cart and checkout, so scoped at page level.
+  .wc-block-components-totals-coupon__form {
+    align-items: center;
+
+    // Compact black "APPLY" pill matching prod — stretch to the input's height,
+    // horizontal padding only (the black fill comes from the primary-button
+    // rule below).
+    .wc-block-components-totals-coupon__button {
+      flex: 0 0 auto;
+      align-self: stretch;
+      min-height: 0;
+      margin: 0;
+      padding: 0 1.2em;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  // Single product — fallback only. LD add-to-cart bypasses product pages, but
+  // the URLs stay live, so a direct visitor still gets a proper product page.
+  // Our theme uses WooCommerce's BLOCK product template (it handles its own
+  // layout), so the classic PHP-template CSS (#primary/.summary/.product_title/
+  // .woocommerce-tabs/.qty/variations_form) is NOT ported — it's all dead here.
+  // We only make it consistent: card wrapper (above), black add-to-cart (below),
+  // and a rounded gallery image (the one classic class that survives).
+  &.single-product {
+    .woocommerce-product-gallery__image {
+      border-radius: 0.8rem;
+      overflow: hidden;
+      box-shadow: var(--wp--preset--shadow--soft);
+    }
+  }
+
+  // My Account.
+  &.woocommerce-account {
+    .my-account-login {
+      h2 {
+        display: none;
+      }
+      .woocommerce form.login {
+        margin-bottom: 0;
+
+        p.woocommerce-LostPassword {
+          margin-bottom: 0;
+        }
+      }
+    }
+    .woocommerce-form-login__rememberme {
+      display: none;
+    }
+
+    .woocommerce-MyAccount-navigation {
+      margin: 0;
+      padding: 0;
+
+      @media (min-width: 1001px) {
+        width: 25%;
+      }
+      @media (max-width: 1000px) {
+        float: none;
+        width: 100%;
+      }
+
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        li {
+          // Woo sets `li { padding: 1em 0 }`; the ul already has `gap`, so the
+          // vertical padding just bloats each row. Zero it.
+          margin: 0;
+          padding: 0;
+
+          &.woocommerce-MyAccount-navigation-link--customer-logout a {
+            font-weight: 600;
+          }
+
+          a {
+            display: block;
+            padding: 0.6rem 0.9rem;
+            border-radius: 0.4rem;
+            text-decoration: none;
+            text-transform: capitalize;
+            font-family: var(--wp--preset--font-family--body);
+            font-size: 0.95rem;
+            color: var(--wp--preset--color--contrast-2);
+            border: 1px solid transparent;
+            transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+
+            &:hover {
+              background-color: var(--wp--preset--color--surface-2);
+              border-color: var(--wp--preset--color--border);
+              color: var(--wp--preset--color--contrast-2);
+            }
+          }
+        }
+      }
+
+      // Active nav item — prod used black; brand keeps it on-theme.
+      .is-active > a {
+        background-color: var(--wp--preset--color--brand);
+        border-color: var(--wp--preset--color--brand);
+        color: var(--wp--preset--color--base);
+
+        &:hover {
+          background-color: var(--wp--preset--color--surface-dark-2);
+          border-color: var(--wp--preset--color--surface-dark-2);
+          color: var(--wp--preset--color--base);
+        }
+      }
+    }
+
+    .woocommerce-MyAccount-content {
+      @media (max-width: 1000px) {
+        float: none;
+        width: 100%;
+        margin-top: 2rem;
+        border-top: 1px solid var(--wp--preset--color--border);
+        padding-top: 2rem;
+      }
+
+      h2 {
+        font-size: 1.4rem;
+        margin: 0.6rem 0;
+      }
+      .woocommerce-info {
+        border-top-color: var(--wp--preset--color--contrast);
+
+        &::before {
+          color: var(--wp--preset--color--contrast);
+        }
+      }
+      #add_payment_method #payment {
+        background-color: var(--wp--preset--color--base);
+      }
+    }
+
+    &.woocommerce-dashboard {
+      .woocommerce-MyAccount-content {
+        font-family: var(--wp--preset--font-family--body);
+        color: var(--wp--preset--color--contrast-2);
+
+        // LearnDash injects a profile card/summary into the account dashboard.
+        .ld-profile-summary {
+          margin-top: 0;
+        }
+        .ld-profile-card {
+          display: none;
+        }
+
+        p {
+          margin: 0 0 1rem;
+          line-height: 1.6;
+
+          a {
+            color: var(--wp--preset--color--contrast-2);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            font-weight: 600;
+            transition: color 200ms ease;
+
+            &:hover {
+              color: var(--wp--preset--color--brand);
+            }
+          }
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+
+  // Button spacing + hide the default Woo button icons.
+  .wc-block-components-button,
+  .wc-block-components-checkout-return-to-cart-button,
+  .woocommerce-MyAccount-content .edit,
+  .woocommerce-Button.button,
+  .woocommerce button.button,
+  .browse-retreats,
+  .woocommerce a.button {
+    margin: 1rem 0;
+  }
+  .wc-block-components-checkout-return-to-cart-button,
+  .woocommerce-MyAccount-content .edit,
+  .woocommerce-Button.button,
+  .woocommerce button.button,
+  .woocommerce a.button {
+    svg {
+      display: none;
+    }
+  }
+
+  // Primary Woo action buttons — black, matching prod (Proceed to Checkout,
+  // Place Order, account save/edit, empty-cart browse). The theme.json accent
+  // button style would otherwise render them orange. Express-pay buttons
+  // (Apple/Google Pay/Link) are provider-controlled and already black.
+  .wc-block-components-button.contained,
+  .wc-block-cart__submit-button .wc-block-components-button,
+  .woocommerce-Button.button,
+  .woocommerce button.button,
+  .woocommerce a.button,
+  .single_add_to_cart_button,
+  .browse-retreats {
+    background-color: var(--wp--preset--color--black);
+    border-color: var(--wp--preset--color--black);
+    color: var(--wp--preset--color--base);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+      border-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+      color: var(--wp--preset--color--base);
+    }
+  }
+}
+
+// Mini-cart flyout drawer. Lives in the header on EVERY page (not just
+// `.woocommerce-page`), so scoped to the drawer classes directly.
+.wc-block-mini-cart__drawer {
+  // Rounded cart-item thumbnails, matching the cart page.
+  .wc-block-cart-item__image img {
+    border-radius: 6px;
+  }
+
+  // Content text to our medium size. !important beats Woo's deep cart-item
+  // selector (`table.wc-block-cart-items .wc-block-cart-items__row …`).
+  .wc-block-components-product-name,
+  .wc-block-components-product-price,
+  .wc-block-components-product-price__value,
+  .wc-block-components-totals-item__label,
+  .wc-block-components-totals-item__value {
+    font-size: var(--wp--preset--font-size--medium) !important;
+  }
+
+  .wc-block-mini-cart__footer-actions {
+    // "Go to checkout" — solid black primary.
+    .wc-block-mini-cart__footer-checkout {
+      background-color: var(--wp--preset--color--black);
+      border: 1px solid var(--wp--preset--color--black);
+      color: var(--wp--preset--color--base);
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+        border-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+        color: var(--wp--preset--color--base);
+      }
+    }
+
+    // "View my cart" — secondary, black outline; fills solid black on hover.
+    // Woo's `.is-style-outline` draws its ring with an inset box-shadow, so we
+    // zero it and use a single real border (otherwise: double outline, and on
+    // hover the currentColor shadow became a white ring on the black fill).
+    .wc-block-mini-cart__footer-cart {
+      background-color: transparent;
+      border: 1px solid var(--wp--preset--color--black);
+      box-shadow: none;
+      color: var(--wp--preset--color--black);
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: var(--wp--preset--color--black);
+        border-color: var(--wp--preset--color--black);
+        box-shadow: none;
+        color: var(--wp--preset--color--base);
+      }
+    }
+  }
+}
+
+// Product-name links (cart page + mini-cart drawer) — plain black text, no
+// underline; underline on hover, still black. Scoped to the two Woo contexts
+// (never site-wide).
+.woocommerce-page a.wc-block-components-product-name,
+.wc-block-mini-cart__drawer a.wc-block-components-product-name {
+  color: var(--wp--preset--color--contrast-2);
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: var(--wp--preset--color--contrast-2);
+    text-decoration: underline;
+  }
+}
