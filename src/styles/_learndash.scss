@@ -1,0 +1,621 @@
+// Course-overview shell (block template single-sfwd-courses.html):
+// the LearnDash content sits inside a bordered card, under a centered
+// eyebrow + title + meta bar. Ported from the classic single-course layout.
+.sb-course-card {
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  background-color: var(--wp--preset--color--base);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 8px;
+  box-shadow: var(--wp--preset--shadow--soft);
+}
+
+.sb-course-eyebrow {
+  display: block;
+  margin: 0 auto 0.5rem;
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--wp--preset--color--brand);
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.sb-course-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 1.5rem auto 1.5rem;
+  .cm {
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--muted);
+    & + .cm::before {
+      content: "\00B7";
+      margin-right: 0.35rem;
+    }
+  }
+}
+
+// Course description body copy (the course post-content blocks LearnDash
+// renders in the content tab): normalise to our medium body size.
+.sb-course-card {
+  .ld-tab-bar__panel {
+    p,
+    .wp-block-list,
+    .wp-block-list li {
+      font-size: var(--wp--preset--font-size--medium);
+    }
+  }
+}
+
+// Enrollment sidebar (logged-out / not-enrolled): two columns with the
+// price/enroll box FIRST (~33%) and the course content on the right (~66%),
+// overriding LD's default content-left / sidebar-right order.
+.sb-course-card {
+  .ld-layout.ld-breakpoint--extra-small:not(.ld-layout--no-sidebar) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-areas: "header header" "sidebar content";
+
+    &.ld-layout--no-header {
+      grid-template-areas: "sidebar content";
+    }
+  }
+
+  // Center everything inside the enrollment box, including the "or Log In" line.
+  .ld-enrollment {
+    text-align: center;
+    gap: var(--wp--preset--spacing--50);
+
+    .ld-enrollment__pricing,
+    .ld-enrollment__join,
+    .ld-enrollment__login {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ld-enrollment__pricing {
+      gap: var(--wp--preset--spacing--50);
+
+      .ld-enrollment__pricing-label {
+        font-family: var(--wp--preset--font-family--eyebrow);
+        color: var(--wp--preset--color--brand);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+      }
+
+      .ld-enrollment__pricing-price {
+        font-size: 2rem;
+        font-weight: 400;
+        font-family: var(--wp--preset--font-family--heading);
+      }
+    }
+
+    .ld-enrollment__join {
+      gap: var(--wp--preset--spacing--50);
+    }
+
+    .ld-enrollment__login-text,
+    .ld-enrollment__login-link {
+      font-size: var(--wp--preset--font-size--medium);
+    }
+    .ld-enrollment__login-link {
+      color: var(--wp--preset--color--link);
+
+      &:hover,
+      &:focus {
+        color: var(--wp--preset--color--link-hover);
+      }
+    }
+  }
+}
+
+// LearnDash buttons: match the site's primary button spec (theme.json button
+// element) but solid brand instead of accent. Scoped to the LD wrapper so
+// site-wide buttons are untouched. LearnDash injects a dynamic inline
+// stylesheet (learndash-front-line-css) that styles these with `!important` AND
+// a `:not(.ld--ignore-inline-css)` selector, and it loads after our CSS — so we
+// need both `!important` and higher specificity (the `body.learndash-cpt`
+// anchor) to win. This is the one place `!important` is unavoidable.
+body.learndash-cpt .learndash-wrapper {
+  .ld-button,
+  a.ld-button,
+  .btn-join,
+  #btn-join,
+  .wp-element-button,
+  .learndash_mark_complete_button,
+  .wpProQuiz_button,
+  .wpProQuiz_button2,
+  a#quiz_continue_link,
+  .learndash-course-reviews-form input[type="submit"],
+  form#loginform input[type="submit"] {
+    font-family: var(--wp--preset--font-family--eyebrow) !important;
+    font-size: var(--wp--preset--font-size--x-small) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    text-decoration: none !important;
+    line-height: 1.2 !important;
+    padding: 1.18em 2.65em !important;
+    border: 2px solid var(--wp--preset--color--brand) !important;
+    border-radius: 5px !important;
+    background-color: var(--wp--preset--color--brand) !important;
+    color: var(--wp--preset--color--base) !important;
+    cursor: pointer;
+
+    &:hover,
+    &:active {
+      background-color: var(--wp--preset--color--surface-dark-2) !important;
+      border-color: var(--wp--preset--color--surface-dark-2) !important;
+      color: var(--wp--preset--color--base) !important;
+    }
+    &:focus,
+    &:focus-visible {
+      outline: 3px solid var(--wp--preset--color--surface-3) !important;
+      outline-offset: 2px !important;
+      box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3) !important;
+    }
+  }
+}
+
+// Quiz buttons specifically: LD's front-line CSS hits these with a 6-class
+// :not() chain + !important (higher specificity than the rule above). Mirror
+// its full selector and add the `body.learndash-cpt` anchor to out-specify it.
+body.learndash-cpt .learndash-wrapper .wpProQuiz_content
+  .wpProQuiz_button:not([disabled]):not(.wpProQuiz_button_reShowQuestion):not(.wpProQuiz_button_restartQuiz) {
+  background-color: var(--wp--preset--color--brand) !important;
+  border-color: var(--wp--preset--color--brand) !important;
+  color: var(--wp--preset--color--base) !important;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--wp--preset--color--surface-dark-2) !important;
+    border-color: var(--wp--preset--color--surface-dark-2) !important;
+    color: var(--wp--preset--color--base) !important;
+  }
+  &:focus,
+  &:focus-visible {
+    outline: 3px solid var(--wp--preset--color--surface-3) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3) !important;
+  }
+}
+
+// Breadcrumb placement: on COURSE pages the breadcrumb nav is a bare direct
+// child of the grid with no named area, so LD auto-places it in an implicit
+// row at the BOTTOM. Add a `breadcrumb` area at the top and pin the nav to it.
+// Guarded by :has(> nav.ld-breadcrumbs) so LESSON/TOPIC pages — where the nav
+// is nested inside .ld-layout__header, not a direct grid child — are untouched.
+.sb-course-card {
+  .ld-layout:has(> nav.ld-breadcrumbs) {
+    grid-template-areas: "breadcrumb" "header" "sidebar" "content";
+
+    &.ld-layout--no-header {
+      grid-template-areas: "breadcrumb" "sidebar" "content";
+    }
+    &.ld-layout--no-sidebar {
+      grid-template-areas: "breadcrumb" "header" "content";
+    }
+    &.ld-layout--no-sidebar.ld-layout--no-header {
+      grid-template-areas: "breadcrumb" "content";
+    }
+    // Two-column enrolment layout: breadcrumb spans both columns on top.
+    &.ld-breakpoint--extra-small:not(.ld-layout--no-sidebar) {
+      grid-template-areas: "breadcrumb breadcrumb" "header header" "sidebar content";
+
+      &.ld-layout--no-header {
+        grid-template-areas: "breadcrumb breadcrumb" "sidebar content";
+      }
+    }
+
+    // !important beats LD's high-specificity `.ld-layout > *:not(...)` rule.
+    > nav.ld-breadcrumbs {
+      grid-area: breadcrumb !important;
+    }
+  }
+}
+
+// Course overview only (not lessons/topics/quizzes) — center the progress bar.
+.sb-course-card .learndash-wrapper--course {
+  .ld-progress-bar {
+    justify-content: center;
+  }
+}
+
+// Breadcrumb: strip LearnDash's default pill (grey fill + rounded corners),
+// keep only a bottom rule. Scoped to our card wrapper so it beats LD defaults
+// (the classic ported rules below are scoped to a DOM the block theme lacks).
+.sb-course-card {
+  .ld-breadcrumbs {
+    background: transparent;
+    border-radius: 0;
+    border-bottom: 1px solid var(--wp--preset--color--border);
+    // Flush left/right, with the quiz nav's 0.5em top/bottom on both variants
+    // (the modern breadcrumb's `all: unset` otherwise leaves it with none).
+    padding: 0.5em 0;
+
+    .ld-breadcrumbs__item {
+      font-size: var(--wp--preset--font-size--medium);
+      a.ld-breadcrumbs__link,
+      span.ld-breadcrumbs__link {
+        font-size: var(--wp--preset--font-size--medium);
+        font-weight: 400;
+      }
+      // !important + our higher specificity beats LD's inline
+      // `.ld-breadcrumbs a { color: #00a2e8 !important }`.
+      a.ld-breadcrumbs__link {
+        color: var(--wp--preset--color--link) !important;
+      }
+      a.ld-breadcrumbs__link:hover {
+        text-decoration: underline;
+        color: var(--wp--preset--color--link-hover) !important;
+      }
+      // Current page: LD renders it as an <a aria-current="page"> on inner
+      // pages (a real link), but it shouldn't read as one. Force contrast
+      // colour, no underline, default cursor. !important beats the general
+      // link rule above (this selector is more specific, so it wins the tie).
+      &:last-child a.ld-breadcrumbs__link,
+      a.ld-breadcrumbs__link[aria-current="page"],
+      &:last-child span.ld-breadcrumbs__link {
+        color: var(--wp--preset--color--contrast) !important;
+        cursor: default;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    // Legacy (non-modern) breadcrumb markup — used on QUIZ pages. Match the
+    // modern breadcrumb: medium blue links, "/" delimiter, plain contrast
+    // current page.
+    ol.ld-breadcrumbs-segments {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        font-size: var(--wp--preset--font-size--medium);
+
+        a {
+          font-size: var(--wp--preset--font-size--medium);
+          font-weight: 400;
+          color: var(--wp--preset--color--link) !important;
+
+          // !important beats LD's `.learndash-wrapper:not(--modern) a {
+          // text-decoration: none }` on the quiz (legacy) wrapper.
+          &:hover {
+            text-decoration: underline !important;
+            color: var(--wp--preset--color--link-hover) !important;
+          }
+        }
+        &::after {
+          content: "/";
+          padding: 0 0.4rem;
+          color: var(--wp--preset--color--muted);
+        }
+        &:last-child {
+          a {
+            color: var(--wp--preset--color--contrast) !important;
+            cursor: default;
+
+            &:hover {
+              text-decoration: none !important;
+            }
+          }
+          &::after {
+            content: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Featured image rounded corners
+.sb-course-card {
+  .ld-tab-bar__panel .ld-featured-image {
+    border-radius: 8px;
+  }
+}
+
+// Course / Reviews tab bar + Reviews panel. Ported from the classic theme and
+// re-scoped to our card (the original targeted a `main#main-content` DOM the
+// block theme doesn't produce). Raw hex/rgba swapped for theme tokens; LD-blue
+// accents swapped for brand.
+.sb-course-card {
+  // Tab nav (Course | Reviews).
+  .ld-tab-bar__tabs {
+    border-bottom: 1px solid var(--wp--preset--color--border);
+  }
+  .ld-tab-bar__tab {
+    background: transparent;
+    border: 0;
+    border-bottom: 4px solid transparent;
+    box-shadow: none;
+    color: inherit;
+    outline: none;
+    position: relative;
+
+    &:hover,
+    &:focus,
+    &:focus-visible {
+      background: transparent;
+      color: inherit;
+    }
+    &::before,
+    &::after {
+      content: none;
+    }
+    &:focus {
+      box-shadow: none;
+    }
+    &:focus-visible {
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--wp--preset--color--brand) 30%, transparent);
+      border-radius: 6px;
+    }
+    &[aria-selected="true"] {
+      color: var(--wp--preset--color--brand);
+      border-bottom-color: var(--wp--preset--color--brand);
+    }
+  }
+
+  // Average score row + LD's own notice banner (hidden).
+  .ld-tab-bar__panel {
+    .average-review {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      column-gap: 1rem;
+
+      .learndash-course-reviews-review-stars {
+        font-size: 1.9rem;
+      }
+    }
+    .notices-container {
+      display: none;
+    }
+  }
+
+  // Reviews: login/submit form + review cards.
+  .learndash-course-reviews-container {
+    font-family: var(--wp--preset--font-family--body);
+    color: var(--wp--preset--color--contrast-2);
+
+    label {
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.875rem;
+      color: var(--wp--preset--color--contrast-2);
+    }
+    .required {
+      color: var(--wp--preset--color--accent);
+    }
+    input[type="hidden"] {
+      display: none;
+    }
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      border: 1px solid var(--wp--preset--color--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--wp--preset--color--base);
+      color: var(--wp--preset--color--contrast-2);
+      font-size: 1rem;
+      line-height: 1.4;
+      box-shadow: none;
+      transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+
+      &::placeholder {
+        color: var(--wp--preset--color--muted);
+      }
+      &:hover {
+        border-color: var(--wp--preset--color--muted);
+      }
+      &:focus-visible {
+        outline: none;
+        border-color: var(--wp--preset--color--brand);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--wp--preset--color--brand) 25%, transparent);
+      }
+    }
+    textarea {
+      min-height: 8.75rem;
+      resize: vertical;
+    }
+
+    .learndash-course-reviews-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 19.75rem;
+
+      form#loginform {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+
+        // The login fields are <p> wrappers — drop their native margin so the
+        // flex gap is the only spacing.
+        > p {
+          margin: 0;
+        }
+
+        .login-username,
+        .login-password,
+        .login-submit {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .login-remember {
+          display: none;
+        }
+        input[type="submit"] {
+          width: 100%;
+        }
+      }
+
+      // Logged-in review-submission form: LD sets a tight inline row-gap and
+      // stacks label/input flush. Space it with WP spacing presets (the row-gap
+      // override needs !important to beat the inline style).
+      form[name="learndash_course_reviews"] {
+        .grid-container.full {
+          display: flex !important;
+          flex-direction: column;
+          gap: var(--wp--preset--spacing--50);
+        }
+        .grid-x .cell {
+          display: flex;
+          flex-direction: column;
+          gap: var(--wp--preset--spacing--30);
+        }
+        input[type="submit"] {
+          width: 100%;
+        }
+
+        // Star rating labels are clickable — show the link/pointer cursor.
+        .learndash-course-reviews-stars-input .review-star label {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .reviews-list {
+      margin-bottom: 4rem;
+
+      .ld_review {
+        padding: 0;
+        margin-bottom: 2rem;
+
+        .learndash-course-reviews-body {
+          background: var(--wp--preset--color--base);
+          border: 1px solid var(--wp--preset--color--border);
+          border-radius: 1rem;
+          padding: 1.25rem 1.5rem;
+          box-shadow: var(--wp--preset--shadow--soft);
+          display: grid;
+          gap: 0.75rem;
+
+          .learndash-course-reviews-meta {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+          }
+          .review-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--wp--preset--color--contrast-2);
+          }
+          .learndash-course-reviews-metadata {
+            font-size: 0.9rem;
+            color: var(--wp--preset--color--muted);
+
+            a {
+              color: inherit;
+              text-decoration: none;
+            }
+          }
+          .learndash-course-reviews-review-stars {
+            font-size: 1.3rem;
+            line-height: 1;
+          }
+          .learndash-course-reviews-content {
+            font-size: 1rem;
+            color: var(--wp--preset--color--contrast-2);
+
+            p:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Quiz body (wpProQuiz markup). Ported from the classic theme and re-scoped to
+// our card. Question options highlight on hover; the duplicate header is hidden;
+// the results score bar uses brand; raw values tokenized.
+.sb-course-card {
+  .wpProQuiz_content {
+    // LD prints the question title twice (h5 + legend) — hide the h5.
+    h5.wpProQuiz_header {
+      display: none !important;
+    }
+
+    fieldset {
+      margin-top: 2rem !important;
+
+      legend {
+        padding-bottom: 1.2rem;
+
+        p {
+          font-size: var(--wp--preset--font-size--medium);
+          margin-bottom: 1rem;
+        }
+      }
+
+      .wpProQuiz_questionList[data-type="multiple"],
+      .wpProQuiz_questionList[data-type="single"] {
+        .wpProQuiz_questionListItem:hover label {
+          cursor: pointer;
+          background-color: color-mix(in srgb, var(--wp--preset--color--brand) 8%, var(--wp--preset--color--base));
+        }
+      }
+    }
+
+    .wpProQuiz_results {
+      .wpProQuiz_quiz_time {
+        display: none;
+      }
+      .wpProQuiz_resultTable .progress-meter {
+        border-radius: 0.3rem;
+        background-color: var(--wp--preset--color--brand) !important;
+      }
+      .wpProQuiz_resultsList p {
+        margin-bottom: 1rem;
+        font-size: var(--wp--preset--font-size--medium);
+      }
+    }
+
+    .wpProQuiz_button_reShowQuestion {
+      display: none;
+    }
+  }
+}
+
+@keyframes star-animation {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    left: 0.0625em;
+    opacity: 0;
+    top: 0.0625em;
+    transform: scale(1);
+  }
+}
+
