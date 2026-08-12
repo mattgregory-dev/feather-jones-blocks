@@ -31,3 +31,25 @@ function sb_remove_woo_hooked_blocks( $hooked_block_types ) {
 	);
 }
 add_filter( 'hooked_block_types', 'sb_remove_woo_hooked_blocks' );
+
+/**
+ * Tailor the My Account navigation for the course-driven store.
+ *
+ * Removing Downloads and renaming Dashboard leaves the default Woo order as:
+ * My Courses, Orders, Address, Payment Methods, Account Details, Log out — no
+ * explicit reordering needed. The Dashboard screen itself is repurposed into a
+ * course list via the dashboard.php template override (woocommerce/myaccount/).
+ *
+ * @param array $items Menu slug => label.
+ * @return array
+ */
+function sb_woo_account_menu_items( $items ) {
+	unset( $items['downloads'] );
+
+	if ( isset( $items['dashboard'] ) ) {
+		$items['dashboard'] = __( 'My Courses', 'starter-blocks' );
+	}
+
+	return $items;
+}
+add_filter( 'woocommerce_account_menu_items', 'sb_woo_account_menu_items', 20 );
