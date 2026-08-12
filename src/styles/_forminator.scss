@@ -16,9 +16,15 @@
 // (0,2,0)) so these overrides out-rank Forminator's own design CSS regardless of
 // enqueue order. On narrow screens the row wraps so the button drops below the
 // input (matching production).
+//
+// `:not(:has(.sb-card))` guards the case where a full Forminator form (e.g. the
+// contact form) is placed inside a card within a band — that form is a carded
+// layout, not an inline signup, so the pill treatment must not reach it. The
+// contact styling below is scoped to `.sb-card`, so the two are mutually
+// exclusive on the card.
 // ---------------------------------------------------------------------------
 
-.sb-band .forminator-custom-form.forminator-custom-form {
+.sb-band:not(:has(.sb-card)) .forminator-custom-form.forminator-custom-form {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -128,6 +134,165 @@
       width: 100%;
       border-radius: 6px;
       margin-top: 0.5rem;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Contact form — the full multi-field form (name, email, interest, message,
+// referral), carded on the contact page. Ported from the classic fj theme's
+// refined `.forminator-site-form` rewrite (components/_forms.scss), not the
+// older Aero variant. Colours swapped for theme.json tokens. Scoped to
+// `.sb-card` so it never touches the inline CTA-band signup above. The form
+// ships with Forminator's "no CSS" design option, so there's nothing to fight;
+// its `forminator-grid-default` stylesheet still handles the column layout.
+// ---------------------------------------------------------------------------
+
+.sb-card .forminator-ui.forminator-custom-form {
+  font-family: var(--wp--preset--font-family--body);
+  color: var(--wp--preset--color--contrast-2);
+
+  .forminator-row {
+    margin-bottom: 1.25rem;
+  }
+  .forminator-col {
+    min-width: 0;
+  }
+
+  .forminator-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .forminator-label {
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    color: var(--wp--preset--color--contrast-2);
+  }
+  .forminator-required {
+    color: var(--wp--preset--color--accent);
+  }
+
+  // Text inputs, textareas, selects.
+  .forminator-input,
+  .forminator-textarea,
+  select.forminator-select--field {
+    width: 100%;
+    border: 1px solid var(--wp--preset--color--border);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--wp--preset--color--base);
+    color: var(--wp--preset--color--contrast-2);
+    // Form controls don't inherit font-family (textareas default to monospace),
+    // so set it explicitly to keep every field on the body font.
+    font-family: var(--wp--preset--font-family--body);
+    font-size: 1rem;
+    line-height: 1.4;
+    box-shadow: none;
+    transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
+  }
+  .forminator-input::placeholder,
+  .forminator-textarea::placeholder {
+    color: var(--wp--preset--color--muted);
+  }
+  .forminator-input:hover,
+  .forminator-textarea:hover,
+  select.forminator-select--field:hover {
+    border-color: var(--wp--preset--color--contrast-2);
+    background: var(--wp--preset--color--surface-1);
+  }
+  .forminator-input:focus-visible,
+  .forminator-textarea:focus-visible,
+  select.forminator-select--field:focus-visible {
+    outline: none;
+    border-color: var(--wp--preset--color--brand);
+    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+    background: var(--wp--preset--color--surface-1);
+  }
+  .forminator-textarea {
+    min-height: 8.75rem;
+    resize: vertical;
+  }
+
+  // Select2 dropdowns ("I'm Interested In", "How did you hear about us?").
+  // Forminator swaps the native <select> for a Select2 widget, so style its
+  // container to match the text inputs. The (0,5,0) selectors beat Select2's
+  // own `.select2-container--default .select2-selection--single` defaults.
+  .select2-container .select2-selection {
+    height: auto;
+    min-height: calc(1.4em + 1.5rem + 2px); // input line-height + padding + border
+    border: 1px solid var(--wp--preset--color--border);
+    border-radius: 0.5rem;
+    background: var(--wp--preset--color--base);
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+  .select2-container--open .select2-selection,
+  .select2-container--focus .select2-selection {
+    border-color: var(--wp--preset--color--brand);
+    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+  }
+  .select2-container .select2-selection--single .select2-selection__rendered {
+    padding: 0;
+    line-height: 1.4;
+    color: var(--wp--preset--color--contrast-2);
+  }
+  .select2-container .select2-selection__placeholder {
+    color: var(--wp--preset--color--muted);
+  }
+  .select2-container .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    top: 0;
+    right: 0.5rem;
+  }
+
+  // Messages / validation.
+  .forminator-response-message {
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  .forminator-error-message {
+    color: #a44b4b;
+    font-size: 0.75rem;
+    margin-top: 0.375rem;
+  }
+  .forminator-has_error .forminator-input,
+  .forminator-has_error .forminator-textarea {
+    border-color: rgba(164, 75, 75, 0.65);
+    box-shadow: 0 0 0 3px rgba(164, 75, 75, 0.18);
+  }
+
+  // Submit — black primary, matching the site's Woo/checkout buttons.
+  .forminator-button.forminator-button-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-family: var(--wp--preset--font-family--body);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1;
+    border-radius: 0.3125rem;
+    border: 2px solid var(--wp--preset--color--black);
+    background-color: var(--wp--preset--color--black);
+    color: var(--wp--preset--color--base);
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: background-color 240ms ease, border-color 240ms ease, color 100ms ease;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+      border-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+      color: var(--wp--preset--color--base);
     }
   }
 }
