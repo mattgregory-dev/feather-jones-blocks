@@ -70,3 +70,6 @@
 @use "./styles/forminator"; // Forminator form styling (CTA-band signup)
 @use "./styles/reveal"; // sb-reveal — details toggle that opens into a card
 @use "./styles/icons"; // sb-trust — icon + label rows (SVG mask icons)
+@use "./styles/file"; // Core File block — blue link + dark pill download button
+
+@use "./styles/learndash"; // LearnDash course pages (ported from fj)

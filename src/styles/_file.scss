@@ -1,0 +1,36 @@
+// Core File block (used for course/lesson ebook downloads). Match the classic
+// site: filename as a plain blue link, Download as a dark pill (the block's
+// button otherwise inherits the theme's accent-orange button style).
+.wp-block-file {
+  // The filename media link (not the button).
+  a:not(.wp-block-file__button) {
+    color: var(--wp--preset--color--link);
+    font-size: var(--wp--preset--font-size--small);
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+
+  // Download button.
+  .wp-block-file__button {
+    background-color: var(--wp--preset--color--contrast-2);
+    color: var(--wp--preset--color--base);
+    border: none;
+    border-radius: 999px;
+
+    &:hover,
+    &:focus {
+      background-color: var(--wp--preset--color--contrast);
+    }
+  }
+
+  // No filename link (nothing entered in the DB): drop the left margin WP adds
+  // to separate the button from the (now absent) link — the hidden <object>
+  // embed still counts as a preceding sibling, so the margin lingers otherwise.
+  &:not(:has(a:not(.wp-block-file__button))) .wp-block-file__button {
+    margin-left: 0;
+  }
+}
