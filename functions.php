@@ -29,4 +29,5 @@ require_once $theme_inc . '/analytics.php';
 require_once $theme_inc . '/bloat.php';
 require_once $theme_inc . '/woocommerce.php';
 require_once $theme_inc . '/learndash.php';
+require_once $theme_inc . '/course-links.php';
 require_once $theme_inc . '/shortcodes.php';
