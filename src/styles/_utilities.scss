@@ -23,3 +23,56 @@
 .sb-band-link a {
   color: var(--wp--preset--color--base);
 }
+
+// Homepage "Choose the Path" card grid (#paths). WordPress generated a FIXED
+// 4-column grid (`repeat(4, minmax(0, 1fr))`) capped at the 1120 content width,
+// so the cards never reflow. We lift the section to its one-off 1440 width and
+// step the columns down explicitly: 4-up (to 1440) → 2-up (≤1120) → 1-up
+// (≤700). The `#paths` id (1,1,0) out-ranks core's generated container rule and
+// the `.is-layout-constrained > :where(…)` content-width cap (both (0,1,0))
+// without !important. Scoped to the section, so no other grid is affected.
+#paths .wp-block-group.is-layout-grid {
+  max-width: 1440px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 1120px) {
+  #paths .wp-block-group.is-layout-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  #paths .wp-block-group.is-layout-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
+
+// Grid that collapses straight to a single full-width column at <=900px (no
+// 2-up step, so no orphan to center). Stays a grid — we just override the
+// column track to 1fr, so every card goes 100%. Doubled class (0,2,0) beats
+// core's generated `.wp-container-… { grid-template-columns: … }` (0,1,0).
+// Applied via the `sb-grid-stack` class on a grid group.
+@media (max-width: 900px) {
+  .sb-grid-stack.sb-grid-stack {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Grid where the ORPHAN spans both columns. 3-up on desktop; at <=900px it's a
+// 2-column grid, and a lone last card — `:last-child:nth-child(odd)`, i.e. a
+// final item sitting alone in an odd (first) column — spans the full width
+// across both columns instead of stranding in column 1. Below 600 it's a single
+// column (where the span is a harmless no-op). Stays a grid throughout. Doubled
+// class beats core's generated grid rules. Applied via the `sb-grid-span` class.
+@media (max-width: 900px) {
+  .sb-grid-span.sb-grid-span {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sb-grid-span.sb-grid-span > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 600px) {
+  .sb-grid-span.sb-grid-span {
+    grid-template-columns: 1fr;
+  }
+}
