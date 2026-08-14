@@ -1,0 +1,186 @@
+// ---------------------------------------------------------------------------
+// Plan Selector block — a radiogroup of selectable plan cards (starter-blocks/
+// plan-selector), the "select" half of a select-then-act pricing section.
+//
+// The selected card is expressed two ways so it looks identical in the editor
+// and on the front end: :has(input:checked) matches the real radios on the front
+// end, and .is-selected is the editor's stand-in (no live radios in the canvas).
+// The "act" button is a native block wired up by view.js.
+// ---------------------------------------------------------------------------
+
+.plan-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--wp--preset--spacing--40);
+  align-items: stretch;
+}
+
+.plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 28px 28px;
+  background-color: var(--wp--preset--color--surface-1);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--wp--preset--color--brand) 12%, transparent);
+  }
+
+  // The radio is present but visually removed — the card face is the control.
+  input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  // Keyboard focus lands on the radio; surface it as the same soft surface-3
+  // ring the search and Forminator inputs use. Keyed on :focus-visible, which a
+  // radio only matches for keyboard focus — so selecting a card by mouse shows
+  // just its clean brand border (no second hard outline), while keyboard users
+  // still get a clear ring. Only the ring, not a border recolour, so focus stays
+  // distinct from the selected state.
+  &:has(input:focus-visible) {
+    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+  }
+}
+
+// Selected state — white face, brand ring, filled dot, brand pill, and the same
+// brand-tinted lift shadow the card-link block uses, so a chosen plan reads as
+// clearly raised (a step above the lighter hover shadow the other cards keep).
+// The padding shrinks by 1px to absorb the thicker border so the card doesn't jump.
+.plan-card:has(input:checked),
+.plan-card.is-selected {
+  background-color: var(--wp--preset--color--base);
+  border: 2px solid var(--wp--preset--color--brand);
+  padding: 31px 27px 27px;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--wp--preset--color--brand) 22%, transparent);
+}
+
+// Selection dot, top-right.
+.plan-card__dot {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--wp--preset--color--brand);
+  background-color: var(--wp--preset--color--base);
+  box-shadow: inset 0 0 0 3px var(--wp--preset--color--base);
+  transition: background-color 0.15s ease;
+}
+.plan-card:has(input:checked) .plan-card__dot,
+.plan-card.is-selected .plan-card__dot {
+  background-color: var(--wp--preset--color--brand);
+}
+
+.plan-card__kicker {
+  margin-bottom: 12px;
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--xx-small);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--brand);
+}
+
+.plan-card__price {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: 44px; // display figure — deliberately larger than the type ladder
+  line-height: 1;
+  color: var(--wp--preset--color--contrast-2);
+}
+
+.plan-card__per {
+  margin-top: 10px;
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--contrast);
+}
+
+.plan-card__total {
+  margin-top: 4px;
+  font-size: var(--wp--preset--font-size--x-small);
+  color: var(--wp--preset--color--muted);
+}
+
+.plan-card__pill {
+  margin-top: 16px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  background-color: var(--wp--preset--color--surface-2);
+  font-size: var(--wp--preset--font-size--x-small);
+  color: var(--wp--preset--color--contrast);
+  white-space: nowrap;
+}
+.plan-card:has(input:checked) .plan-card__pill,
+.plan-card.is-selected .plan-card__pill {
+  background-color: var(--wp--preset--color--surface-3);
+}
+
+// ---- Mobile: each card collapses to a compact row -------------------------
+// dot | kicker + total | price + cadence. The pill drops (its savings message
+// moves to the mobile-only trust list the author places above the button).
+@media (max-width: 799px) {
+  .plan-selector {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .plan-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    column-gap: 14px;
+    grid-template-areas:
+      "dot kicker price"
+      "dot total  per";
+    align-items: center;
+    text-align: left;
+    padding: 16px;
+  }
+  .plan-card:has(input:checked),
+  .plan-card.is-selected {
+    padding: 15px;
+  }
+
+  .plan-card__dot {
+    position: static;
+    grid-area: dot;
+    width: 20px;
+    height: 20px;
+  }
+  .plan-card__kicker {
+    grid-area: kicker;
+    margin: 0;
+    align-self: end;
+  }
+  .plan-card__total {
+    grid-area: total;
+    margin: 3px 0 0;
+    align-self: start;
+  }
+  .plan-card__price {
+    grid-area: price;
+    font-size: 24px;
+    justify-self: end;
+    align-self: end;
+  }
+  .plan-card__per {
+    grid-area: per;
+    margin: 3px 0 0;
+    font-size: 12.5px;
+    justify-self: end;
+    align-self: start;
+  }
+  .plan-card__pill {
+    display: none;
+  }
+}

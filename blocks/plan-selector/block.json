@@ -1,0 +1,31 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/plan-selector",
+	"version": "1.0.0",
+	"title": "Plan Selector",
+	"category": "theme",
+	"icon": "forms",
+	"description": "A radiogroup of selectable plan cards. Picking a card drives a shared button (marked .plan-cta) — its label and checkout URL follow the selection.",
+	"keywords": [ "pricing", "plan", "tuition", "radio", "select" ],
+	"textdomain": "fj-blocks",
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"spacing": { "margin": true }
+	},
+	"attributes": {
+		"cards": {
+			"type": "array",
+			"default": [
+				{ "kicker": "Full Year", "price": "$2,800", "per": "One-time payment", "total": "$2,800 total · no fees", "pill": "Save $120 vs. quarterly", "ctaLabel": "Enroll — Full Year · $2,800", "ctaUrl": "" },
+				{ "kicker": "Half Year", "price": "$1,430", "per": "per half (2 payments)", "total": "$2,860 total", "pill": "Save $60 vs. quarterly", "ctaLabel": "Enroll — Half Year · $1,430 × 2", "ctaUrl": "" },
+				{ "kicker": "Quarterly", "price": "$730", "per": "per quarter (4 payments)", "total": "$2,920 total", "pill": "Most flexible", "ctaLabel": "Enroll — Quarterly · $730 × 4", "ctaUrl": "" }
+			]
+		},
+		"selected": { "type": "number", "default": 0 }
+	},
+	"editorScript": "file:./index.js",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}
