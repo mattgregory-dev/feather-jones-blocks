@@ -26,13 +26,13 @@
 
 // Homepage "Choose the Path" card grid (#paths). WordPress generated a FIXED
 // 4-column grid (`repeat(4, minmax(0, 1fr))`) capped at the 1120 content width,
-// so the cards never reflow. We lift the section to its one-off 1440 width and
-// step the columns down explicitly: 4-up (to 1440) → 2-up (≤1120) → 1-up
+// so the cards never reflow. We lift the section to its one-off 1320 width and
+// step the columns down explicitly: 4-up (to 1320) → 2-up (≤1120) → 1-up
 // (≤700). The `#paths` id (1,1,0) out-ranks core's generated container rule and
 // the `.is-layout-constrained > :where(…)` content-width cap (both (0,1,0))
 // without !important. Scoped to the section, so no other grid is affected.
 #paths .wp-block-group.is-layout-grid {
-  max-width: 1440px;
+  max-width: 1320px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 @media (max-width: 1120px) {
