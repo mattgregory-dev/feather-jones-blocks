@@ -76,3 +76,20 @@
     grid-template-columns: 1fr;
   }
 }
+
+// Responsive visibility at the 800px breakpoint (the pricing section swaps its
+// composition here). Applied via a group block's className to show one grouping
+// on desktop and a differently-ordered one on mobile — e.g. a trust list placed
+// above the button on mobile, extra info below it on desktop. Named for what
+// they HIDE: `from-800` hides at >=800 (mobile-only), `below-800` hides at <800
+// (desktop-only).
+.sb-hide-from-800 {
+  @media (min-width: 800px) {
+    display: none !important;
+  }
+}
+.sb-hide-below-800 {
+  @media (max-width: 799px) {
+    display: none !important;
+  }
+}
