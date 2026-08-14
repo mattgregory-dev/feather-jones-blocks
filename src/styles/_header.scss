@@ -18,13 +18,14 @@
     margin-block: 0;
   }
 
-  // Logo size is set natively on the block (width attribute, 328px ≈ 86px tall at
-  // the logo's 500×131 aspect). CSS deliberately does NOT constrain it: the Site
-  // Logo editor component re-asserts its width inline with !important priority
-  // after mount, which no external rule can beat — so a CSS height constraint
-  // renders correct then snaps back to squished in the editor. Keeping the size
-  // on the block keeps the editor WYSIWYG. Responsive shrink lives in the mobile
-  // pass (override the front-end inline width there, where no JS re-asserts it).
+  // The block sets the logo width natively (328px). In the EDITOR the Site Logo
+  // component re-asserts that width inline with !important after mount, so a CSS
+  // constraint can't win there; on the FRONT END nothing re-asserts it, so this
+  // max-width caps it cleanly while the editor keeps its WYSIWYG size.
+  .wp-block-site-logo img {
+    max-width: 290px;
+    height: auto;
+  }
 
   // The Woo account block renders as a link (or a dropdown toggle), so it takes
   // the global blue link colour; recolour it — and its currentColor SVG icon —
