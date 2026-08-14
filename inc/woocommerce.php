@@ -53,3 +53,48 @@ function sb_woo_account_menu_items( $items ) {
 	return $items;
 }
 add_filter( 'woocommerce_account_menu_items', 'sb_woo_account_menu_items', 20 );
+
+/**
+ * Point the WooCommerce "shop" page permalink at the courses archive.
+ *
+ * The store funnels through LearnDash courses, not a product catalog, so every
+ * "shop" affordance should land on /courses/ — including the Mini-Cart empty
+ * "Start shopping" button, which the block JS renders from the localized
+ * `storePages.shop.permalink`. Both that value and WooCommerce's
+ * `wc_get_page_permalink( 'shop' )` derive from `get_permalink()`, so filtering
+ * `page_link` for the shop page is the single lever covering server- and
+ * client-rendered links alike. The page still renders at /shop/; only generated
+ * links change.
+ *
+ * @param string $permalink The page URL.
+ * @param int    $post_id   The page ID.
+ * @return string
+ */
+function sb_shop_page_link_to_courses( $permalink, $post_id ) {
+	if ( (int) $post_id === (int) wc_get_page_id( 'shop' ) ) {
+		return home_url( '/courses/' );
+	}
+
+	return $permalink;
+}
+add_filter( 'page_link', 'sb_shop_page_link_to_courses', 10, 2 );
+
+/**
+ * Relabel the Mini-Cart empty-state button "Start shopping" → "Browse Courses"
+ * to match the Cart block's empty-state link. The Mini-Cart button is
+ * server-rendered (iAPI Mini-Cart) via `__( 'Start shopping', 'woocommerce' )`,
+ * so a scoped gettext filter on that exact string relabels it.
+ *
+ * @param string $translation Translated text.
+ * @param string $text        Original text.
+ * @param string $domain      Text domain.
+ * @return string
+ */
+function sb_mini_cart_shopping_label( $translation, $text, $domain ) {
+	if ( 'woocommerce' === $domain && 'Start shopping' === $text ) {
+		return __( 'Browse Courses', 'starter-blocks' );
+	}
+
+	return $translation;
+}
+add_filter( 'gettext', 'sb_mini_cart_shopping_label', 10, 3 );
