@@ -1,0 +1,26 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "starter-blocks/card-link",
+	"version": "1.0.0",
+	"title": "Card Link",
+	"category": "theme",
+	"icon": "index-card",
+	"description": "An entire card that is a single link — for routing grids. Inner content is decorative; the whole surface is clickable and lifts on hover.",
+	"keywords": [ "card", "link", "cta", "route", "grid" ],
+	"textdomain": "fj-blocks",
+	"supports": {
+		"anchor": true,
+		"html": false,
+		"color": { "text": false, "background": true },
+		"spacing": { "margin": false, "padding": false }
+	},
+	"attributes": {
+		"url": { "type": "string", "default": "" },
+		"opensInNewTab": { "type": "boolean", "default": false },
+		"padding": { "type": "string", "default": "80" },
+		"contentAlign": { "type": "string", "default": "" }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}
