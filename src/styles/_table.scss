@@ -53,9 +53,17 @@
 
 .wp-block-table.is-style-comparison {
   border: 0;
+  // Scroll the table left-right on narrow screens — it holds a min-width, so
+  // rather than squishing the columns it overflows and this wrapper scrolls.
+  overflow-x: auto;
 
   table {
     width: 100%;
+    // Fixed layout so the two option columns are pixel-exact halves (auto layout
+    // only approximates). Min-width keeps the columns readable on mobile and
+    // makes the horizontal scroll deliberate (not dependent on content length).
+    table-layout: fixed;
+    min-width: 600px;
     border-collapse: collapse;
   }
 
@@ -69,8 +77,13 @@
   }
 
   // The label column (and the empty top-left cell) hangs to the content edge.
+  // Fixed width sized to the longest label ("Investment" ≈ 103px); nowrap keeps
+  // each label on one line. Under fixed layout the two option columns (no width)
+  // then split the remaining space into exact equal halves.
   th:first-child,
   td:first-child {
+    width: 6.5rem;
+    white-space: nowrap;
     padding-left: 0;
   }
 
