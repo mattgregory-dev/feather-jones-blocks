@@ -21,5 +21,6 @@ function sb_register_blocks() {
 	register_block_type( get_template_directory() . '/build/spotlight' );
 	register_block_type( get_template_directory() . '/build/bio' );
 	register_block_type( get_template_directory() . '/build/hero' );
+	register_block_type( get_template_directory() . '/build/card-link' );
 }
 add_action( 'init', 'sb_register_blocks' );

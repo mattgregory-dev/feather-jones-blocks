@@ -1,0 +1,93 @@
+// ---------------------------------------------------------------------------
+// Card Link block — an entire card that is a single link (starter-blocks/
+// card-link), for routing grids like the homepage "ways to learn" 4-up.
+//
+// Borrows the static .sb-card chrome (surface, border, radius) but reads as
+// interactive: it lifts and its border lights to brand on hover / keyboard
+// focus. Inner content is decorative — the whole surface is the anchor.
+// ---------------------------------------------------------------------------
+
+.sb-card-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--40);
+  // Cancel the global link blue and underline; inner blocks keep their own
+  // colours, and the card itself is a surface, not link-styled text.
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+// Author-selectable padding (60/70/80) via a custom property set inline. Doubled
+// class (0,2,0) outranks .sb-card.sb-card's fixed padding so the choice sticks.
+.sb-card-link.sb-card-link {
+  padding: var(--sb-card-link-pad, var(--wp--preset--spacing--80));
+}
+
+// The inner-block wrapper fills the card's height as its own flex column, so the
+// last block can be pushed to the foot: margin-block-start:auto eats the free
+// space above it. Make the "Explore →" link the last block and it pins to the
+// bottom of every card — and since the cards sit in a Grid (equal row heights),
+// those links line up across the row. Spacing between the other blocks is left
+// untouched (their own block spacing still applies).
+.sb-card-link__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+
+  > :last-child {
+    margin-block-start: auto;
+    // The pinned block (often a paragraph) carries its own bottom margin; drop it
+    // so it sits flush on the card's foot padding.
+    margin-block-end: 0;
+  }
+}
+
+// Content alignment. Because the card is a flex column, align-items centers the
+// image (and any non-stretched child) while text-align handles the copy — so a
+// centered card reads centered whole, not just its text. Left is the default.
+.sb-card-link--align-center {
+  align-items: center;
+  text-align: center;
+}
+.sb-card-link--align-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+// Interactive lift. Keyboard focus gets it unconditionally (accessibility);
+// pointer hover only where a real hover exists, so touch devices don't strand
+// the card in a stuck lifted state after a tap.
+.sb-card-link:focus-visible {
+  border-color: var(--wp--preset--color--brand);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--wp--preset--color--brand) 22%, transparent);
+  transform: translateY(-3px);
+}
+
+@media (hover: hover) {
+  .sb-card-link:hover {
+    border-color: var(--wp--preset--color--brand);
+    box-shadow: 0 6px 16px color-mix(in srgb, var(--wp--preset--color--brand) 22%, transparent);
+    transform: translateY(-3px);
+  }
+}
+
+// Reduced motion: drop the lift (it's movement), but keep the border + shadow —
+// those are a static "interactive" cue, like a focus ring, not motion. Also pull
+// transform out of the transition so nothing eases.
+@media (prefers-reduced-motion: reduce) {
+  .sb-card-link {
+    transition:
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .sb-card-link:hover,
+  .sb-card-link:focus-visible {
+    transform: none;
+  }
+}
