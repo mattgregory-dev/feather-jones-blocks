@@ -15,6 +15,10 @@
     gap: 0.5em;
     width: fit-content;
     margin-inline: auto;
+    // Include the border + padding in any width (e.g. the full-width small-screen
+    // state below); otherwise width:100% + 2px border + padding overflows the
+    // panel to the right.
+    box-sizing: border-box;
     cursor: pointer;
     list-style: none; // Firefox marker
 
@@ -107,5 +111,24 @@
       position: relative;
       z-index: 1;
     }
+  }
+}
+
+// Small screens: the toggle hugs its text (width: fit-content), so the label
+// wraps to two lines as the column narrows. Make it full-width to the content
+// gutters so it stays on one line, and trim the horizontal padding.
+@media (max-width: 720px) {
+  .sb-reveal > summary {
+    width: 100%;
+    padding-inline: var(--wp--preset--spacing--40);
+    white-space: nowrap;
+  }
+
+  // Open state keeps the summary absolutely positioned above the panel; pin it
+  // to the left edge (drop the translateX centring) so — with the full width
+  // above — it spans edge-to-edge to the gutters like the closed button.
+  .sb-reveal[open] > summary {
+    left: 0;
+    transform: none;
   }
 }
