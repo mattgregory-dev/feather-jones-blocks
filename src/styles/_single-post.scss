@@ -86,10 +86,72 @@ main.sb-post-bg {
 
 // ---- Post body ------------------------------------------------------------
 
-// Body copy reads at the medium step. Paragraphs carrying their own font-size
-// class (e.g. a lede) keep it — those preset classes ship !important.
-.wp-block-post-content p {
+// Body copy reads at the medium step — scoped to single blog posts (.single-post)
+// so pages keep their default sizing. Covers paragraphs, list items, and a
+// <details> summary. Paragraphs with their own font-size class (e.g. a lede)
+// keep it (those preset classes ship !important).
+.single-post .wp-block-post-content :is(p, li, summary) {
   font-size: var(--wp--preset--font-size--medium);
+}
+
+// Content h2 sits between the two presets on posts: the global h2 (xx-large,
+// ~28–36px) reads too large in a reading column and x-large (~22–26px) too
+// small, so a fluid middle ground (~26–31px). Off-token on purpose — there's no
+// preset in this gap. Beats the theme.json h2 element rule on specificity.
+.single-post .wp-block-post-content h2 {
+  font-size: clamp(1.625rem, 1.4rem + 1vw, 1.95rem);
+}
+
+// "Short version" panel — the core Details block in a post, styled as a soft
+// surface-2 summary card: a brand kicker header (disclosure marker hidden) over
+// a list with custom brand-dot bullets. Scoped to blog posts; the .sb-reveal
+// details treatment is excluded.
+.single-post .wp-block-post-content .wp-block-details:not(.sb-reveal) {
+  padding: var(--wp--preset--spacing--50);
+  background-color: var(--wp--preset--color--surface-2);
+  border-radius: 12px;
+
+  // Header — brand, uppercase, tracked; no triangle. The strong inside inherits.
+  > summary {
+    list-style: none; // Firefox marker
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--xx-small);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--brand);
+    cursor: pointer;
+
+    &::-webkit-details-marker { display: none; } // Safari/Chrome marker
+  }
+
+  // List — unbulleted rows a step below the header, each with a small brand dot.
+  .wp-block-list {
+    margin: var(--wp--preset--spacing--40) 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--wp--preset--spacing--30);
+  }
+
+  li {
+    position: relative;
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--wp--preset--color--contrast);
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.6em; // aligns the dot with the first line of text
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--wp--preset--color--brand);
+    }
+  }
 }
 
 // ---- Prev / next pagination -----------------------------------------------
