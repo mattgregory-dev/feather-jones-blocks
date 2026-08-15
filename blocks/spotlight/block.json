@@ -20,6 +20,9 @@
 		"imageAlt": { "type": "string", "default": "" },
 		"imagePosition": { "type": "string", "default": "right" },
 		"verticalAlignment": { "type": "string", "default": "center" },
+		"mobileRatio": { "type": "string", "default": "3 / 2" },
+		"mobileFocal": { "type": "string", "default": "center" },
+		"mobileImageId": { "type": "number" },
 		"eyebrow": { "type": "string", "default": "" },
 		"level": { "type": "string", "default": "h2" },
 		"title": { "type": "string", "default": "" }

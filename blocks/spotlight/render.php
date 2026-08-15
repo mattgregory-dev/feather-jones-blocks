@@ -25,24 +25,46 @@ $sp_level    = ( isset( $attributes['level'] ) && 'h1' === $attributes['level'] 
 $sp_eyebrow  = trim( $attributes['eyebrow'] ?? '' );
 $sp_position = ( isset( $attributes['imagePosition'] ) && 'left' === $attributes['imagePosition'] ) ? 'left' : 'right';
 $sp_valign   = ( isset( $attributes['verticalAlignment'] ) && 'top' === $attributes['verticalAlignment'] ) ? 'top' : 'center';
-$sp_image_id = isset( $attributes['imageId'] ) ? (int) $attributes['imageId'] : 0;
-$sp_alt      = trim( $attributes['imageAlt'] ?? '' );
+$sp_image_id  = isset( $attributes['imageId'] ) ? (int) $attributes['imageId'] : 0;
+$sp_mobile_id = isset( $attributes['mobileImageId'] ) ? (int) $attributes['mobileImageId'] : 0;
+$sp_alt       = trim( $attributes['imageAlt'] ?? '' );
 
 $sp_title = trim( $attributes['title'] ?? '' );
 
+// The desktop image is always present when an image is set; the optional mobile
+// image (same alt — same subject, different crop) replaces it below 800px, so
+// they carry distinct classes the stylesheet swaps. With no mobile image, the
+// desktop one is cropped in CSS (mobileRatio / mobileFocal) instead.
 $sp_media = '';
 if ( $sp_image_id ) {
-	$sp_media = '<figure class="spotlight__media">'
-		. wp_get_attachment_image( $sp_image_id, 'full', false, array( 'alt' => $sp_alt ) )
-		. '</figure>';
+	$sp_media  = '<figure class="spotlight__media">';
+	$sp_media .= wp_get_attachment_image( $sp_image_id, 'full', false, array( 'alt' => $sp_alt, 'class' => 'spotlight__img spotlight__img--desktop' ) );
+	if ( $sp_mobile_id ) {
+		$sp_media .= wp_get_attachment_image( $sp_mobile_id, 'full', false, array( 'alt' => $sp_alt, 'class' => 'spotlight__img spotlight__img--mobile' ) );
+	}
+	$sp_media .= '</figure>';
 }
 
 $sp_classes = 'is-position-' . $sp_position . ' is-valign-' . $sp_valign;
 if ( '' === $sp_media ) {
 	$sp_classes .= ' has-no-media';
 }
+if ( $sp_image_id && $sp_mobile_id ) {
+	$sp_classes .= ' has-mobile-image';
+}
+
+// Mobile crop controls (<= 800px) surface as custom properties the stylesheet
+// reads: the aspect ratio the image is cropped to, and which part of it the crop
+// keeps. Validated against a fixed set so only known CSS values reach the style.
+$sp_ratio = in_array( $attributes['mobileRatio'] ?? '3 / 2', array( '3 / 2', '4 / 3', '1 / 1' ), true )
+	? $attributes['mobileRatio']
+	: '3 / 2';
+$sp_focal = in_array( $attributes['mobileFocal'] ?? 'center', array( 'center', 'center top', 'center bottom' ), true )
+	? $attributes['mobileFocal']
+	: 'center';
+$sp_style = sprintf( '--sb-spot-ratio:%s;--sb-spot-focal:%s;', $sp_ratio, $sp_focal );
 ?>
-<section <?php echo get_block_wrapper_attributes( array( 'class' => $sp_classes ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core. ?>>
+<section <?php echo get_block_wrapper_attributes( array( 'class' => $sp_classes, 'style' => $sp_style ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core. ?>>
 	<div class="spotlight__inner">
 		<div class="spotlight__text">
 			<?php if ( '' !== $sp_eyebrow ) : ?>
