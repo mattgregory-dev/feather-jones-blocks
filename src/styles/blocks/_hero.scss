@@ -6,11 +6,12 @@
 // in the spotlight partial. Starts as a near-clone; that duplication is the
 // point. Extract a shared partial only when a shared change hits both.
 //
-//   > 1160px    : side-by-side, text-55 / image-45. Vertical alignment follows
+//   > 1120px    : side-by-side, text-55 / image-45. Vertical alignment follows
 //                 the block's `verticalAlignment` attribute (centered by
 //                 default; `is-valign-top` top-aligns).
-//   800–1160px  : columns go equal-width (≈50/50) and top-align.
-//   <= 800px    : columns stack, with tighter vertical padding.
+//   800–1120px  : columns go equal-width (≈50/50) and top-align.
+//   <= 800px    : a column image stacks image-first; a cover-background hero
+//                 swaps the full-cover image for a photo band on a cream panel.
 //
 // The column image side is flipped with flex-direction, never duplicated
 // markup: DOM order is always text-then-media.
@@ -70,6 +71,31 @@
     letter-spacing: 0.16rem;
   }
 
+  // Cover-background photo band — the background image rendered as an <img> for
+  // the stacked mobile layout (shown only <= 800px, below). Hidden on desktop,
+  // where the CSS cover background does the work. Fades into the cream panel
+  // beneath it so the photo blends into the copy.
+  .hero__bg-band {
+    display: none;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      bottom: 0;
+      height: 72px;
+      background: linear-gradient(180deg, transparent 0%, var(--wp--preset--color--surface-1) 100%);
+    }
+  }
+  .hero__bg-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    object-position: center;
+  }
+
   // Column image on the left.
   &.is-position-left .hero__inner { flex-direction: row-reverse; }
 
@@ -94,24 +120,30 @@
 
     // Overlay tint — above the background image, below the content. Only present
     // when has-overlay is set (and --hero-overlay carries the value). A horizontal
-    // left→right gradient: near-opaque overlay on the text side (a sliver of the
-    // image still bleeds through), fading to transparent so the background reads
-    // on the right. The alpha comes from color-mix on the token (see
-    // docs/ARCHITECTURE.md), so the overlay colour stays the block's overlayColor.
-    // Stops and opacities are tunable.
+    // gradient: near-opaque overlay on the text side (a sliver of the image still
+    // bleeds through), fading to transparent so the background reads on the other.
+    // The alpha comes from color-mix on the token (see docs/ARCHITECTURE.md), so
+    // the overlay colour stays the block's overlayColor. The direction and the
+    // stop positions are custom properties so the tablet range can extend the
+    // opaque reach (and is-position-left can flip it) without restating the whole
+    // gradient.
     &.has-overlay::before {
       content: "";
       position: absolute;
       inset: 0;
       z-index: 0;
-      background: linear-gradient(90deg, var(--hero-overlay) 0%, var(--hero-overlay) 45%, transparent 85%); // fallback
+      background: linear-gradient(var(--hero-overlay-angle, 90deg), var(--hero-overlay) 0%, var(--hero-overlay) var(--hero-overlay-mid, 45%), transparent var(--hero-overlay-end, 85%)); // fallback
       background: linear-gradient(
-        90deg,
+        var(--hero-overlay-angle, 90deg),
         color-mix(in srgb, var(--hero-overlay) 98%, transparent) 0%,
-        color-mix(in srgb, var(--hero-overlay) 94%, transparent) 45%,
-        transparent 85%
+        color-mix(in srgb, var(--hero-overlay) 94%, transparent) var(--hero-overlay-mid, 45%),
+        transparent var(--hero-overlay-end, 85%)
       );
     }
+
+    // Text on the right (is-position-left): flip the gradient so the opaque side
+    // stays under the copy.
+    &.is-position-left.has-overlay { --hero-overlay-angle: 270deg; }
 
     // The columns (text + optional image) sit above the overlay tint.
     .hero__inner {
@@ -175,51 +207,96 @@
   background-size: cover;
   background-position: center;
 
+  // Base (mobile): a solid cream panel — the stacked layout has no room for a
+  // side-by-side fade. Desktop overrides this to the left→right gradient below.
   &::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: linear-gradient(90deg, var(--wp--preset--color--surface-1) 0%, var(--wp--preset--color--surface-1) 45%, transparent 85%); // fallback
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--wp--preset--color--surface-1) 98%, transparent) 0%,
-      color-mix(in srgb, var(--wp--preset--color--surface-1) 94%, transparent) 45%,
-      color-mix(in srgb, var(--wp--preset--color--surface-1) 50%, transparent) 85%
-    );
+    background: var(--wp--preset--color--surface-1);
   }
 
+  // Content sits above the tint.
   > * {
     position: relative;
     z-index: 1;
   }
+
+  // Desktop: near-opaque cream on the text side fading to transparent, so the
+  // background image reads on the right.
+  @media (width >= 801px) {
+    &::before {
+      background: linear-gradient(90deg, var(--wp--preset--color--surface-1) 0%, var(--wp--preset--color--surface-1) 45%, transparent 85%); // fallback
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--wp--preset--color--surface-1) 98%, transparent) 0%,
+        color-mix(in srgb, var(--wp--preset--color--surface-1) 94%, transparent) 45%,
+        color-mix(in srgb, var(--wp--preset--color--surface-1) 50%, transparent) 85%
+      );
+    }
+  }
 }
 
-// 800–1160px: equal-width columns (50/50), top-aligned — otherwise the shorter
-// column floats in the extra space.
-@media (width <= 1160px) {
-  .wp-block-starter-blocks-hero {
+// 700–1120px: split heroes go equal-width + top-align; a cover hero widens its
+// copy to two-thirds and extends the overlay's opaque reach to match, so the
+// text keeps its contrast and ~1/3 stays clear background (no full-width copy
+// bleeding over the faded side).
+@media (width <= 1120px) {
+  // Split hero (has a column image): equal columns, top-aligned.
+  .wp-block-starter-blocks-hero:not(.has-no-media) {
     .hero__inner { align-items: flex-start; }
 
     .hero__text,
     .hero__media { flex: 1 1 0; }
   }
+
+  // Cover hero (no column image): copy to two-thirds, opaque overlay extended.
+  .wp-block-starter-blocks-hero.has-no-media .hero__text {
+    flex-basis: 66%;
+  }
+  .wp-block-starter-blocks-hero.has-cover-background.has-no-media.has-overlay {
+    --hero-overlay-mid: 62%;
+    --hero-overlay-end: 92%;
+  }
 }
 
-// <= 800px: stack full-width, with tighter vertical padding.
+// <= 800px: split heroes stack image-first (the cover hero holds its extended
+// two-thirds layout down to 700). Scoped to split heroes so a cover hero's copy
+// isn't forced full-width here.
 @media (width <= 800px) {
-  .wp-block-starter-blocks-hero {
-    padding-block: var(--wp--preset--spacing--40);
-
-    .hero__inner { flex-direction: column; }
-
-    // Image-left heroes keep the column image on top when stacked.
-    &.is-position-left .hero__inner { flex-direction: column-reverse; }
+  .wp-block-starter-blocks-hero:not(.has-no-media) {
+    // The :not() adds a class of specificity (0,3,0), matching — and, by later
+    // source order, beating — the desktop is-position-left row-reverse, so
+    // image-left heroes stack image-first too.
+    .hero__inner { flex-direction: column-reverse; }
 
     .hero__text,
     .hero__media {
       flex: none;
       width: 100%;
     }
+
+    // A cover background can't sit behind a stacked split hero; drop it.
+    &.has-cover-background { background-image: none !important; }
+    &.has-cover-background.has-overlay::before { display: none; }
+  }
+}
+
+// <= 700px: a cover hero swaps its full-cover background for a photo band on a
+// cream panel, copy below. The band is flush to the top (no section padding
+// there); the copy goes full-width with a small gap under the fade. !important
+// beats the background-image render.php sets inline.
+@media (width <= 700px) {
+  .wp-block-starter-blocks-hero.has-cover-background.has-no-media {
+    padding-block: 0 var(--wp--preset--spacing--60);
+    background-image: none !important;
+    background-color: var(--wp--preset--color--surface-1);
+
+    &.has-overlay::before { display: none; }
+
+    .hero__bg-band { display: block; }
+    .hero__text { flex-basis: 100%; }
+    .hero__inner { padding-top: var(--wp--preset--spacing--40); }
   }
 }

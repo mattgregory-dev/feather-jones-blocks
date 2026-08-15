@@ -50,6 +50,18 @@ if ( $hero_image_id ) {
 		. '</figure>';
 }
 
+// The background image is also rendered as an <img> band, hidden on desktop and
+// shown below 800px (for a cover hero with no column image) so the photo reads as
+// a real image on top of the copy instead of a full-cover backdrop behind it.
+// Decorative alt: it duplicates the CSS background and the copy carries the
+// message.
+$hero_bg_band = '';
+if ( $hero_bg_url ) {
+	$hero_bg_band = '<figure class="hero__bg-band">'
+		. wp_get_attachment_image( $hero_bg_id, 'full', false, array( 'alt' => '', 'class' => 'hero__bg-image', 'loading' => 'lazy' ) )
+		. '</figure>';
+}
+
 $hero_classes = 'is-position-' . $hero_position . ' is-valign-' . $hero_valign;
 if ( '' === $hero_media ) {
 	$hero_classes .= ' has-no-media';
@@ -84,6 +96,7 @@ if ( '' !== $hero_style ) {
 }
 ?>
 <section <?php echo get_block_wrapper_attributes( $hero_wrapper_args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core. ?>>
+	<?php echo $hero_bg_band; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by wp_get_attachment_image(). ?>
 	<div class="hero__inner">
 		<div class="hero__text">
 			<?php if ( '' !== $hero_eyebrow ) : ?>

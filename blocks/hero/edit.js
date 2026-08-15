@@ -254,6 +254,11 @@ export default function Edit( { attributes, setAttributes } ) {
 			) }
 
 			<section { ...blockProps }>
+				{ hasBackground && backgroundUrl && (
+					<figure className="hero__bg-band">
+						<img className="hero__bg-image" src={ backgroundUrl } alt="" />
+					</figure>
+				) }
 				<div className="hero__inner">
 					<div className="hero__text">
 						{ eyebrow && <p className="hero__eyebrow">{ eyebrow }</p> }
