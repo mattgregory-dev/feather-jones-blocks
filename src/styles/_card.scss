@@ -70,7 +70,16 @@
 // band) it hangs off the top-left corner.
 .sb-card.is-style-quote::before {
   top: 0.4rem;
-  left: 1rem;
+  left: 0.6rem;
+}
+
+// On small screens the card padding tightens, so tuck the quote glyph closer to
+// the corner.
+@media (max-width: 600px) {
+  .sb-card.is-style-quote::before {
+    top: 0.1rem;
+    left: 0.3rem;
+  }
 }
 
 .is-style-quote:not(.sb-card)::before {
@@ -80,7 +89,8 @@
 
 // Quick-links list inside a card: unbulleted rows with a soft divider between.
 .sb-quick-links {
-  margin: 0;
+  // Small top margin (~11px) to separate the list from the heading above.
+  margin: var(--wp--preset--spacing--30) 0 0;
   padding: 0;
   list-style: none;
 
@@ -100,7 +110,7 @@
 .sb-eyebrow {
   margin: 0;
   font-family: var(--wp--preset--font-family--eyebrow);
-  font-size: var(--wp--preset--font-size--xx-small);
+  font-size: var(--wp--preset--font-size--x-small);
   font-weight: 700;
   color: var(--wp--preset--color--brand);
   text-transform: uppercase;
@@ -125,17 +135,4 @@
   background-color: var(--wp--preset--color--surface-2);
   font-size: var(--wp--preset--font-size--x-small);
   font-weight: 600;
-}
-
-// "Read more" link on a link-card — matches the card heading (contrast-2),
-// bold, underlined only on hover.
-.sb-card-more a {
-  color: var(--wp--preset--color--contrast-2);
-  font-weight: 600;
-  text-decoration: none;
-
-  &:hover,
-  &:focus {
-    text-decoration: underline;
-  }
 }
