@@ -73,6 +73,8 @@
 @use "./styles/reveal"; // sb-reveal — details toggle that opens into a card
 @use "./styles/icons"; // sb-trust — icon + label rows (SVG mask icons)
 @use "./styles/file"; // Core File block — blue link + dark pill download button
+@use "./styles/post-list"; // Blog post list — open editorial layout + hovers
+@use "./styles/single-post"; // Single blog post — band header, pagination, author bio
 
 @use "./styles/learndash"; // LearnDash course pages (ported from fj)
 @use "./styles/woocommerce"; // WooCommerce cart / checkout / account (ported from fj)

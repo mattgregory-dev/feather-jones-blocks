@@ -1,0 +1,213 @@
+// ---------------------------------------------------------------------------
+// Single blog post (single.html). Styles the chrome around the post — the
+// surface-3 band header (breadcrumb, category eyebrow, title, date · read time),
+// the prev/next pagination, and the author bio. The article prose itself is left
+// to the theme's element/block styles.
+// ---------------------------------------------------------------------------
+
+// A brand tone deepened toward black — the readable "brand-dark" the mockup uses
+// for band chrome and interactive kickers (the theme has no brand-dark token).
+$brand-deep: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+
+// Surface-1 softened to 50% alpha behind the post. The block sets the solid
+// token; this halves it via color-mix. Element + class (0,1,1) plus !important
+// outranks the preset has-*-background-color class, which ships !important.
+main.sb-post-bg {
+  background-color: color-mix(in srgb, var(--wp--preset--color--surface-1) 50%, transparent) !important;
+}
+
+// ---- Band header ----------------------------------------------------------
+
+// Breadcrumb — a quiet trail; a bit more air below it than the tight cluster
+// beneath (title/eyebrow/meta share the band's small block-gap).
+.sb-breadcrumb {
+  margin-bottom: var(--wp--preset--spacing--50);
+  font-size: var(--wp--preset--font-size--small);
+  color: $brand-deep;
+
+  a {
+    color: $brand-deep;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+  }
+
+  .sb-breadcrumb__sep {
+    margin-inline: 0.5rem;
+    color: var(--wp--preset--color--muted);
+  }
+
+  // Current page (unlinked) — the theme's contrast tone, distinct from the
+  // brand-deep ancestor links.
+  [aria-current="page"] {
+    color: var(--wp--preset--color--contrast);
+  }
+}
+
+// Category eyebrow — a brand kicker link that deepens and underlines on hover,
+// matching the blog index post cards.
+.sb-eyebrow-link a {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--x-small);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--brand);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $brand-deep;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 2px;
+  }
+}
+
+// Date · read time — one uppercase meta line; a dot joins the two spans.
+.sb-post-meta {
+  display: flex;
+  align-items: baseline;
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--xx-small);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: $brand-deep;
+
+  .sb-post-meta__read::before {
+    content: "·";
+    margin-inline: 0.5rem;
+  }
+}
+
+// ---- Post body ------------------------------------------------------------
+
+// Body copy reads at the medium step. Paragraphs carrying their own font-size
+// class (e.g. a lede) keep it — those preset classes ship !important.
+.wp-block-post-content p {
+  font-size: var(--wp--preset--font-size--medium);
+}
+
+// ---- Prev / next pagination -----------------------------------------------
+
+.sb-post-pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--wp--preset--spacing--40);
+  margin-top: var(--wp--preset--spacing--70);
+  padding-top: var(--wp--preset--spacing--40);
+  border-top: 1px solid var(--wp--preset--color--border);
+}
+
+.sb-post-pagination__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-decoration: none;
+
+  &.is-next {
+    text-align: right;
+  }
+}
+
+.sb-post-pagination__dir {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--xx-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+}
+
+.sb-post-pagination__title {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--medium);
+  color: var(--wp--preset--color--contrast-2);
+  transition: color 0.15s ease;
+}
+
+.sb-post-pagination__link:hover .sb-post-pagination__title {
+  color: var(--wp--preset--color--brand);
+}
+
+// Stack on small screens; both sides read left-aligned.
+@media (max-width: 799px) {
+  .sb-post-pagination {
+    flex-direction: column;
+    gap: var(--wp--preset--spacing--40);
+  }
+  .sb-post-pagination__link.is-next {
+    text-align: left;
+  }
+}
+
+// ---- Author bio -----------------------------------------------------------
+
+.sb-author-bio {
+  align-items: flex-start;
+  gap: var(--wp--preset--spacing--40);
+  margin-top: var(--wp--preset--spacing--50);
+  padding-top: var(--wp--preset--spacing--50);
+  border-top: 1px solid var(--wp--preset--color--border);
+}
+
+// wpautop wraps the [sb_author_avatar] <img> in a <p>, so that <p> — not the
+// image — is the flex child. It must not shrink, or the img shrinks width-only
+// with it into an ellipse; zero its margins too so the avatar aligns to the top.
+.sb-author-bio > p {
+  flex: none;
+  margin: 0;
+}
+
+// The avatar image itself, held square; object-fit crops a non-square photo to
+// the circle. aspect-ratio guards against the global `img { height: auto }` reset.
+.sb-author-bio__avatar {
+  display: block;
+  width: 64px;
+  height: 64px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sb-author-bio__name {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: var(--wp--preset--font-size--medium);
+  color: var(--wp--preset--color--contrast-2);
+}
+
+.sb-author-bio__role {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--xx-small);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+}
+
+.sb-author-bio__text {
+  font-size: var(--wp--preset--font-size--small);
+  color: var(--wp--preset--color--contrast);
+}
+
+.sb-author-bio__link a {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--x-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--brand);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $brand-deep;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 2px;
+  }
+}
