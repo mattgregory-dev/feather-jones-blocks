@@ -1,0 +1,66 @@
+// Core Search block (blog sidebar) — restyled to match the Forminator form
+// inputs. It's a `button-inside` search: `.wp-block-search__inside-wrapper` is
+// the bordered field box, the input sits transparent inside it, and the submit
+// button is black on the right. The border + focus ring live on the wrapper
+// since that's the visible box, mirroring a Forminator input's border/hover/
+// focus treatment (keyboard-only ring).
+
+.wp-block-search {
+  // The bordered field box (matches a Forminator input).
+  .wp-block-search__inside-wrapper {
+    border: 1px solid var(--wp--preset--color--border);
+    border-radius: 0.5rem;
+    background: var(--wp--preset--color--base);
+    padding: 0;
+    overflow: hidden; // clip the button to the box's rounded corners
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+
+    &:hover {
+      border-color: var(--wp--preset--color--brand);
+    }
+    // Match the Forminator inputs: show the ring only for keyboard focus, so a
+    // mouse click doesn't flash it. The wrapper is the visible box but isn't
+    // focusable itself, so key the ring off a focus-visible input via :has().
+    &:has(.wp-block-search__input:focus-visible) {
+      border-color: var(--wp--preset--color--brand);
+      box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+    }
+  }
+
+  // The text field — transparent; the wrapper carries the border.
+  .wp-block-search__input {
+    border: none;
+    background: transparent;
+    padding: 0.75rem 1rem;
+    color: var(--wp--preset--color--contrast-2);
+    font-family: var(--wp--preset--font-family--body);
+    font-size: 1rem;
+    line-height: 1.4;
+
+    &::placeholder {
+      color: var(--wp--preset--color--muted);
+    }
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+
+  // Submit — solid brand. Keeps the theme button typography (Montserrat,
+  // uppercase); square corners so it fills the box's right edge cleanly. Hover
+  // deepens the brand toward black.
+  .wp-block-search__button {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background-color: var(--wp--preset--color--brand);
+    color: var(--wp--preset--color--base);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: color-mix(in srgb, var(--wp--preset--color--brand) 85%, black);
+      color: var(--wp--preset--color--base);
+    }
+  }
+}
