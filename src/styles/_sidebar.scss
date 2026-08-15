@@ -1,0 +1,58 @@
+// ---------------------------------------------------------------------------
+// Blog sidebar widgets (parts/sidebar.html). Borderless on the page surface —
+// each widget is an uppercase title with a brand underline over a divided list
+// of brand links, category counts pushed to the right. Applied via the
+// `.sidebar` wrapper and the `sb-widget` / `sb-widget-title` classes.
+// ---------------------------------------------------------------------------
+
+// Widget title — an uppercase kicker with a brand rule beneath it. The list sits
+// a block-gap below (owned by the widget group), so the title carries no bottom
+// margin of its own; its padding sets the gap between text and rule.
+.sb-widget-title {
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--wp--preset--color--brand);
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--x-small);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--contrast-2);
+}
+
+.sidebar {
+  // Category and recent-post lists: unbulleted rows with a hairline divider
+  // under each (including the last), and brand links — the mockup's ledger look.
+  .wp-block-categories,
+  .wp-block-latest-posts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    padding-block: 0.8rem;
+    border-bottom: 1px solid var(--wp--preset--color--border);
+    line-height: 1.4;
+  }
+
+  a {
+    color: var(--wp--preset--color--brand);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Categories: name on the left, post count on the right in the muted tone.
+  // justify-content pushes the count (a bare "(n)" text node after the link) to
+  // the far edge; the link keeps its own brand colour.
+  .wp-block-categories li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    color: var(--wp--preset--color--muted);
+  }
+}
