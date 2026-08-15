@@ -23,6 +23,8 @@
 		"mobileRatio": { "type": "string", "default": "3 / 2" },
 		"mobileFocal": { "type": "string", "default": "center" },
 		"mobileImageId": { "type": "number" },
+		"backgroundImageId": { "type": "number", "default": 0 },
+		"overlayColor": { "type": "string", "default": "" },
 		"eyebrow": { "type": "string", "default": "" },
 		"level": { "type": "string", "default": "h2" },
 		"title": { "type": "string", "default": "" }

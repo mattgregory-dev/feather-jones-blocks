@@ -8,8 +8,9 @@ import {
 	MediaReplaceFlow,
 	MediaUpload,
 	MediaUploadCheck,
+	ColorPalette,
 } from '@wordpress/block-editor';
-import { PanelBody, SelectControl, TextControl, Button } from '@wordpress/components';
+import { PanelBody, SelectControl, TextControl, Button, BaseControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 
 /**
@@ -25,18 +26,53 @@ const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/heading', 'core/list', 'core/qu
 const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add spotlight text…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { imageId, imageAlt, imagePosition, verticalAlignment, mobileRatio, mobileFocal, mobileImageId, eyebrow, level, title } = attributes;
+	const {
+		imageId,
+		imageAlt,
+		imagePosition,
+		verticalAlignment,
+		mobileRatio,
+		mobileFocal,
+		mobileImageId,
+		backgroundImageId,
+		overlayColor,
+		eyebrow,
+		level,
+		title,
+	} = attributes;
 	const isH1 = 'h1' === level;
 	const TitleTag = isH1 ? 'h1' : 'h2';
+	const hasBackground = !! backgroundImageId;
+	const hasOverlay = hasBackground && !! overlayColor;
+
+	// Background image source (for the live canvas cover) and the theme palette
+	// for the overlay color control.
+	const { backgroundUrl, themeColors } = useSelect(
+		( select ) => ( {
+			backgroundUrl: backgroundImageId
+				? select( 'core' ).getMedia( backgroundImageId )?.source_url || ''
+				: '',
+			themeColors: select( 'core/block-editor' ).getSettings().colors || [],
+		} ),
+		[ backgroundImageId ]
+	);
 
 	const blockProps = useBlockProps( {
 		className:
 			`is-position-${ imagePosition } is-valign-${ verticalAlignment }` +
 			( imageId ? '' : ' has-no-media' ) +
-			( imageId && mobileImageId ? ' has-mobile-image' : '' ),
+			( imageId && mobileImageId ? ' has-mobile-image' : '' ) +
+			( hasBackground ? ' has-cover-background' : '' ) +
+			( hasOverlay ? ' has-overlay' : '' ),
 		// Mobile crop controls surface as custom properties the <= 800px rule reads;
-		// set here too so a narrowed editor canvas previews them.
-		style: { '--sb-spot-ratio': mobileRatio, '--sb-spot-focal': mobileFocal },
+		// set here too so a narrowed editor canvas previews them. The cover
+		// background and overlay tint are visual config, so they render live too.
+		style: {
+			'--sb-spot-ratio': mobileRatio,
+			'--sb-spot-focal': mobileFocal,
+			...( hasBackground && backgroundUrl ? { backgroundImage: `url(${ backgroundUrl })` } : {} ),
+			...( hasOverlay ? { '--sb-spot-overlay': overlayColor } : {} ),
+		},
 	} );
 
 	const innerBlocksProps = useInnerBlocksProps(
@@ -110,6 +146,54 @@ export default function Edit( { attributes, setAttributes } ) {
 						__nextHasNoMarginBottom
 					/>
 				</PanelBody>
+
+				<PanelBody title={ __( 'Background', 'fj-blocks' ) }>
+						<MediaUploadCheck>
+							<MediaUpload
+								onSelect={ ( selected ) => setAttributes( { backgroundImageId: selected.id } ) }
+								allowedTypes={ [ 'image' ] }
+								value={ backgroundImageId }
+								render={ ( { open } ) => (
+									<BaseControl __nextHasNoMarginBottom>
+										<Button variant="secondary" onClick={ open }>
+											{ backgroundImageId
+												? __( 'Replace background image', 'fj-blocks' )
+												: __( 'Set background image', 'fj-blocks' ) }
+										</Button>
+										{ hasBackground && (
+											<Button
+												variant="link"
+												isDestructive
+												onClick={ () =>
+													setAttributes( { backgroundImageId: 0, overlayColor: '' } )
+												}
+											>
+												{ __( 'Remove', 'fj-blocks' ) }
+											</Button>
+										) }
+									</BaseControl>
+								) }
+							/>
+						</MediaUploadCheck>
+
+						{ /* An overlay over nothing is meaningless — only offer it with a background. */ }
+						{ hasBackground && (
+							<BaseControl
+								label={ __( 'Overlay tint', 'fj-blocks' ) }
+								help={ __( 'Semi-transparent tint over the background. Adjust the alpha for strength.', 'fj-blocks' ) }
+								__nextHasNoMarginBottom
+							>
+								<ColorPalette
+									colors={ themeColors }
+									value={ overlayColor }
+									onChange={ ( value ) => setAttributes( { overlayColor: value || '' } ) }
+									enableAlpha
+									clearable
+								/>
+							</BaseControl>
+						) }
+				</PanelBody>
+
 				<PanelBody title={ __( 'Content', 'fj-blocks' ) }>
 					<TextControl
 						label={ __( 'Eyebrow (optional)', 'fj-blocks' ) }
