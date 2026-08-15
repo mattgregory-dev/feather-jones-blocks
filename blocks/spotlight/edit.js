@@ -6,6 +6,8 @@ import {
 	BlockControls,
 	MediaPlaceholder,
 	MediaReplaceFlow,
+	MediaUpload,
+	MediaUploadCheck,
 } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl, Button } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
@@ -23,12 +25,18 @@ const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/heading', 'core/list', 'core/qu
 const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add spotlight text…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
-	const { imageId, imageAlt, imagePosition, verticalAlignment, eyebrow, level, title } = attributes;
+	const { imageId, imageAlt, imagePosition, verticalAlignment, mobileRatio, mobileFocal, mobileImageId, eyebrow, level, title } = attributes;
 	const isH1 = 'h1' === level;
 	const TitleTag = isH1 ? 'h1' : 'h2';
 
 	const blockProps = useBlockProps( {
-		className: `is-position-${ imagePosition } is-valign-${ verticalAlignment }` + ( imageId ? '' : ' has-no-media' ),
+		className:
+			`is-position-${ imagePosition } is-valign-${ verticalAlignment }` +
+			( imageId ? '' : ' has-no-media' ) +
+			( imageId && mobileImageId ? ' has-mobile-image' : '' ),
+		// Mobile crop controls surface as custom properties the <= 800px rule reads;
+		// set here too so a narrowed editor canvas previews them.
+		style: { '--sb-spot-ratio': mobileRatio, '--sb-spot-focal': mobileFocal },
 	} );
 
 	const innerBlocksProps = useInnerBlocksProps(
@@ -36,19 +44,28 @@ export default function Edit( { attributes, setAttributes } ) {
 		{ allowedBlocks: ALLOWED_BLOCKS, template: TEMPLATE, templateLock: false }
 	);
 
-	// Media object for the selected image (source URL for the canvas preview).
+	// Media objects for the canvas preview source URLs.
 	const image = useSelect(
 		( select ) => ( imageId ? select( 'core' ).getMedia( imageId ) : null ),
 		[ imageId ]
 	);
+	const mobileImage = useSelect(
+		( select ) => ( mobileImageId ? select( 'core' ).getMedia( mobileImageId ) : null ),
+		[ mobileImageId ]
+	);
 
-	const onSelectImage = ( media ) =>
-		setAttributes( { imageId: media.id, imageAlt: media.alt || '' } );
+	const onSelectImage = ( selected ) =>
+		setAttributes( { imageId: selected.id, imageAlt: selected.alt || '' } );
 
 	const media = (
 		<figure className="spotlight__media">
 			{ imageId ? (
-				<img src={ image?.source_url } alt={ imageAlt } />
+				<>
+					<img className="spotlight__img spotlight__img--desktop" src={ image?.source_url } alt={ imageAlt } />
+					{ mobileImageId && (
+						<img className="spotlight__img spotlight__img--mobile" src={ mobileImage?.source_url } alt={ imageAlt } />
+					) }
+				</>
 			) : (
 				<MediaPlaceholder
 					icon="format-image"
@@ -83,7 +100,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 					<SelectControl
 						label={ __( 'Vertical alignment', 'fj-blocks' ) }
-						help={ __( 'Applies above 1160px; narrower screens stack and top-align.', 'fj-blocks' ) }
+						help={ __( 'Applies above 1120px; narrower screens stack and top-align.', 'fj-blocks' ) }
 						value={ verticalAlignment }
 						options={ [
 							{ label: __( 'Center', 'fj-blocks' ), value: 'center' },
@@ -127,10 +144,60 @@ export default function Edit( { attributes, setAttributes } ) {
 							onChange={ ( value ) => setAttributes( { imageAlt: value } ) }
 							__nextHasNoMarginBottom
 						/>
+						<SelectControl
+							label={ __( 'Mobile crop ratio', 'fj-blocks' ) }
+							help={ __( 'Aspect ratio the image is cropped to below 800px. Keep 3:2 unless the crop fails.', 'fj-blocks' ) }
+							value={ mobileRatio }
+							options={ [
+								{ label: __( '3:2 (default)', 'fj-blocks' ), value: '3 / 2' },
+								{ label: __( '4:3', 'fj-blocks' ), value: '4 / 3' },
+								{ label: __( '1:1 (square)', 'fj-blocks' ), value: '1 / 1' },
+							] }
+							onChange={ ( value ) => setAttributes( { mobileRatio: value } ) }
+							__nextHasNoMarginBottom
+						/>
+						<SelectControl
+							label={ __( 'Mobile focal point', 'fj-blocks' ) }
+							help={ __( 'Which part of the image the crop keeps below 800px. Try this before changing ratio.', 'fj-blocks' ) }
+							value={ mobileFocal }
+							options={ [
+								{ label: __( 'Center', 'fj-blocks' ), value: 'center' },
+								{ label: __( 'Top', 'fj-blocks' ), value: 'center top' },
+								{ label: __( 'Bottom', 'fj-blocks' ), value: 'center bottom' },
+							] }
+							onChange={ ( value ) => setAttributes( { mobileFocal: value } ) }
+							__nextHasNoMarginBottom
+						/>
+						<p className="components-base-control__help" style={ { marginBottom: '0.25rem' } }>
+							{ __( 'Optional mobile image — shown below 800px instead of the cropped desktop one. Supply a pre-cropped landscape version when the crop can’t be rescued.', 'fj-blocks' ) }
+						</p>
+						<MediaUploadCheck>
+							<MediaUpload
+								allowedTypes={ [ 'image' ] }
+								value={ mobileImageId }
+								onSelect={ ( selected ) => setAttributes( { mobileImageId: selected.id } ) }
+								render={ ( { open } ) => (
+									<Button variant="secondary" onClick={ open }>
+										{ mobileImageId
+											? __( 'Replace mobile image', 'fj-blocks' )
+											: __( 'Set mobile image', 'fj-blocks' ) }
+									</Button>
+								) }
+							/>
+							{ mobileImageId && (
+								<Button
+									variant="link"
+									isDestructive
+									onClick={ () => setAttributes( { mobileImageId: undefined } ) }
+								>
+									{ __( 'Remove mobile image', 'fj-blocks' ) }
+								</Button>
+							) }
+						</MediaUploadCheck>
 						<Button
 							variant="link"
 							isDestructive
-							onClick={ () => setAttributes( { imageId: undefined, imageAlt: '' } ) }
+							onClick={ () => setAttributes( { imageId: undefined, imageAlt: '', mobileImageId: undefined } ) }
 						>
 							{ __( 'Remove image', 'fj-blocks' ) }
 						</Button>

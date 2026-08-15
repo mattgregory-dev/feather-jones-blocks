@@ -87,14 +87,34 @@
   }
 }
 
-// <= 800px: crop the (often portrait) image to a 3:2 landscape so it reads as
-// imagery, not a full-height wall, at mobile width. width:100% + height:auto
-// come from the base img rule; aspect-ratio drives the height and object-fit
-// cover crops the source into it.
+// Mobile image (.spotlight__img--mobile) — an author-supplied, pre-cropped
+// landscape alternate, hidden on desktop and swapped in for the desktop image
+// below 800px. The escape hatch for tall images the CSS crop can't rescue. The
+// three-class selector (0,3,0) outranks the base .spotlight__media img (0,2,1).
+.wp-block-starter-blocks-spotlight .spotlight__media .spotlight__img--mobile {
+  display: none;
+}
+
+// <= 800px: crop whichever image is shown to a landscape ratio so it reads as
+// imagery, not a full-height wall. width:100% + height:auto come from the base
+// img rule; aspect-ratio drives the height and object-fit cover crops the source
+// into it. Ratio and focal point are author-controlled per spotlight via custom
+// properties (defaults 3:2 / center). The crop applies to the mobile image too:
+// when it already matches the ratio the crop is a no-op, otherwise a safety net —
+// so the ratio/focal controls keep working whether or not a mobile image is set.
 @media (width <= 800px) {
   .wp-block-starter-blocks-spotlight .spotlight__media img {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: var(--sb-spot-ratio, 3 / 2);
     object-fit: cover;
+    object-position: var(--sb-spot-focal, center);
+  }
+
+  .wp-block-starter-blocks-spotlight.has-mobile-image .spotlight__media .spotlight__img--desktop {
+    display: none;
+  }
+
+  .wp-block-starter-blocks-spotlight .spotlight__media .spotlight__img--mobile {
+    display: block;
   }
 }
 
