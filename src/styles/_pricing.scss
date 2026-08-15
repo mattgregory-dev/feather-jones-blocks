@@ -36,6 +36,14 @@
     justify-content: space-between;
     gap: var(--wp--preset--spacing--50);
     position: relative; // anchor for the featured badge
+
+    // Shared background across every plan; regular cards get a hairline muted
+    // border (the featured card overrides to a bold brand border below).
+    // !important is required to beat WP's preset `has-*-color` classes
+    // (border-color / background, both shipped !important) and any inline
+    // border-width.
+    border: 2px solid var(--wp--preset--color--border) !important;
+    background-color: color-mix(in srgb, var(--wp--preset--color--surface-1) 40%, transparent) !important;
     // Half the default card padding — these plan cards hold little content and
     // read tighter. Derived from the token so it tracks the scale.
     padding: calc(var(--wp--preset--spacing--60) / 2);
@@ -67,6 +75,10 @@
 
   // Featured plan — "Best Value" pill becomes a badge centred on the top border.
   .is-featured {
+    // Bold brand border (regular cards use the hairline muted border above).
+    // Later source order + equal specificity (0,2,0) wins the !important tie.
+    border: 2px solid var(--wp--preset--color--brand) !important;
+
     // A little extra headroom (over the halved padding) so the badge clears the
     // "Full Year" label.
     padding-top: var(--wp--preset--spacing--50);
