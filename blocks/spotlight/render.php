@@ -53,6 +53,29 @@ if ( $sp_image_id && $sp_mobile_id ) {
 	$sp_classes .= ' has-mobile-image';
 }
 
+// Optional full-cover background image with an alpha-capable overlay tint,
+// mirroring the hero block. The overlay is user input landing in a style value,
+// so accept only a hex (3/4/6/8-digit) or rgb()/rgba() string, and only when a
+// background exists (an overlay over nothing is meaningless) — anything else is
+// dropped, never echoed raw.
+$sp_bg_id  = isset( $attributes['backgroundImageId'] ) ? (int) $attributes['backgroundImageId'] : 0;
+$sp_bg_url = $sp_bg_id ? wp_get_attachment_image_url( $sp_bg_id, 'full' ) : '';
+
+$sp_overlay_raw = isset( $attributes['overlayColor'] ) ? trim( (string) $attributes['overlayColor'] ) : '';
+$sp_overlay     = '';
+if ( $sp_bg_url && '' !== $sp_overlay_raw
+	&& preg_match( '/^(#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})|rgba?\(\s*[0-9.,%\s\/]+\))$/i', $sp_overlay_raw )
+) {
+	$sp_overlay = $sp_overlay_raw;
+}
+
+if ( $sp_bg_url ) {
+	$sp_classes .= ' has-cover-background';
+	if ( '' !== $sp_overlay ) {
+		$sp_classes .= ' has-overlay';
+	}
+}
+
 // Mobile crop controls (<= 800px) surface as custom properties the stylesheet
 // reads: the aspect ratio the image is cropped to, and which part of it the crop
 // keeps. Validated against a fixed set so only known CSS values reach the style.
@@ -63,6 +86,12 @@ $sp_focal = in_array( $attributes['mobileFocal'] ?? 'center', array( 'center', '
 	? $attributes['mobileFocal']
 	: 'center';
 $sp_style = sprintf( '--sb-spot-ratio:%s;--sb-spot-focal:%s;', $sp_ratio, $sp_focal );
+if ( $sp_bg_url ) {
+	$sp_style .= 'background-image:url(' . esc_url( $sp_bg_url ) . ');';
+	if ( '' !== $sp_overlay ) {
+		$sp_style .= '--sb-spot-overlay:' . $sp_overlay . ';';
+	}
+}
 ?>
 <section <?php echo get_block_wrapper_attributes( array( 'class' => $sp_classes, 'style' => $sp_style ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core. ?>>
 	<div class="spotlight__inner">

@@ -74,6 +74,52 @@
 
   // No image selected — text spans the full width, no empty column.
   &.has-no-media .spotlight__text { flex: 1 1 100%; }
+
+  // Cover background + optional overlay tint (mirrors the hero block). The
+  // background image and --sb-spot-overlay custom property are set inline by
+  // render.php; sizing and the tint layer live here.
+  &.has-cover-background {
+    position: relative;
+    isolation: isolate; // scope the overlay/content z-indexes to this section
+    background-size: cover;
+    background-position: center;
+
+    // Overlay tint — above the image, below the content; only when has-overlay is
+    // set. A horizontal gradient: near-opaque on the text side (a sliver of image
+    // bleeds through) fading to transparent so the background reads on the image
+    // side. Alpha via color-mix on the overlay value (solid fallback first).
+    &.has-overlay::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: linear-gradient(90deg, var(--sb-spot-overlay) 0%, var(--sb-spot-overlay) 45%, transparent 85%); // fallback
+      background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--sb-spot-overlay) 98%, transparent) 0%,
+        color-mix(in srgb, var(--sb-spot-overlay) 94%, transparent) 45%,
+        transparent 85%
+      );
+    }
+
+    // Image on the left puts the text on the right, so flip the gradient to keep
+    // the opaque side under the text.
+    &.is-position-left.has-overlay::before {
+      background: linear-gradient(270deg, var(--sb-spot-overlay) 0%, var(--sb-spot-overlay) 45%, transparent 85%); // fallback
+      background: linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--sb-spot-overlay) 98%, transparent) 0%,
+        color-mix(in srgb, var(--sb-spot-overlay) 94%, transparent) 45%,
+        transparent 85%
+      );
+    }
+
+    // The columns sit above the overlay tint.
+    .spotlight__inner {
+      position: relative;
+      z-index: 1;
+    }
+  }
 }
 
 // 800–1160px: equal-width columns (50/50), top-aligned — otherwise the shorter
