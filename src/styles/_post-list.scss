@@ -1,0 +1,84 @@
+// ---------------------------------------------------------------------------
+// Blog post list (home.html query) — open editorial layout: image left, text
+// right, a hairline divider between posts, no card chrome. The category and
+// Read More are brand kickers that deepen and underline on hover; the title
+// deepens to brand. Applied via the `sb-post*` classes on the query blocks.
+// ---------------------------------------------------------------------------
+
+// A brand tone deepened toward black — stands in for the mockup's brand-dark on
+// the interactive kickers (the theme has no brand-dark token).
+$brand-deep: color-mix(in srgb, var(--wp--preset--color--brand) 82%, black);
+
+.sb-post {
+  padding-block: var(--wp--preset--spacing--50);
+  border-bottom: 1px solid var(--wp--preset--color--border);
+}
+
+// Meta row — category · date, on one baseline-aligned line. A dot before the
+// date separates the two (the date block can't carry a prefix of its own).
+.sb-post__meta {
+  align-items: baseline;
+}
+
+.sb-post__cat a {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--x-small);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--brand);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $brand-deep;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 2px;
+  }
+}
+
+.sb-post__date {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--xx-small);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+
+  &::before {
+    content: "·";
+    margin-inline-end: 0.5rem;
+  }
+}
+
+// Title — serif, dark, deepens to brand on hover.
+.sb-post__title a {
+  color: var(--wp--preset--color--contrast-2);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: var(--wp--preset--color--brand);
+  }
+}
+
+// Read More — brand kicker matching the category's hover treatment.
+.sb-post .wp-block-post-excerpt__more-link {
+  display: inline-block;
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-size: var(--wp--preset--font-size--x-small);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--brand);
+  text-decoration: none;
+  transition: color 0.15s ease;
+
+  &:hover {
+    color: $brand-deep;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 2px;
+  }
+}
