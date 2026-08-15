@@ -93,3 +93,35 @@
     display: none !important;
   }
 }
+
+// Top-align a flex row's items at 1120px and below — an escape hatch for one-off
+// core Columns (or a flex Group) that read best centered on desktop but should
+// top-align once the layout tightens (the image column shrinks faster than the
+// text grows, so centered leaves the short side floating). Applied via the
+// block's Additional CSS class.
+//
+// Core Columns don't center via the container — each column carries its own
+// `align-self: center` (.wp-block-column.is-vertically-aligned-center), and a
+// child's align-self beats the parent's align-items. So override the children's
+// align-self directly; also set the container's align-items for flex Groups
+// whose children have no explicit align-self. !important wins regardless of the
+// core stylesheet's order.
+@media (max-width: 1120px) {
+  .sb-align-top-1120 {
+    align-items: flex-start !important;
+  }
+  .sb-align-top-1120 > * {
+    align-self: flex-start !important;
+  }
+}
+
+// Center a flex row's items at 800px and below — for a Buttons group (or any
+// flex block) that sits left-aligned on desktop but should center once the
+// layout tightens on mobile. Applied via the block's Additional CSS class.
+// !important beats core's justification classes (e.g.
+// .is-content-justification-left) regardless of the core stylesheet's order.
+@media (max-width: 800px) {
+  .sb-justify-center-800 {
+    justify-content: center !important;
+  }
+}

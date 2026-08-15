@@ -78,7 +78,7 @@
 
 // 800–1160px: equal-width columns (50/50), top-aligned — otherwise the shorter
 // column floats in the extra space.
-@media (width <= 1160px) {
+@media (width <= 1120px) {
   .wp-block-starter-blocks-spotlight {
     .spotlight__inner { align-items: flex-start; }
 
@@ -87,20 +87,30 @@
   }
 }
 
-// <= 800px: stack full-width, with tighter vertical padding.
+// <= 800px: crop the (often portrait) image to a 3:2 landscape so it reads as
+// imagery, not a full-height wall, at mobile width. width:100% + height:auto
+// come from the base img rule; aspect-ratio drives the height and object-fit
+// cover crops the source into it.
 @media (width <= 800px) {
-  .wp-block-starter-blocks-spotlight {
-    padding-block: var(--wp--preset--spacing--40);
+  .wp-block-starter-blocks-spotlight .spotlight__media img {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+}
 
-    .spotlight__inner { flex-direction: column; }
+// <= 800px: stack full-width with the image on top for EVERY spotlight. DOM
+// order is text-then-media, so column-reverse lifts the media above the text.
+// The doubled block class (0,3,0) outranks the desktop is-position-left
+// row-reverse (also 0,3,0) on source order, so image-left variants stack
+// image-first too — no separate override needed.
+@media (width <= 800px) {
+  .wp-block-starter-blocks-spotlight.wp-block-starter-blocks-spotlight .spotlight__inner {
+    flex-direction: column-reverse;
+  }
 
-    // Image-left spotlights keep the image on top when stacked.
-    &.is-position-left .spotlight__inner { flex-direction: column-reverse; }
-
-    .spotlight__text,
-    .spotlight__media {
-      flex: none;
-      width: 100%;
-    }
+  .wp-block-starter-blocks-spotlight .spotlight__text,
+  .wp-block-starter-blocks-spotlight .spotlight__media {
+    flex: none;
+    width: 100%;
   }
 }

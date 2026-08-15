@@ -5,10 +5,12 @@
 // partial. Starts as a near-clone; that duplication is the point. If a shared
 // change hits both later, extract a _split-layout.scss partial then.
 //
-//   > 1160px : side-by-side, text-55 / image-45. Vertical alignment follows the
-//              block's `verticalAlignment` attribute (centered by default;
-//              `is-valign-top` top-aligns).
-//   <= 1160px: columns stack and top-align — long bios read full-width sooner.
+//   > 1120px    : side-by-side, text-55 / image-45. Vertical alignment follows
+//                 the block's `verticalAlignment` attribute (centered by
+//                 default; `is-valign-top` top-aligns).
+//   800–1120px  : columns go equal-width (≈50/50) and top-align, regardless of
+//                 the attribute — otherwise the shorter column floats awkwardly.
+//   <= 800px    : columns stack image-first (portrait on top), full-width.
 //
 // The image side is flipped with flex-direction (row-reverse / column-reverse),
 // never duplicated markup: DOM order is always text-then-media.
@@ -68,28 +70,29 @@
   &.has-no-media .bio__text { flex: 1 1 100%; }
 }
 
-// <= 1160px: stack full-width and top-align (long bios want the full measure).
-@media (width <= 1160px) {
+// 800–1120px: equal-width columns (50/50), top-aligned — otherwise the shorter
+// column floats in the extra space.
+@media (width <= 1120px) {
   .wp-block-starter-blocks-bio {
-    .bio__inner {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    // Image-left bios keep the portrait on top when stacked.
-    &.is-position-left .bio__inner { flex-direction: column-reverse; }
+    .bio__inner { align-items: flex-start; }
 
     .bio__text,
-    .bio__media {
-      flex: none;
-      width: 100%;
-    }
+    .bio__media { flex: 1 1 0; }
   }
 }
 
-// <= 800px: tighter vertical padding.
+// <= 800px: stack full-width with the portrait on top for EVERY bio. DOM order
+// is text-then-media, so column-reverse lifts the media above the text. The
+// doubled block class (0,3,0) outranks the desktop is-position-left row-reverse
+// (also 0,3,0) on source order, so image-left bios stack image-first too.
 @media (width <= 800px) {
-  .wp-block-starter-blocks-bio {
-    padding-block: var(--wp--preset--spacing--40);
+  .wp-block-starter-blocks-bio.wp-block-starter-blocks-bio .bio__inner {
+    flex-direction: column-reverse;
+  }
+
+  .wp-block-starter-blocks-bio .bio__text,
+  .wp-block-starter-blocks-bio .bio__media {
+    flex: none;
+    width: 100%;
   }
 }
