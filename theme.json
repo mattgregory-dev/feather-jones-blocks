@@ -85,7 +85,7 @@
         { "slug": "small",    "name": "Small",    "size": "0.94rem",      "fluid": false },
         { "slug": "medium",   "name": "Medium",   "size": "1.06rem",  "fluid": false },
         { "slug": "large",    "name": "Large",    "size": "1.3125rem", "fluid": false },
-        { "slug": "x-large",  "name": "X Large",  "size": "1.5rem",    "fluid": false },
+        { "slug": "x-large",  "name": "X Large",  "size": "1.5rem",    "fluid": { "min": "1.375rem", "max": "1.625rem" } },
         { "slug": "xx-large", "name": "XX Large", "size": "2rem",      "fluid": { "min": "1.75rem", "max": "2.25rem" } },
         { "slug": "huge",     "name": "Huge",     "size": "2.5rem",    "fluid": { "min": "2.2rem", "max": "2.75rem" } }
       ]
