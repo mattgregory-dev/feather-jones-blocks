@@ -4,31 +4,45 @@
 // contact layout (form + sidebar) and reusable elsewhere.
 // ---------------------------------------------------------------------------
 
-// Doubled class (0,2,0) on purpose: a nested card also carries WP's
-// `has-global-padding` class (root-padding-aware alignments), whose
-// `.has-global-padding { padding-inline: root }` is an equal (0,1,0) match on
-// the inline axes. On the front end our bundle enqueues last (priority 999) so
-// a single `.sb-card` wins the source-order tie; in the editor the
-// global-styles inline CSS loads AFTER our bundle and would win instead,
-// wiping the card's left/right padding. Out-ranking it settles the cascade the
-// same way in both places.
-.sb-card.sb-card {
+// Card panel chrome — white surface, dark text, hairline border, soft corners.
+// Shared by the roomy `sb-card` and the compact `sb-card-tight` (blog post
+// cards, sidebar widgets); the two differ only in their padding.
+.sb-card,
+.sb-card-tight {
   background-color: var(--wp--preset--color--base);
   // A white panel carries its own dark text, so a card stays readable on any
   // band — including a dark CTA band that sets its own text to a light colour
   // (which the card would otherwise inherit onto its white surface).
   color: var(--wp--preset--color--contrast);
-  padding: var(--wp--preset--spacing--60);
   border: 1px solid var(--wp--preset--color--border);
   border-radius: 12px;
+}
 
-  // Icon well — a card's line-art icon sits on a soft circular surface-3
-  // background (the homepage feature cards). Colour + a full round; the icon's
-  // own size and whitespace do the rest.
-  figure.wp-block-image img {
-    background-color: var(--wp--preset--color--surface-3);
-    border-radius: 100%;
-  }
+// Padding. Doubled class (0,2,0) beats WP's `has-global-padding` padding-inline
+// (0,1,0): a nested card also carries has-global-padding, and in the editor the
+// global-styles inline CSS loads after our bundle and would otherwise wipe the
+// card's left/right padding. Out-ranking it settles the cascade in both places.
+// Roomy default; compact variant for dense contexts.
+.sb-card.sb-card {
+  padding: var(--wp--preset--spacing--60);
+}
+.sb-card-tight.sb-card-tight {
+  padding: var(--wp--preset--spacing--40);
+}
+
+// Blog post card: no gap above the "Read More" link — the post-excerpt block's
+// more-link is a separate paragraph that otherwise takes a block-gap margin on
+// top; zero it so it sits tight under the excerpt.
+.sb-card-tight .wp-block-post-excerpt__more-text {
+  margin-block-start: 0;
+}
+
+// Icon well — a card's line-art icon sits on a soft circular surface-3
+// background (the homepage feature cards). Colour + a full round; the icon's
+// own size and whitespace do the rest.
+.sb-card figure.wp-block-image img {
+  background-color: var(--wp--preset--color--surface-3);
+  border-radius: 100%;
 }
 
 // Quote treatment — a large, soft opening quotation glyph in the top-left
