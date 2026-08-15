@@ -87,21 +87,45 @@
   left: -0.5rem;
 }
 
-// Quick-links list inside a card: unbulleted rows with a soft divider between.
+// Quick-links card (contact page) — matched to the blog sidebar widgets: an
+// uppercase brand-underlined title over brand links with hairline dividers. The
+// card lives in page content, so this styles its existing classes rather than
+// adding the sidebar ones. `:has(> .sb-quick-links)` scopes the title treatment
+// to this card only.
+.sb-card:has(> .sb-quick-links) .wp-block-heading {
+  margin: 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--wp--preset--color--brand);
+  // Eyebrow (Montserrat) kicker — !important beats the block's
+  // has-heading-font-family (which ships !important) so it isn't left serif.
+  font-family: var(--wp--preset--font-family--eyebrow) !important;
+  font-size: var(--wp--preset--font-size--x-small);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--contrast-2);
+}
+
+// Quick-links list: unbulleted brand-link rows with a hairline divider under
+// each — the sidebar widget's list treatment.
 .sb-quick-links {
-  // Small top margin (~11px) to separate the list from the heading above.
   margin: var(--wp--preset--spacing--30) 0 0;
   padding: 0;
   list-style: none;
 
-  li + li {
-    border-top: 1px solid var(--wp--preset--color--border);
+  li {
+    border-bottom: 1px solid var(--wp--preset--color--border);
   }
 
   a {
     display: block;
-    padding-block: 0.6rem;
+    padding-block: 0.8rem;
+    color: var(--wp--preset--color--brand);
     text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
