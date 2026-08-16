@@ -307,7 +307,12 @@ function sb_course_catalog_row( $course ) {
 
 	$row .= '<span class="sb-course-info">';
 	if ( $featured ) {
-		$row .= '<span class="sb-course-pill">' . esc_html__( 'Featured', 'fj-blocks' ) . '</span>';
+		// Optional custom pill text (sb_course_featured_label); "Featured" otherwise.
+		$pill_label = function_exists( 'get_field' ) ? trim( (string) get_field( 'sb_course_featured_label', $course_id ) ) : '';
+		if ( '' === $pill_label ) {
+			$pill_label = __( 'Featured', 'fj-blocks' );
+		}
+		$row .= '<span class="sb-course-pill">' . esc_html( $pill_label ) . '</span>';
 	}
 	$row .= '<h3 class="sb-course-title">' . esc_html( $title ) . '</h3>';
 	if ( '' !== $summary ) {
