@@ -23,6 +23,7 @@
 		"eyebrow": { "type": "string", "default": "" },
 		"level": { "type": "string", "default": "h2" },
 		"title": { "type": "string", "default": "" },
+		"backgroundColor": { "type": "string", "default": "" },
 		"backgroundImageId": { "type": "number", "default": 0 },
 		"overlayColor": { "type": "string", "default": "" },
 		"textScheme": { "type": "string", "default": "default" }

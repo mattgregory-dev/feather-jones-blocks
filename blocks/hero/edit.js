@@ -26,7 +26,20 @@ import { useSelect } from '@wordpress/data';
  * no column image is set (not hidden).
  */
 
-const ALLOWED_BLOCKS = [ 'core/paragraph', 'core/buttons', 'core/separator' ];
+// The hero body accepts the same layout set as a card (group/columns for
+// structure, plus the common content blocks), with core/buttons kept for the
+// hero's CTA. A hero has no whole-surface link, so buttons nest freely here.
+const ALLOWED_BLOCKS = [
+	'core/group',
+	'core/columns',
+	'core/paragraph',
+	'core/heading',
+	'core/image',
+	'core/list',
+	'core/buttons',
+	'core/separator',
+	'core/spacer',
+];
 const TEMPLATE = [ [ 'core/paragraph', { placeholder: __( 'Add hero text…', 'fj-blocks' ) } ] ];
 
 export default function Edit( { attributes, setAttributes } ) {
@@ -38,6 +51,7 @@ export default function Edit( { attributes, setAttributes } ) {
 		eyebrow,
 		level,
 		title,
+		backgroundColor,
 		backgroundImageId,
 		overlayColor,
 		textScheme,
@@ -71,6 +85,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			( 'light' === textScheme ? ' has-text-light' : '' ) +
 			( 'dark' === textScheme ? ' has-text-dark' : '' ),
 		style: {
+			...( backgroundColor ? { backgroundColor } : {} ),
 			...( hasBackground && backgroundUrl ? { backgroundImage: `url(${ backgroundUrl })` } : {} ),
 			...( hasOverlay ? { '--hero-overlay': overlayColor } : {} ),
 		},
@@ -134,6 +149,21 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 
 				<PanelBody title={ __( 'Background', 'fj-blocks' ) }>
+					{ /* A solid fill for when an image + overlay isn't wanted. It also sits
+					     under a cover image as a fallback, so both can be set. */ }
+					<BaseControl
+						label={ __( 'Background color', 'fj-blocks' ) }
+						help={ __( 'A solid section background. A cover image, if set, layers over it.', 'fj-blocks' ) }
+						__nextHasNoMarginBottom
+					>
+						<ColorPalette
+							colors={ themeColors }
+							value={ backgroundColor }
+							onChange={ ( value ) => setAttributes( { backgroundColor: value || '' } ) }
+							clearable
+						/>
+					</BaseControl>
+
 					<MediaUploadCheck>
 						<MediaUpload
 							onSelect={ ( selected ) => setAttributes( { backgroundImageId: selected.id } ) }
