@@ -88,6 +88,46 @@ The block namespace (`starter-blocks/*`), the generated class prefix
 (`starter-blocks`) are likewise permanent and shared across every cloned
 project. See the repo-root `CLAUDE.md` for the full conventions index.
 
+## Units: spacing preset vs. rem vs. px
+
+CSS values are chosen by what the value *is*, not by whichever number the mockup
+happened to use. The rule of thumb, highest-preference first:
+
+**Spacing — padding, margin, gap. Never raw px.**
+
+- **Spacing preset** — `var(--wp--preset--spacing--NN)` — is the default for
+  *structural* spacing: section padding, band rhythm, the vertical gaps between
+  components, anything that should ride the theme's spacing scale. The larger
+  steps (`50`–`80`) are fluid `clamp()`s, so they scale with the viewport, and
+  every value reseeds from `theme.json` — that's why layout-level spacing goes
+  through them.
+- **rem** — for *component-internal* spacing (a gap inside a card, a small pad on
+  a pill) and for any value that falls between preset steps. It scales with the
+  root font-size / user zoom, which px does not. Match an existing preset when
+  the value is close to one; reach for rem only when it genuinely sits off-scale.
+
+**Fixed graphical constants — px.** These are meant to stay a constant device
+size and deliberately do *not* ride the fluid/relative scale:
+
+- border widths (`1px`, `2px`) and border-radius (`6px`, `8px`, `12px`),
+- `box-shadow` offsets/blur (`0 6px 16px …`) and `transform` offsets
+  (`translateY(-2px)`),
+- fixed media / layout dimensions — a thumbnail's `120px` grid column, a hero
+  photo's `300px` height, a `520px` max-width cap.
+
+**Proportions — `%` / `fr` / `flex-basis`** for column splits and grid tracks.
+
+**Type — font-size presets** (`var(--wp--preset--font-size--*)`) for the scale,
+rem for the occasional off-scale size. **Color — tokens + `color-mix`** (above).
+
+The test for any value: *is it spacing?* → preset (structural) or rem
+(component). *A fixed graphical constant* (border, radius, shadow, transform,
+fixed media size)? → px. *A proportion?* → `%`/`fr`. *Type?* → preset/rem.
+
+This is the **target** convention. Newer partials follow it; some older/ported
+ones still carry stray px spacing and are reconciled in the polish-stage sweep
+(see [PIPELINE.md](PIPELINE.md)).
+
 ## Project structure
 
 ```
