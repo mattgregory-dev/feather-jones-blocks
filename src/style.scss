@@ -74,6 +74,7 @@
 @use "./styles/icons"; // sb-trust — icon + label rows (SVG mask icons)
 @use "./styles/file"; // Core File block — blue link + dark pill download button
 @use "./styles/search"; // Core Search block — Forminator-matched field styling
+@use "./styles/stats-band"; // Homepage stats/credibility band — dividers + responsive reflow
 @use "./styles/sidebar"; // Blog sidebar widgets — borderless titled/divided lists
 @use "./styles/post-list"; // Blog post list — open editorial layout + hovers
 @use "./styles/single-post"; // Single blog post — band header, pagination, author bio

@@ -1,0 +1,79 @@
+// ---------------------------------------------------------------------------
+// Stats / credibility band — the three-stat strip under the homepage hero.
+//
+// The band background and the stat typography live in the block markup (native
+// blocks, styled inline). This partial adds the two things blocks can't express:
+// equal columns with dividers between them, and the responsive reflow —
+// 3-up → 2-up with a full-width third → fully stacked — with the dividers
+// swapping from vertical rules to horizontal ones at each step.
+//
+// Applied via the `sb-stats` class on a constrained inner wrapper, so the
+// section keeps its full-bleed background while the grid stays centered.
+// ---------------------------------------------------------------------------
+
+.sb-stats {
+  // Hairline divider tuned to the green band — surface-3 at 35% alpha, so it
+  // reads as a soft rule rather than a hard line. Held on a custom property so
+  // the responsive rules below can reuse it.
+  --stats-divider: color-mix(in srgb, var(--wp--preset--color--surface-3) 35%, transparent);
+
+  width: 100%;
+  max-width: 960px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  // Stretch the columns to equal height so the dividers are all the same length
+  // even when one label wraps to a second line (the tallest stat sets the row).
+  align-items: stretch;
+
+  // Each stat centers its value + label vertically within that equal height, and
+  // carries a little side padding for the vertical rules to sit in.
+  > * {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-inline: var(--wp--preset--spacing--40);
+  }
+
+  // The value line (the first paragraph — the white Lora stat) reads tighter than
+  // body copy; 1.4 gives a wrapped value ("Registered Herbalist") comfortable
+  // leading without drifting apart.
+  > * > :first-child {
+    line-height: 1.4;
+  }
+
+  // Divider between adjacent columns. margin reset guards against the wrapper's
+  // default flow block-gap landing as a top margin on the grid items.
+  > * + * {
+    margin-block-start: 0;
+    border-inline-start: 1px solid var(--stats-divider);
+  }
+}
+
+// 3-up → 2-up. The third stat drops to a full-width row so there's no lonely
+// orphan column; its side rule becomes a top rule.
+@media (max-width: 799px) {
+  .sb-stats {
+    grid-template-columns: 1fr 1fr;
+    row-gap: var(--wp--preset--spacing--50);
+  }
+  .sb-stats > :nth-child(3) {
+    grid-column: 1 / -1;
+    border-inline-start: 0;
+    border-top: 1px solid var(--stats-divider);
+    padding-top: var(--wp--preset--spacing--50);
+  }
+}
+
+// Fully stacked: one column, each stat after the first separated by a top rule
+// (no vertical rules remain).
+@media (max-width: 519px) {
+  .sb-stats {
+    grid-template-columns: 1fr;
+  }
+  .sb-stats > * + * {
+    border-inline-start: 0;
+    border-top: 1px solid var(--stats-divider);
+    padding-top: var(--wp--preset--spacing--40);
+  }
+}
