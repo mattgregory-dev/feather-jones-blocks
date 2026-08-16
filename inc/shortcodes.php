@@ -210,6 +210,8 @@ function sb_course_catalog_shortcode() {
 		}
 	);
 
+	$included_map = sb_course_included_map();
+
 	$out = '<div class="sb-course-catalog">';
 
 	foreach ( $terms as $term ) {
@@ -261,7 +263,7 @@ function sb_course_catalog_shortcode() {
 
 		$out .= '<div class="sb-course-list">';
 		foreach ( $courses as $course ) {
-			$out .= sb_course_catalog_row( $course );
+			$out .= sb_course_catalog_row( $course, $included_map );
 		}
 		$out .= '</div></div>';
 	}
@@ -286,21 +288,68 @@ function sb_course_is_featured( $course_id ) {
 }
 
 /**
+ * Map of course ID → "included" chip label, built in one pass over every
+ * course's sb_course_included relationship. A child course inherits the label of
+ * the parent that lists it (the parent's sb_course_included_label, or a default
+ * when unset). First parent wins; self-references are skipped.
+ *
+ * @return array<int,string>
+ */
+function sb_course_included_map() {
+	$map = array();
+	if ( ! function_exists( 'get_field' ) ) {
+		return $map;
+	}
+
+	$parents = get_posts(
+		array(
+			'post_type'      => 'sfwd-courses',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+		)
+	);
+
+	foreach ( $parents as $parent_id ) {
+		$children = get_field( 'sb_course_included', $parent_id );
+		if ( empty( $children ) ) {
+			continue;
+		}
+
+		$label = trim( (string) get_field( 'sb_course_included_label', $parent_id ) );
+		if ( '' === $label ) {
+			$label = __( 'Included in the Complete Course', 'fj-blocks' );
+		}
+
+		foreach ( (array) $children as $child ) {
+			$child_id = is_object( $child ) ? (int) $child->ID : (int) $child;
+			if ( $child_id && $child_id !== (int) $parent_id && ! isset( $map[ $child_id ] ) ) {
+				$map[ $child_id ] = $label; // First parent wins.
+			}
+		}
+	}
+
+	return $map;
+}
+
+/**
  * One catalog row: a whole-card link to the course. Thumb | info (pill, title,
  * short description, stat bar) | side (price, View Course).
  *
  * @param WP_Post $course Course post (may carry a ->sb_featured flag from the sort).
  * @return string
  */
-function sb_course_catalog_row( $course ) {
+function sb_course_catalog_row( $course, $included_map = array() ) {
 	$course_id = $course->ID;
 	$link      = get_permalink( $course_id );
 	$title     = get_the_title( $course_id );
 	$featured  = isset( $course->sb_featured ) ? (bool) $course->sb_featured : sb_course_is_featured( $course_id );
 
-	$summary = function_exists( 'get_field' ) ? trim( (string) get_field( 'sb_course_summary', $course_id ) ) : '';
-	$stats   = sb_course_stat_line( $course_id );
-	$price   = sb_course_price( $course_id );
+	$summary        = function_exists( 'get_field' ) ? trim( (string) get_field( 'sb_course_summary', $course_id ) ) : '';
+	$stats          = sb_course_stat_line( $course_id );
+	$price          = sb_course_price( $course_id );
+	$included_label = isset( $included_map[ $course_id ] ) ? $included_map[ $course_id ] : '';
 
 	$row  = '<a class="sb-course-row' . ( $featured ? ' is-featured' : '' ) . '" href="' . esc_url( $link ) . '">';
 	$row .= '<span class="sb-course-thumb">' . sb_course_thumb_html( $course_id ) . '</span>';
@@ -318,8 +367,15 @@ function sb_course_catalog_row( $course ) {
 	if ( '' !== $summary ) {
 		$row .= '<p class="sb-course-desc">' . esc_html( $summary ) . '</p>';
 	}
-	if ( '' !== $stats ) {
-		$row .= '<span class="sb-course-row-meta"><span class="sb-course-stats">' . esc_html( $stats ) . '</span></span>';
+	if ( '' !== $stats || '' !== $included_label ) {
+		$row .= '<span class="sb-course-row-meta">';
+		if ( '' !== $stats ) {
+			$row .= '<span class="sb-course-stats">' . esc_html( $stats ) . '</span>';
+		}
+		if ( '' !== $included_label ) {
+			$row .= '<span class="sb-course-chip">' . esc_html( $included_label ) . '</span>';
+		}
+		$row .= '</span>';
 	}
 	$row .= '</span>';
 
