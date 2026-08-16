@@ -30,6 +30,18 @@ $hero_title    = trim( $attributes['title'] ?? '' );
 $hero_bg_id  = isset( $attributes['backgroundImageId'] ) ? (int) $attributes['backgroundImageId'] : 0;
 $hero_bg_url = $hero_bg_id ? wp_get_attachment_image_url( $hero_bg_id, 'full' ) : '';
 
+// Solid background color — user input landing in a style attribute, so accept
+// only a hex (3/4/6/8-digit) or rgb()/rgba() string; anything else is dropped.
+// Independent of the image: it paints the section, and a cover image (if set)
+// simply layers on top — so it doubles as both a standalone fill and a fallback.
+$hero_bg_color_raw = isset( $attributes['backgroundColor'] ) ? trim( (string) $attributes['backgroundColor'] ) : '';
+$hero_bg_color     = '';
+if ( '' !== $hero_bg_color_raw
+	&& preg_match( '/^(#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})|rgba?\(\s*[0-9.,%\s\/]+\))$/i', $hero_bg_color_raw )
+) {
+	$hero_bg_color = $hero_bg_color_raw;
+}
+
 // Overlay is user input landing in a style attribute. Accept only a hex
 // (3/4/6/8-digit) or rgb()/rgba() string, and only when a background exists
 // (an overlay over nothing is meaningless). Anything else is dropped, never
@@ -83,6 +95,9 @@ if ( 'default' !== $hero_scheme ) {
 }
 
 $hero_style = '';
+if ( '' !== $hero_bg_color ) {
+	$hero_style .= 'background-color:' . $hero_bg_color . ';';
+}
 if ( $hero_bg_url ) {
 	$hero_style .= 'background-image:url(' . esc_url( $hero_bg_url ) . ');';
 	if ( '' !== $hero_overlay ) {
