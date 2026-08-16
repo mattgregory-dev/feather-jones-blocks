@@ -837,6 +837,23 @@ $sb-course-shadow: 0 6px 16px color-mix(in srgb, var(--wp--preset--color--brand)
   color: var(--wp--preset--color--muted);
 }
 
+// "Included in …" chip — sits beside the stats when a course belongs to a
+// bundle (it carries the parent's sb_course_included_label). Surface-3 fill with
+// brand-deep text.
+.sb-course-chip {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--wp--preset--color--surface-3);
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-weight: 700;
+  font-size: var(--wp--preset--font-size--xx-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--wp--preset--color--brand); // fallback
+  color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+}
+
 // Side column — price over CTA, right-aligned.
 .sb-course-side {
   display: flex;
