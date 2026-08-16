@@ -668,3 +668,254 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Course catalog — the [sb_course_catalog] shortcode output (the Courses page):
+// a list of course rows grouped by course category. Each row is a whole-card
+// link to the course; a featured course gets a pill + a 2px brand border and
+// sorts first in its category. Markup is emitted by sb_course_catalog_row() in
+// inc/shortcodes.php. (Settled from the Experiment B / catalog-12a direction.)
+// ---------------------------------------------------------------------------
+
+// Interactive-lift shadow, brand-tinted (matches the card-link block).
+$sb-course-shadow: 0 6px 16px color-mix(in srgb, var(--wp--preset--color--brand) 18%, transparent);
+
+// One category group: a series bar over its list; the gap after each separates
+// it from the next. The last group needs no trailing gap.
+.sb-course-series-block {
+  margin-block-end: var(--wp--preset--spacing--70);
+
+  &:last-child {
+    margin-block-end: 0;
+  }
+}
+
+// Series bar — category name left, note right, on a brand hairline rule.
+.sb-course-series {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-block-end: var(--wp--preset--spacing--40);
+  padding-block-end: 0.75rem;
+  border-block-end: 2px solid var(--wp--preset--color--brand);
+}
+.sb-course-series__title {
+  margin: 0;
+  font-size: var(--wp--preset--font-size--x-large);
+}
+.sb-course-series__note {
+  margin: 0;
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-weight: 600;
+  font-size: var(--wp--preset--font-size--xx-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+  white-space: nowrap;
+}
+
+.sb-course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+// Course row — the whole card is the course link.
+.sb-course-row {
+  display: grid;
+  grid-template-columns: 190px 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 0.875rem 1.375rem 0.875rem 0.875rem;
+  background-color: var(--wp--preset--color--base);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+// Featured course: a 2px brand border for emphasis (over the 1px default).
+.sb-course-row.is-featured {
+  border-width: 2px;
+  border-color: var(--wp--preset--color--brand);
+}
+
+// Interactive lift: keyboard focus unconditionally, pointer hover only where a
+// real hover exists (touch taps don't strand the row lifted).
+.sb-course-row:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: $sb-course-shadow;
+  border-color: var(--wp--preset--color--brand);
+}
+@media (hover: hover) {
+  .sb-course-row:hover {
+    transform: translateY(-2px);
+    box-shadow: $sb-course-shadow;
+    border-color: var(--wp--preset--color--brand);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-course-row {
+    transition:
+      box-shadow 0.15s ease,
+      border-color 0.15s ease;
+  }
+  .sb-course-row:hover,
+  .sb-course-row:focus-visible {
+    transform: none;
+  }
+}
+
+// Thumbnail — fills the full column width; a 4:3 landscape crop on desktop. The
+// image always covers the box, so it fills the width at every size (the box
+// height follows from the aspect ratio).
+.sb-course-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  align-self: start;
+  border-radius: 6px;
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.sb-course-info {
+  min-width: 0;
+}
+
+// Featured pill above the title.
+.sb-course-pill {
+  display: inline-block;
+  margin-block-end: 0.375rem;
+  // Slightly tighter bottom padding optically centers the all-caps label.
+  padding: 0.3rem 0.5rem 0.15rem;
+  border-radius: 4px;
+  background-color: var(--wp--preset--color--brand);
+  color: var(--wp--preset--color--base);
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-weight: 700;
+  font-size: var(--wp--preset--font-size--xx-small);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sb-course-title {
+  margin: 0 0 0.3125rem;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+.sb-course-desc {
+  margin: 0 0 0.4375rem;
+  font-size: var(--wp--preset--font-size--small);
+  line-height: 1.5;
+  color: var(--wp--preset--color--contrast);
+}
+
+// Meta row: the stat line now, with room for the v2 "included" chip beside it.
+.sb-course-row-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+.sb-course-stats {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-weight: 600;
+  font-size: var(--wp--preset--font-size--xx-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--muted);
+}
+
+// Side column — price over CTA, right-aligned.
+.sb-course-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding-inline-start: 0.625rem;
+  text-align: right;
+}
+.sb-course-price {
+  font-family: var(--wp--preset--font-family--heading);
+  font-size: 1.375rem;
+  color: var(--wp--preset--color--contrast-2);
+}
+.sb-course-cta {
+  font-family: var(--wp--preset--font-family--eyebrow);
+  font-weight: 700;
+  font-size: var(--wp--preset--font-size--x-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wp--preset--color--brand);
+  white-space: nowrap;
+}
+
+// Mobile: two columns, image spanning both rows; price/CTA go horizontal under
+// the copy; the description is dropped on the narrow row.
+@media (max-width: 799px) {
+  .sb-course-series {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  .sb-course-series__note {
+    white-space: normal;
+  }
+
+  .sb-course-row {
+    grid-template-columns: 130px 1fr;
+    grid-template-rows: auto auto;
+    align-items: start;
+    gap: 0.5rem 1rem;
+    padding: 0.875rem;
+  }
+  // Bigger image on mobile, flipped to a 3:4 portrait; still fills the column.
+  .sb-course-thumb {
+    grid-row: 1 / 3;
+    aspect-ratio: 3 / 4;
+  }
+  .sb-course-desc {
+    display: none;
+  }
+  .sb-course-side {
+    grid-column: 2;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-inline-start: 0;
+    text-align: left;
+  }
+}
+
+// Very small screens: a smaller image and tighter padding. minmax(0, 1fr) lets
+// the copy column shrink so the text wraps (growing the row taller) instead of
+// pushing past the edge.
+@media (max-width: 440px) {
+  .sb-course-row {
+    grid-template-columns: 80px minmax(0, 1fr);
+    padding: 0.6rem;
+  }
+  .sb-course-info {
+    overflow-wrap: break-word;
+  }
+  // A touch more air under the wrapped title at this size.
+  .sb-course-title {
+    margin-block-end: 0.7rem;
+  }
+  // Stack price over the CTA when the row is this tight.
+  .sb-course-side {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
