@@ -31,12 +31,12 @@
   }
 
   .hero__text {
-    flex: 0 1 55%;
+    flex: 0 1 58%;
     min-width: 0;
   }
 
   .hero__media {
-    flex: 0 1 45%;
+    flex: 0 1 42%;
     min-width: 0;
     margin: 0;
 
@@ -102,7 +102,7 @@
   // Top alignment above the breakpoint.
   &.is-valign-top .hero__inner { align-items: flex-start; }
 
-  // Diverges from spotlight: with no column image the text keeps its 55% basis
+  // Diverges from spotlight: with no column image the text keeps its 58% basis
   // (not full-width), so a cover hero shows the background beside the text
   // instead of letting the copy span the whole band.
 
