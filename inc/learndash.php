@@ -206,11 +206,17 @@ function sb_course_star_summary( $course_id = 0 ) {
 	/* translators: %d: number of reviews. */
 	$count_label = sprintf( _n( '%d review', '%d reviews', $count, 'fj-blocks' ), $count );
 
+	// Jump to the reviews: the guest sales layout has our bottom section,
+	// the enrolled layout has LearnDash's Reviews tab.
+	$has_access = function_exists( 'sfwd_lms_has_access' ) && sfwd_lms_has_access( $course_id, get_current_user_id() );
+	$target     = $has_access ? '#ld-tab-reviews' : '#sb-course-reviews';
+
 	return sprintf(
-		'<div class="sb-course-stars"><span class="sb-course-stars__icons">%1$s</span> <span class="sb-course-stars__score">%2$s</span> <span class="sb-course-stars__count">&middot; %3$s</span></div>',
+		'<a class="sb-course-stars" href="%4$s"><span class="sb-course-stars__icons">%1$s</span> <span class="sb-course-stars__score">%2$s</span> <span class="sb-course-stars__count">&middot; %3$s</span></a>',
 		$stars,
 		esc_html( number_format( (float) $average, 1 ) ),
-		esc_html( $count_label )
+		esc_html( $count_label ),
+		esc_attr( $target )
 	);
 }
 
@@ -394,6 +400,105 @@ function sb_course_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'sb_course_body_class' );
+
+/**
+ * Tidy LearnDash's review-list markup: collapse the template's heavy
+ * indentation to a single line so a following wpautop can't turn its newlines
+ * into stray <br>s. Used on both the guest section and LD's enrolled Reviews
+ * tab. (The empty <p></p> tags wpautop leaves behind are hidden in CSS via
+ * `p:empty`, since it re-inserts them at render regardless of this pass.)
+ *
+ * @param string $html Review markup.
+ * @return string
+ */
+function sb_clean_review_markup( $html ) {
+	return trim( preg_replace( '/\s+/', ' ', (string) $html ) );
+}
+
+/**
+ * Apply the same tidy to LearnDash's enrolled Reviews tab (its content is built
+ * from the same review templates, so it carries the same <br> / empty-<p> noise).
+ *
+ * @param array  $tabs      Content tabs.
+ * @param string $context   Tab context.
+ * @param int    $course_id Course ID.
+ * @param int    $user_id   User ID.
+ * @return array
+ */
+function sb_clean_reviews_tab( $tabs, $context = '', $course_id = 0, $user_id = 0 ) {
+	if ( ! is_array( $tabs ) ) {
+		return $tabs;
+	}
+	foreach ( $tabs as $index => $tab ) {
+		if ( isset( $tab['id'], $tab['content'] ) && 'reviews' === $tab['id'] ) {
+			$tabs[ $index ]['content'] = sb_clean_review_markup( $tab['content'] );
+		}
+	}
+	return $tabs;
+}
+// After LearnDash's own add_reviews_tab (priority 10).
+add_filter( 'learndash_content_tabs', 'sb_clean_reviews_tab', 20, 4 );
+
+/**
+ * [sb_course_reviews] — guest-only reviews section: LearnDash's approved review
+ * list (social proof for the buy decision) plus a "Log in to leave a review"
+ * prompt linking to the account page. Enrolled users keep LD's Reviews tab (list
+ * + submit form), so this returns '' for them, and also '' when reviews are
+ * disabled or the course has none yet.
+ *
+ * @return string
+ */
+function sb_course_reviews_shortcode() {
+	$course_id = get_the_ID();
+	if ( ! $course_id || 'sfwd-courses' !== get_post_type( $course_id ) ) {
+		return '';
+	}
+	// Enrolled users get LD's Reviews tab (with the submit form).
+	if ( function_exists( 'sfwd_lms_has_access' ) && sfwd_lms_has_access( $course_id, get_current_user_id() ) ) {
+		return '';
+	}
+	if ( function_exists( 'learndash_course_reviews_is_review_enabled' ) && ! learndash_course_reviews_is_review_enabled( $course_id ) ) {
+		return '';
+	}
+	if ( ! function_exists( 'learndash_course_reviews_locate_template' ) ) {
+		return '';
+	}
+
+	// Only surface the section when there's something to show.
+	$count = (int) get_comments(
+		array(
+			'post_id' => $course_id,
+			'type'    => 'ld_review',
+			'status'  => 'approve',
+			'count'   => true,
+		)
+	);
+	if ( $count < 1 ) {
+		return '';
+	}
+
+	// LD's review-list template renders its own `.reviews-list > .ld_review`
+	// markup, which our Phase 1 review-card CSS already styles.
+	ob_start();
+	learndash_course_reviews_locate_template( 'review-list.php', array( 'course_id' => $course_id ) );
+	$list = (string) ob_get_clean();
+	if ( '' === trim( $list ) ) {
+		return '';
+	}
+
+	$list = sb_clean_review_markup( $list );
+
+	$prompt = '<p class="sb-course-reviews__prompt"><a href="' . esc_url( home_url( '/account/' ) ) . '">'
+		. esc_html__( 'Log in to leave a review', 'fj-blocks' )
+		. '</a></p>';
+
+	return '<section id="sb-course-reviews" class="sb-course-reviews learndash-course-reviews-container">'
+		. '<h2 class="sb-course-reviews__heading">' . esc_html__( 'What learners are saying', 'fj-blocks' ) . '</h2>'
+		. $list
+		. $prompt
+		. '</section>';
+}
+add_shortcode( 'sb_course_reviews', 'sb_course_reviews_shortcode' );
 
 /**
  * Ensure LearnDash prices show a currency symbol even when intl is missing.
