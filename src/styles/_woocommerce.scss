@@ -266,10 +266,54 @@
     main {
       max-width: calc(min(1120px, 100% - (2 * var(--wp--preset--spacing--40))));
     }
-    // Login (logged-out) page: narrow the card to the mockup's width. The
-    // dashboard (logged-in) keeps the wide 2-column card.
+    // Login (logged-out) page: narrow the card to the mockup's width.
     &:not(.logged-in) main {
       max-width: calc(min(640px, 100% - (2 * var(--wp--preset--spacing--40))));
+    }
+
+    // Logged-in dashboard: the page itself is the beige backdrop, so strip the
+    // shared white card off <main> — the sidebar, stats row and course rows
+    // carry their own cards instead.
+    &.logged-in main {
+      background-color: transparent;
+      border: 0;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    // Logged-in account layout — replace WooCommerce's fragile float columns
+    // (nav float:left 30% / content float:right 68%) with flex so the two
+    // columns grow and shrink cleanly. min-width:0 on the content is the key
+    // fix: it lets the column shrink instead of wide LearnDash tables forcing an
+    // overflow that drops the content below the sidebar (the layout break).
+    &.logged-in {
+      .my-account-login > .woocommerce {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--wp--preset--spacing--50);
+      }
+      .woocommerce-MyAccount-navigation {
+        float: none;
+        width: auto;
+        flex: 0 0 260px;
+      }
+      .woocommerce-MyAccount-content {
+        float: none;
+        width: auto;
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      // Stack the columns on narrower screens.
+      @media (max-width: 768px) {
+        .my-account-login > .woocommerce {
+          flex-direction: column;
+        }
+        .woocommerce-MyAccount-navigation {
+          flex: 0 0 auto;
+          width: 100%;
+        }
+      }
     }
 
     // The account page content leaves a trailing empty paragraph block after the
@@ -408,8 +452,12 @@
 
     .woocommerce-MyAccount-navigation {
       margin: 0;
-      padding: 0;
-
+      // Sidebar card — white panel for the left rail.
+      background: var(--wp--preset--color--base);
+      border: 1px solid var(--wp--preset--color--border);
+      border-radius: 8px;
+      box-shadow: var(--wp--preset--shadow--soft);
+      padding: 1rem;
 
       ul {
         list-style: none;
@@ -487,12 +535,23 @@
         font-family: var(--wp--preset--font-family--body);
         color: var(--wp--preset--color--contrast-2);
 
-        // LearnDash injects a profile card/summary into the account dashboard.
+        // LearnDash injects a profile summary (stats) into the dashboard. Wrap
+        // the stat row in a white card matching the mockup.
         .ld-profile-summary {
           margin-top: 0;
+          background: var(--wp--preset--color--base);
+          border: 1px solid var(--wp--preset--color--border);
+          border-radius: 8px;
+          box-shadow: var(--wp--preset--shadow--soft);
+          padding: clamp(1.25rem, 3vw, 1.75rem);
         }
         .ld-profile-card {
           display: none;
+        }
+
+        // Course rows on the dashboard — white cards on the beige page.
+        .ld-course-list .ld-item-list-item {
+          background: var(--wp--preset--color--base);
         }
 
         p {

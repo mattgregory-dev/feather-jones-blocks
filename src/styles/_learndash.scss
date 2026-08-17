@@ -532,6 +532,49 @@ body.woocommerce-account .learndash-wrapper {
   .ld-progress {
     margin-bottom: 0;
   }
+
+  // LD's teal "secondary" colour (#019e7c) drives the in-progress ring arc, the
+  // progress-bar fill, and the "% Complete" text — all !important. Repaint them
+  // brand so dashboard progress reads on-theme. These are generic status classes
+  // (any course's ring/bar/complete icon uses them), so rows that aren't visible
+  // yet pick this up too. The ring's grey track + the masked primary-blue base
+  // stay as-is.
+  .ld-secondary-color,
+  .ld-secondary-color-hover:hover {
+    color: var(--wp--preset--color--brand) !important;
+  }
+  .ld-secondary-background {
+    background-color: var(--wp--preset--color--brand) !important;
+  }
+  .ld-secondary-in-progress-icon {
+    border-left-color: var(--wp--preset--color--brand) !important;
+    border-top-color: var(--wp--preset--color--brand) !important;
+  }
+
+  // Progress wrapper — LD paints the band behind the heading + bar #f0f3f6;
+  // recolour it surface-2 (mirror LD's deep selector chain to out-specify it).
+  .ld-item-list .ld-item-list-item .ld-item-list-item-expanded .ld-progress {
+    background-color: var(--wp--preset--color--surface-2);
+  }
+
+  // Progress bar treatment — the dashboard uses LD's legacy profile bar
+  // (.ld-progress-bar track + .ld-progress-bar-percentage fill), not the modern
+  // meter. White track at 10px tall with a light border and a very slight
+  // shadow (matching the course page); the brand fill (from
+  // .ld-secondary-background above) rides inside it as a rounded pill.
+  .ld-progress-bar {
+    height: 10px;
+    background-color: var(--wp--preset--color--base);
+    border: 1px solid var(--wp--preset--color--border);
+    border-radius: 999px;
+    box-shadow: 0 0 1px var(--wp--preset--color--border);
+    overflow: hidden;
+
+    .ld-progress-bar-percentage {
+      height: 100%;
+      border-radius: 999px;
+    }
+  }
 }
 
 // Progress bar (enrolled): the shared LD component styled as a rounded card —
