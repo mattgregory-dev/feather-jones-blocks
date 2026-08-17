@@ -231,3 +231,14 @@ function sb_woocommerce_login_title() {
 	}
 }
 add_action( 'woocommerce_before_customer_login_form', 'sb_woocommerce_login_title' );
+
+/**
+ * Suppress the "…has been added to your cart" success notice. Our funnel goes
+ * straight from add-to-cart to checkout, so the message is never useful and only
+ * surfaces at inopportune moments. Returning an empty string is a clean
+ * suppression: wc_add_notice() skips empty messages, so no empty notice box is
+ * queued. Other success notices (coupons, etc.) are unaffected. The
+ * `.woocommerce-message` styles in _woocommerce.scss stay in place in case this
+ * is ever re-enabled.
+ */
+add_filter( 'wc_add_to_cart_message_html', '__return_empty_string' );
