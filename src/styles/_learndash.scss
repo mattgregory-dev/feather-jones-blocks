@@ -167,10 +167,12 @@ body.sb-course--guest {
   .ld-tab-bar--no-access .ld-tab-bar__tabs {
     display: none;
   }
-  // Curriculum links point at gated pages for guests, so mute the hover (LD
-  // defaults to its dark brand-primary blue) — they shouldn't read as active.
-  .ld-accordion__item-title:hover {
-    color: var(--wp--preset--color--muted);
+  // Curriculum links point at gated pages for guests (a click just loops back),
+  // so render them as plain, non-interactive text. The expand chevron is a
+  // separate control, so lessons still open.
+  .ld-accordion__item-title {
+    pointer-events: none;
+    cursor: default;
   }
 }
 
