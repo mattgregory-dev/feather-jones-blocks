@@ -16,3 +16,6 @@ if (import.meta.env.DEV) {
 
 // Back-to-top button (fixed-position chrome; markup in inc/scroll-top.php).
 import "./scripts/scroll-top.js";
+
+// Custom mobile menu drawer (markup in parts/header.html; styles in _header.scss).
+import "./scripts/mobile-menu.js";
