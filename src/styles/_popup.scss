@@ -1,0 +1,256 @@
+// ---------------------------------------------------------------------------
+// Lead-capture popup — a two-step, timed modal on landing pages + blog posts.
+// Frame 1 (offer) presents the free teaching with a one-click CTA; frame 2
+// (form) reveals the Forminator email signup. Deep-green panel over a dimmed
+// backdrop, matching the home CTA band. Markup: inc/popup.php. Behaviour:
+// src/scripts/popup.js. The frame-2 form pill treatment is shared with the CTA
+// band (see _forminator.scss, which also targets .sb-popup).
+// ---------------------------------------------------------------------------
+
+.sb-popup__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+
+  &.is-open {
+    opacity: 1;
+  }
+}
+
+// Lock the page behind the open popup.
+body.is-popup-open {
+  overflow: hidden;
+}
+
+.sb-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 1001;
+  box-sizing: border-box;
+  width: min(560px, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  padding: clamp(1.75rem, 5vw, 2.75rem);
+  background: var(--wp--preset--color--surface-dark);
+  color: var(--wp--preset--color--base);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+  text-align: center;
+  // Off until opened; JS flips .is-open.
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.96);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+
+  &.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  // Accent bar across the very top.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    border-radius: 14px 14px 0 0;
+    background: linear-gradient(90deg, var(--wp--preset--color--brand), var(--wp--preset--color--accent));
+  }
+
+  // Close — circle, top-right, translucent on the dark panel.
+  .sb-popup__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--wp--preset--color--base) 30%, transparent);
+    background: color-mix(in srgb, var(--wp--preset--color--base) 8%, transparent);
+    color: color-mix(in srgb, var(--wp--preset--color--base) 75%, transparent);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--wp--preset--color--base);
+      border-color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent);
+      background: color-mix(in srgb, var(--wp--preset--color--base) 14%, transparent);
+    }
+    svg {
+      display: block;
+    }
+  }
+
+  // Eyebrow — uppercase, tracked. Muted on the offer frame, accent on the form.
+  .sb-popup__eyebrow {
+    margin: 0 0 0.75rem;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: var(--wp--preset--font-size--x-small);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent);
+  }
+  .sb-popup__eyebrow--accent {
+    color: var(--wp--preset--color--accent);
+  }
+
+  .sb-popup__title {
+    margin: 0 0 1rem;
+    font-family: var(--wp--preset--font-family--heading);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+    line-height: 1.15;
+    color: var(--wp--preset--color--base);
+  }
+
+  .sb-popup__body {
+    margin: 0 auto 1.5rem;
+    max-width: 42ch;
+    font-size: var(--wp--preset--font-size--medium);
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--wp--preset--color--base) 82%, transparent);
+  }
+
+  // Star trust line.
+  .sb-popup__trust {
+    margin: 0 0 1.5rem;
+    font-size: var(--wp--preset--font-size--x-small);
+    color: color-mix(in srgb, var(--wp--preset--color--base) 75%, transparent);
+
+    .sb-popup__stars {
+      color: var(--wp--preset--color--accent);
+      letter-spacing: 0.1em;
+    }
+    em {
+      font-style: italic;
+    }
+  }
+
+  // Primary CTA — big accent pill with a soft glow.
+  .sb-popup__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 26rem;
+    padding: 1.05rem 1.75rem;
+    background: var(--wp--preset--color--accent);
+    border: 0;
+    border-radius: 999px;
+    color: var(--wp--preset--color--base);
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: var(--wp--preset--font-size--x-small);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 20px color-mix(in srgb, var(--wp--preset--color--accent-strong) 30%, transparent);
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--wp--preset--color--accent-strong);
+      box-shadow: 0 6px 22px color-mix(in srgb, var(--wp--preset--color--accent-strong) 40%, transparent);
+    }
+  }
+
+  // Decline — quiet text link under the CTA.
+  .sb-popup__decline {
+    display: block;
+    margin: 1.1rem auto 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: color-mix(in srgb, var(--wp--preset--color--base) 55%, transparent);
+    font-size: var(--wp--preset--font-size--x-small);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      color: color-mix(in srgb, var(--wp--preset--color--base) 80%, transparent);
+    }
+  }
+
+  // Frame 2 fine print.
+  .sb-popup__fineprint {
+    margin: 1.25rem auto 0;
+    max-width: 40ch;
+    font-size: var(--wp--preset--font-size--xx-small);
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--wp--preset--color--base) 60%, transparent);
+  }
+
+  // The relocated/own Forminator form sits flush in its slot.
+  .sb-popup__form {
+    margin: 0;
+  }
+  // On the dark panel the submit button takes white text (vs the band's dark
+  // text). Match the shared rule's specificity so this wins (loaded after it).
+  // The form is shared (its real label is "Take Me There"), so swap the visible
+  // label to the popup's CTA with a pseudo-element — the same hack as the nav
+  // labels. (The real text stays in the DOM for screen readers.)
+  .forminator-custom-form.forminator-custom-form .forminator-button-submit {
+    color: var(--wp--preset--color--base);
+    font-size: 0;
+
+    &::after {
+      content: "Send It";
+      font-size: var(--wp--preset--font-size--x-small);
+      letter-spacing: 0.1em;
+    }
+  }
+  // Fully round the joined pill's outer corners (input left, button right).
+  .forminator-custom-form.forminator-custom-form .forminator-input {
+    border-radius: 999px 0 0 999px;
+  }
+  .forminator-custom-form.forminator-custom-form .forminator-button-submit {
+    border-radius: 0 999px 999px 0;
+  }
+
+  // Mobile: anchor as a bottom sheet (matches production) — full-width, slides
+  // up from the bottom, with only the top corners rounded.
+  @media (max-width: 600px) {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: none;
+    max-height: 92dvh;
+    border-radius: 16px 16px 0 0;
+    padding-bottom: max(clamp(1.75rem, 5vw, 2.75rem), env(safe-area-inset-bottom));
+    transform: translateY(100%);
+
+    &.is-open {
+      transform: translateY(0);
+    }
+    // Drop the accent gradient bar on the sheet.
+    &::before {
+      display: none;
+    }
+
+    // Form stacks (input over button) flush with no gap, joined into one rounded
+    // block — matching production. Overrides the shared pill radii above.
+    .forminator-custom-form.forminator-custom-form .forminator-input {
+      border-radius: 10px 10px 0 0;
+    }
+    .forminator-custom-form.forminator-custom-form .forminator-button-submit {
+      border-radius: 0 0 10px 10px;
+      margin-top: 0;
+    }
+  }
+}

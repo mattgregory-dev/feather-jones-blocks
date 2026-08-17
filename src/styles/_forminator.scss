@@ -24,7 +24,9 @@
 // exclusive on the card.
 // ---------------------------------------------------------------------------
 
-.sb-band:not(:has(.sb-card)) .forminator-custom-form.forminator-custom-form {
+.sb-band:not(:has(.sb-card)) .forminator-custom-form.forminator-custom-form,
+.sb-popup .forminator-custom-form.forminator-custom-form,
+.sb-sidebar-cta .forminator-custom-form.forminator-custom-form {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -142,6 +144,66 @@
       width: 100%;
       border-radius: 6px;
       margin-top: 0.5rem;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Sidebar CTA form — stacked in the narrow blog-sidebar column, styled to the
+// theme's field/button conventions (not the joined prod pill): a bordered white
+// input with the standard brand-border + mint focus ring, a comfortable gap,
+// then a full-width accent button whose label swaps to "Watch Free". Overrides
+// the horizontal inline-signup defaults from the shared block above.
+// ---------------------------------------------------------------------------
+.sb-sidebar-cta .forminator-custom-form.forminator-custom-form {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+  // Undo the inline-signup centering/cap from the shared rule so the form fills
+  // the sidebar column edge-to-edge with no stray top/side margin.
+  max-width: none;
+  margin: 0;
+
+  // Forminator's notice row is empty until submit; drop it so it doesn't add a
+  // phantom gap above the field (it reappears on error/success — aria-hidden
+  // flips to false). Also removes its flex-gap contribution.
+  .forminator-response-message[aria-hidden="true"] {
+    display: none;
+  }
+
+  > .forminator-row,
+  > .forminator-row.forminator-row-last {
+    flex: none;
+    width: 100%;
+  }
+  .forminator-col,
+  .forminator-field {
+    width: 100%;
+  }
+  .forminator-input {
+    border-radius: 8px;
+    border-color: var(--wp--preset--color--border);
+    // Keep the field's text/placeholder left-aligned even though the card
+    // centres its copy.
+    text-align: left;
+
+    &:focus {
+      border-color: var(--wp--preset--color--brand);
+      box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+    }
+  }
+  .forminator-button-submit {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 0;
+    color: var(--wp--preset--color--base);
+    // Location label swap — the shared form's real text is "Take Me There".
+    font-size: 0;
+
+    &::after {
+      content: "Watch Free";
+      font-size: var(--wp--preset--font-size--x-small);
+      letter-spacing: 0.1em;
     }
   }
 }

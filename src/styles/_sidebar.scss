@@ -56,3 +56,54 @@
     color: var(--wp--preset--color--muted);
   }
 }
+
+// ---------------------------------------------------------------------------
+// Lead-form CTA widget — the free-teaching offer carded in the blog sidebar
+// (surface-1 panel), with a stacked email signup. The form fields/button are
+// styled in _forminator.scss (.sb-sidebar-cta scope); this handles the card
+// chrome + copy typography. The vertical rhythm comes from the block's blockGap.
+// ---------------------------------------------------------------------------
+.sb-sidebar-cta {
+  // Flex column with a real gap — the block's flow-layout blockGap is applied
+  // via :where() (zero specificity) and loses to the elements' own margins, so
+  // drive the spacing here where it can't be overridden.
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--30);
+  // Centre the copy; the form fields stay full-width (align-items: stretch).
+  text-align: center;
+  padding: clamp(1.25rem, 4vw, 1.75rem);
+  background: var(--wp--preset--color--surface-1);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 12px;
+
+  .sb-sidebar-cta__eyebrow {
+    margin: 0;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: var(--wp--preset--font-size--x-small);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--brand);
+  }
+  .sb-sidebar-cta__title {
+    margin: 0;
+    font-family: var(--wp--preset--font-family--heading);
+    font-weight: 400;
+    font-size: var(--wp--preset--font-size--large);
+    line-height: 1.2;
+    color: var(--wp--preset--color--contrast-2);
+  }
+  .sb-sidebar-cta__body {
+    margin: 0;
+    font-size: var(--wp--preset--font-size--small);
+    line-height: 1.55;
+    color: var(--wp--preset--color--contrast);
+  }
+  .sb-sidebar-cta__fineprint {
+    margin: 0;
+    font-size: var(--wp--preset--font-size--xx-small);
+    line-height: 1.5;
+    color: var(--wp--preset--color--muted);
+  }
+}
