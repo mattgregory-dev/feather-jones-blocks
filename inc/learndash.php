@@ -256,6 +256,146 @@ function sb_course_breadcrumb_shortcode() {
 add_shortcode( 'sb_course_breadcrumb', 'sb_course_breadcrumb_shortcode' );
 
 /**
+ * Category eyebrow — the course's `ld_course_category` term name(s), linked, as
+ * the small brand kicker above the title. Shared by both header layouts.
+ *
+ * @param int $course_id Course post ID.
+ * @return string  <p class="sb-course-eyebrow"> markup, or '' with no terms.
+ */
+function sb_course_category_eyebrow( $course_id ) {
+	$terms = get_the_terms( $course_id, 'ld_course_category' );
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return '';
+	}
+
+	$links = array();
+	foreach ( $terms as $term ) {
+		$link = get_term_link( $term );
+		if ( is_wp_error( $link ) ) {
+			continue;
+		}
+		$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a>';
+	}
+	if ( empty( $links ) ) {
+		return '';
+	}
+
+	return '<p class="sb-course-eyebrow">' . implode( ', ', $links ) . '</p>';
+}
+
+/**
+ * Course-detail header — branches on enrollment (access), not login, so a
+ * logged-in-but-not-enrolled visitor still gets the sales layout.
+ *
+ * - Enrolled → the mint band (eyebrow, title, star summary, stat bar, breadcrumb).
+ * - Guest    → the two-column product header (image | eyebrow, title, star
+ *              summary, stat bar, summary, Buy Now).
+ *
+ * Rendered via [sb_course_header] so the block template stays header → body →
+ * footer. The matching body_class (`sb-course--enrolled` / `sb-course--guest`)
+ * drives the state-scoped CSS that suppresses LD's guest chrome.
+ *
+ * @return string
+ */
+function sb_course_header_shortcode() {
+	$course_id = get_the_ID();
+	if ( ! $course_id || 'sfwd-courses' !== get_post_type( $course_id ) ) {
+		return '';
+	}
+
+	$has_access = function_exists( 'sfwd_lms_has_access' )
+		&& sfwd_lms_has_access( $course_id, get_current_user_id() );
+
+	return $has_access
+		? sb_course_header_enrolled( $course_id )
+		: sb_course_header_guest( $course_id );
+}
+add_shortcode( 'sb_course_header', 'sb_course_header_shortcode' );
+
+/**
+ * Enrolled header: the mint band. Full-width surface-3 with a constrained,
+ * centered stack.
+ *
+ * @param int $course_id Course post ID.
+ * @return string
+ */
+function sb_course_header_enrolled( $course_id ) {
+	$html  = '<section class="sb-course-band alignfull has-surface-3-background-color has-background has-global-padding">';
+	$html .= '<div class="sb-course-band__inner">';
+	$html .= sb_course_category_eyebrow( $course_id );
+	$html .= '<h1 class="sb-course-band__title">' . esc_html( get_the_title( $course_id ) ) . '</h1>';
+	$html .= sb_course_star_summary( $course_id );
+	$html .= sb_course_meta_shortcode();
+	$html .= sb_course_breadcrumb_shortcode();
+	$html .= '</div></section>';
+
+	return $html;
+}
+
+/**
+ * Guest header: the two-column product/sales header on cream — breadcrumb, then
+ * featured image alongside eyebrow, title, star summary, stat bar, summary, and
+ * a Buy Now button linking to the course's LearnDash Button URL.
+ *
+ * @param int $course_id Course post ID.
+ * @return string
+ */
+function sb_course_header_guest( $course_id ) {
+	$summary = function_exists( 'get_field' ) ? trim( (string) get_field( 'sb_course_summary', $course_id ) ) : '';
+	$buy_url = function_exists( 'learndash_get_setting' ) ? (string) learndash_get_setting( $course_id, 'custom_button_url' ) : '';
+	$price   = function_exists( 'sb_course_price' ) ? sb_course_price( $course_id ) : '';
+
+	$html  = '<section class="sb-course-sales alignfull has-surface-1-background-color has-background has-global-padding">';
+	$html .= '<div class="sb-course-sales__inner">';
+	$html .= sb_course_breadcrumb_shortcode();
+
+	$html .= '<div class="sb-course-sales__grid">';
+	$html .= '<div class="sb-course-sales__media">' . sb_course_thumb_html( $course_id ) . '</div>';
+
+	$html .= '<div class="sb-course-sales__info">';
+	$html .= sb_course_category_eyebrow( $course_id );
+	$html .= '<h1 class="sb-course-sales__title">' . esc_html( get_the_title( $course_id ) ) . '</h1>';
+	$html .= sb_course_star_summary( $course_id );
+	$html .= sb_course_meta_shortcode();
+	if ( '' !== $summary ) {
+		$html .= '<p class="sb-course-sales__summary">' . esc_html( $summary ) . '</p>';
+	}
+	if ( '' !== $buy_url ) {
+		$label = 'free' === strtolower( $price ) || '' === $price
+			? esc_html__( 'Enroll Now', 'fj-blocks' )
+			: esc_html__( 'Buy Now', 'fj-blocks' ) . ' &middot; ' . esc_html( $price );
+		$html .= '<div class="sb-course-sales__actions">';
+		$html .= '<a class="sb-course-buy" href="' . esc_url( $buy_url ) . '">' . $label . '</a>';
+		$html .= '</div>';
+	}
+	$html .= '</div>'; // .sb-course-sales__info
+
+	$html .= '</div>'; // .sb-course-sales__grid
+	$html .= '</div></section>';
+
+	return $html;
+}
+
+/**
+ * State class on single-course pages: `sb-course--enrolled` when the current
+ * user has access, else `sb-course--guest`. Drives the guest-only CSS that hides
+ * LearnDash's enroll sidebar and duplicate featured image.
+ *
+ * @param string[] $classes Body classes.
+ * @return string[]
+ */
+function sb_course_body_class( $classes ) {
+	if ( is_singular( 'sfwd-courses' ) ) {
+		$course_id  = get_queried_object_id();
+		$has_access = function_exists( 'sfwd_lms_has_access' )
+			&& sfwd_lms_has_access( $course_id, get_current_user_id() );
+		$classes[] = $has_access ? 'sb-course--enrolled' : 'sb-course--guest';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'sb_course_body_class' );
+
+/**
  * Ensure LearnDash prices show a currency symbol even when intl is missing.
  */
 function sb_learndash_currency_symbol_fallback( $symbol ) {
