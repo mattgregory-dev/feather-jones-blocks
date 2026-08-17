@@ -208,23 +208,24 @@ body.sb-course--guest {
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
-  gap: 0.5rem;
   margin: 1rem auto 0;
-  font-family: var(--wp--preset--font-family--eyebrow);
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--medium);
 
   &__icons {
     letter-spacing: 0.1em;
     color: var(--wp--preset--color--muted); // fallback
-    color: color-mix(in srgb, var(--wp--preset--color--brand) 25%, transparent);
+    color: color-mix(in srgb, var(--wp--preset--color--accent) 30%, transparent);
   }
   .sb-course-star.is-filled {
-    color: var(--wp--preset--color--brand); // fallback
-    color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+    color: var(--wp--preset--color--accent);
   }
+  // Gap sits between the stars and the score; the score and count run flush,
+  // with the "·" separator doing that spacing.
   &__score {
+    margin-left: 0.5rem;
     font-weight: 700;
-    color: var(--wp--preset--color--brand); // fallback
-    color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+    color: var(--wp--preset--color--muted);
   }
   &__count {
     font-size: 0.9rem;
