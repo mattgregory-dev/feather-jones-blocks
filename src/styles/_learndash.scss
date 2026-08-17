@@ -15,7 +15,7 @@
     margin-block: 0;
     font-family: var(--wp--preset--font-family--heading);
     font-size: var(--wp--preset--font-size--xx-large);
-    line-height: 1.15;
+    line-height: 1.2;
   }
 
   .sb-course-eyebrow {
@@ -509,40 +509,6 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
-// Breadcrumb placement: on COURSE pages the breadcrumb nav is a bare direct
-// child of the grid with no named area, so LD auto-places it in an implicit
-// row at the BOTTOM. Add a `breadcrumb` area at the top and pin the nav to it.
-// Guarded by :has(> nav.ld-breadcrumbs) so LESSON/TOPIC pages — where the nav
-// is nested inside .ld-layout__header, not a direct grid child — are untouched.
-.sb-course-card {
-  .ld-layout:has(> nav.ld-breadcrumbs) {
-    grid-template-areas: "breadcrumb" "header" "sidebar" "content";
-
-    &.ld-layout--no-header {
-      grid-template-areas: "breadcrumb" "sidebar" "content";
-    }
-    &.ld-layout--no-sidebar {
-      grid-template-areas: "breadcrumb" "header" "content";
-    }
-    &.ld-layout--no-sidebar.ld-layout--no-header {
-      grid-template-areas: "breadcrumb" "content";
-    }
-    // Two-column enrolment layout: breadcrumb spans both columns on top.
-    &.ld-breakpoint--extra-small:not(.ld-layout--no-sidebar) {
-      grid-template-areas: "breadcrumb breadcrumb" "header header" "sidebar content";
-
-      &.ld-layout--no-header {
-        grid-template-areas: "breadcrumb breadcrumb" "sidebar content";
-      }
-    }
-
-    // !important beats LD's high-specificity `.ld-layout > *:not(...)` rule.
-    > nav.ld-breadcrumbs {
-      grid-area: breadcrumb !important;
-    }
-  }
-}
-
 // Course progress bar (enrolled, course overview only): a rounded card on a
 // subtle surface, carrying the "COURSE PROGRESS" label, the meter + step count,
 // and the last-activity note in one row.
@@ -613,96 +579,13 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
-// Breadcrumb: strip LearnDash's default pill (grey fill + rounded corners),
-// keep only a bottom rule. Scoped to our card wrapper so it beats LD defaults
-// (the classic ported rules below are scoped to a DOM the block theme lacks).
+// LearnDash's own breadcrumbs are suppressed in favour of our [sb_ld_header]
+// band breadcrumb: the modern one via the learndash_template_views_breadcrumbs
+// filter (empties it at the source), and the legacy quiz markup hidden here.
 .sb-course-card {
-  .ld-breadcrumbs {
-    background: transparent;
-    border-radius: 0;
-    border-bottom: 1px solid var(--wp--preset--color--border);
-    // Flush left/right, with the quiz nav's 0.5em top/bottom on both variants
-    // (the modern breadcrumb's `all: unset` otherwise leaves it with none).
-    padding: 0.5em 0;
-
-    .ld-breadcrumbs__item {
-      font-size: var(--wp--preset--font-size--medium);
-      a.ld-breadcrumbs__link,
-      span.ld-breadcrumbs__link {
-        font-size: var(--wp--preset--font-size--medium);
-        font-weight: 400;
-      }
-      // !important + our higher specificity beats LD's inline
-      // `.ld-breadcrumbs a { color: #00a2e8 !important }`.
-      a.ld-breadcrumbs__link {
-        color: var(--wp--preset--color--link) !important;
-      }
-      a.ld-breadcrumbs__link:hover {
-        text-decoration: underline;
-        color: var(--wp--preset--color--link-hover) !important;
-      }
-      // Current page: LD renders it as an <a aria-current="page"> on inner
-      // pages (a real link), but it shouldn't read as one. Force contrast
-      // colour, no underline, default cursor. !important beats the general
-      // link rule above (this selector is more specific, so it wins the tie).
-      &:last-child a.ld-breadcrumbs__link,
-      a.ld-breadcrumbs__link[aria-current="page"],
-      &:last-child span.ld-breadcrumbs__link {
-        color: var(--wp--preset--color--contrast) !important;
-        cursor: default;
-
-        &:hover {
-          text-decoration: none;
-        }
-      }
-    }
-
-    // Legacy (non-modern) breadcrumb markup — used on QUIZ pages. Match the
-    // modern breadcrumb: medium blue links, "/" delimiter, plain contrast
-    // current page.
-    ol.ld-breadcrumbs-segments {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-
-      li {
-        font-size: var(--wp--preset--font-size--medium);
-
-        a {
-          font-size: var(--wp--preset--font-size--medium);
-          font-weight: 400;
-          color: var(--wp--preset--color--link) !important;
-
-          // !important beats LD's `.learndash-wrapper:not(--modern) a {
-          // text-decoration: none }` on the quiz (legacy) wrapper.
-          &:hover {
-            text-decoration: underline !important;
-            color: var(--wp--preset--color--link-hover) !important;
-          }
-        }
-        &::after {
-          content: "/";
-          padding: 0 0.4rem;
-          color: var(--wp--preset--color--muted);
-        }
-        &:last-child {
-          a {
-            color: var(--wp--preset--color--contrast) !important;
-            cursor: default;
-
-            &:hover {
-              text-decoration: none !important;
-            }
-          }
-          &::after {
-            content: none;
-          }
-        }
-      }
-    }
+  .ld-breadcrumbs,
+  .ld-breadcrumbs-segments {
+    display: none;
   }
 }
 

@@ -262,6 +262,120 @@ function sb_course_breadcrumb_shortcode() {
 add_shortcode( 'sb_course_breadcrumb', 'sb_course_breadcrumb_shortcode' );
 
 /**
+ * Breadcrumb label for a post: its `sb_course_short_title` when set (keeps long
+ * course / lesson / topic / quiz titles from overrunning the crumb), else the
+ * full title. Replicates the classic breadcrumb-shortname override in-theme.
+ *
+ * @param int $post_id Post ID.
+ * @return string
+ */
+function sb_ld_crumb_label( $post_id ) {
+	$short = function_exists( 'get_field' ) ? trim( (string) get_field( 'sb_course_short_title', $post_id ) ) : '';
+	return '' !== $short ? $short : get_the_title( $post_id );
+}
+
+/**
+ * [sb_ld_breadcrumb] — trail for a LearnDash step page (lesson / topic / quiz):
+ * Courses / <Course> / [<Lesson>] / <current>, reusing the .sb-course-breadcrumb
+ * styling. Each crumb uses its post's `sb_course_short_title` when set; the
+ * parent lesson crumb appears for topics and lesson-nested quizzes.
+ *
+ * @return string
+ */
+function sb_ld_breadcrumb_shortcode() {
+	$post_id = get_the_ID();
+	$type    = $post_id ? get_post_type( $post_id ) : '';
+	if ( ! in_array( $type, array( 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' ), true ) ) {
+		return '';
+	}
+
+	$crumbs = array();
+
+	// Courses (catalog).
+	$catalog  = get_page_by_path( 'courses' );
+	$crumbs[] = array(
+		'label' => __( 'Courses', 'fj-blocks' ),
+		'url'   => $catalog ? (string) get_permalink( $catalog ) : '',
+	);
+
+	// Course.
+	$course_id = function_exists( 'learndash_get_course_id' ) ? (int) learndash_get_course_id( $post_id ) : 0;
+	if ( $course_id ) {
+		$crumbs[] = array(
+			'label' => sb_ld_crumb_label( $course_id ),
+			'url'   => (string) get_permalink( $course_id ),
+		);
+	}
+
+	// Parent lesson for topics and lesson-nested quizzes.
+	if ( in_array( $type, array( 'sfwd-topic', 'sfwd-quiz' ), true ) && function_exists( 'learndash_get_lesson_id' ) ) {
+		$lesson_id = (int) learndash_get_lesson_id( $post_id, $course_id );
+		if ( $lesson_id && $lesson_id !== $post_id ) {
+			$crumbs[] = array(
+				'label' => sb_ld_crumb_label( $lesson_id ),
+				'url'   => (string) get_permalink( $lesson_id ),
+			);
+		}
+	}
+
+	// Current step (unlinked).
+	$crumbs[] = array(
+		'label' => sb_ld_crumb_label( $post_id ),
+		'url'   => '',
+	);
+
+	$sep    = '<span class="sb-course-breadcrumb__sep" aria-hidden="true"> / </span>';
+	$last   = count( $crumbs ) - 1;
+	$pieces = array();
+	foreach ( $crumbs as $index => $crumb ) {
+		if ( '' === (string) $crumb['label'] ) {
+			continue;
+		}
+		if ( $index === $last ) {
+			$pieces[] = '<span class="sb-course-breadcrumb__current" aria-current="page">' . esc_html( $crumb['label'] ) . '</span>';
+		} elseif ( '' !== $crumb['url'] ) {
+			$pieces[] = '<a href="' . esc_url( $crumb['url'] ) . '">' . esc_html( $crumb['label'] ) . '</a>';
+		} else {
+			$pieces[] = '<span>' . esc_html( $crumb['label'] ) . '</span>';
+		}
+	}
+
+	return '<nav class="sb-course-breadcrumb" aria-label="' . esc_attr__( 'Breadcrumb', 'fj-blocks' ) . '">'
+		. implode( $sep, $pieces )
+		. '</nav>';
+}
+add_shortcode( 'sb_ld_breadcrumb', 'sb_ld_breadcrumb_shortcode' );
+
+/**
+ * [sb_ld_header] — the mint band for LearnDash step pages (lesson / topic /
+ * quiz): title + breadcrumb, mirroring the course-detail header band.
+ *
+ * @return string
+ */
+function sb_ld_header_shortcode() {
+	$post_id = get_the_ID();
+	$type    = $post_id ? get_post_type( $post_id ) : '';
+	if ( ! in_array( $type, array( 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' ), true ) ) {
+		return '';
+	}
+
+	return '<section class="sb-course-band alignfull has-surface-3-background-color has-background has-global-padding">'
+		. '<div class="sb-course-band__inner">'
+		. '<h1 class="sb-course-band__title">' . esc_html( get_the_title( $post_id ) ) . '</h1>'
+		. sb_ld_breadcrumb_shortcode()
+		. '</div></section>';
+}
+add_shortcode( 'sb_ld_header', 'sb_ld_header_shortcode' );
+
+/**
+ * Suppress LearnDash's own breadcrumbs on step pages — our [sb_ld_header] band
+ * carries the breadcrumb now (with short-name support). Emptying the breadcrumb
+ * list makes the modern breadcrumb template render nothing; the legacy (quiz)
+ * breadcrumb is hidden in CSS.
+ */
+add_filter( 'learndash_template_views_breadcrumbs', '__return_empty_array' );
+
+/**
  * Category eyebrow — the course's `ld_course_category` term name(s), linked, as
  * the small brand kicker above the title. Shared by both header layouts.
  *
