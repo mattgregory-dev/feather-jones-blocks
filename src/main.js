@@ -19,3 +19,6 @@ import "./scripts/scroll-top.js";
 
 // Custom mobile menu drawer (markup in parts/header.html; styles in _header.scss).
 import "./scripts/mobile-menu.js";
+
+// Lead-capture popup (markup in inc/popup.php; styles in _popup.scss).
+import "./scripts/popup.js";
