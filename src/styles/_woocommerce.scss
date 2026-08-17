@@ -97,6 +97,50 @@
     }
   }
 
+  // Success notices ("…has been added to your cart", etc.) — token-skinned as a
+  // base panel with a brand left rule (replaces Woo's default green bar), with a
+  // brand check. The inline "View cart" becomes a compact brand text link rather
+  // than the big black primary button. Applies on every Woo page.
+  .woocommerce-message {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--wp--preset--color--base);
+    border: 1px solid var(--wp--preset--color--border);
+    border-left: 3px solid var(--wp--preset--color--brand);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    color: var(--wp--preset--color--contrast);
+    font-size: var(--wp--preset--font-size--small);
+
+    &::before {
+      position: static;
+      margin: 0;
+      color: var(--wp--preset--color--brand);
+    }
+    a.button {
+      margin: 0 0 0 auto;
+      padding: 0;
+      background: transparent;
+      border: none;
+      color: var(--wp--preset--color--brand);
+      font-family: var(--wp--preset--font-family--eyebrow);
+      font-size: var(--wp--preset--font-size--xx-small);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+
+      &:hover,
+      &:focus-visible {
+        background: transparent;
+        color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+    }
+  }
+
   // Form fields — our input focus treatment (brand border + mint ring), matching
   // Forminator / the search bar / reviews, so text fields never wear the blue
   // *button* ring. Woo's block fields carry the border on the wrapper, so ring
@@ -212,15 +256,149 @@
 
   // My Account.
   &.woocommerce-account {
+    // Warm page background so the white account/login card reads as a panel
+    // (matches the login mockup — surface-1 behind, base card in front).
+    background-color: var(--wp--preset--color--surface-1);
+
+    // Keep a side gutter at every viewport while the card stays centred (margin
+    // auto from the shared rule): cap the width to the viewport minus a gutter on
+    // small screens, and to the design max on large ones.
+    main {
+      max-width: calc(min(1120px, 100% - (2 * var(--wp--preset--spacing--40))));
+    }
+    // Login (logged-out) page: narrow the card to the mockup's width. The
+    // dashboard (logged-in) keeps the wide 2-column card.
+    &:not(.logged-in) main {
+      max-width: calc(min(640px, 100% - (2 * var(--wp--preset--spacing--40))));
+    }
+
+    // The account page content leaves a trailing empty paragraph block after the
+    // login block, which pads phantom space under the card. Drop empty paragraphs.
+    .entry-content > p:empty {
+      display: none;
+    }
+
     .my-account-login {
-      h2 {
+      // The template's default <h2> is hidden; a real <h1> title is output via
+      // the woocommerce_before_customer_login_form hook (inc/woocommerce.php).
+      > .woocommerce > h2 {
         display: none;
       }
+      // Card heading — serif, understated; same size as the old h2, with uniform
+      // spacing-50 below it before the form.
+      .my-account-login__title {
+        margin: 0 0 var(--wp--preset--spacing--50);
+        font-family: var(--wp--preset--font-family--heading);
+        font-weight: 400;
+        font-size: var(--wp--preset--font-size--x-large);
+        line-height: 1.15;
+        color: var(--wp--preset--color--contrast-2);
+      }
+      // Strip WooCommerce's default border/padding on the login form so the
+      // outer account card is the only wrapper (no nested double card).
       .woocommerce form.login {
-        margin-bottom: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
 
         p.woocommerce-LostPassword {
           margin-bottom: 0;
+        }
+      }
+
+      // Login form fields — bold labels, soft surface-1 inputs; the brand border
+      // + mint focus ring come from the shared `.input-text:focus` rule below.
+      .woocommerce-form-login {
+        // WooCommerce ships the form as an inline flex column (gap:10px); switch
+        // to block flow so uniform margins govern the vertical rhythm. Inline
+        // style, so !important is required.
+        display: block !important;
+
+        // Uniform spacing-50 between every row.
+        > p {
+          margin: 0 0 var(--wp--preset--spacing--50);
+        }
+        // Tighten the first row (username) to spacing-30.
+        > p:first-child {
+          margin-bottom: var(--wp--preset--spacing--30);
+        }
+
+        .form-row-wide > label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 700;
+          font-size: 0.875rem;
+          color: var(--wp--preset--color--contrast-2);
+        }
+        .required {
+          color: var(--wp--preset--color--brand);
+          border: 0;
+        }
+        .password-input {
+          display: block;
+          width: 100%;
+        }
+        .input-text {
+          display: block;
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0.8rem 0.9rem;
+          border: 1px solid var(--wp--preset--color--border);
+          border-radius: 6px;
+          background: var(--wp--preset--color--surface-1);
+          color: var(--wp--preset--color--contrast-2);
+          font-family: var(--wp--preset--font-family--body);
+          font-size: 1rem;
+          line-height: 1.4;
+          // Stays surface-1 on focus; the brand border + mint ring come from the
+          // shared `.input-text:focus` rule.
+        }
+        // Submit button + "Lost your password?" share one row — the link sits
+        // just to the right of the button. They're separate <p> siblings, so lay
+        // both out inline and align their centres (the button's own vertical
+        // margin is zeroed here so the two line up cleanly).
+        button.button {
+          margin: 0;
+        }
+        .form-row:not(.form-row-wide) {
+          display: inline-flex;
+          align-items: center;
+          margin: 0;
+          vertical-align: middle;
+        }
+        .woocommerce-LostPassword {
+          display: inline-flex;
+          align-items: center;
+          margin: 0 0 0 1.5rem;
+          vertical-align: middle;
+        }
+
+        // "Lost your password?" — brand link, underline on hover.
+        .lost_password a {
+          color: var(--wp--preset--color--brand);
+          text-decoration: none;
+
+          &:hover,
+          &:focus-visible {
+            text-decoration: underline;
+            text-underline-offset: 3px;
+          }
+        }
+
+        // Mobile: full-width button with the link stacked, centred beneath it.
+        @media (max-width: 600px) {
+          .form-row:not(.form-row-wide) {
+            display: flex;
+          }
+          button.button {
+            width: 100%;
+          }
+          .woocommerce-LostPassword {
+            display: block;
+            margin: var(--wp--preset--spacing--50) 0 0;
+            text-align: center;
+          }
         }
       }
     }
