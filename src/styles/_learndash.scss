@@ -1,12 +1,25 @@
-// Course-overview shell (block template single-sfwd-courses.html):
-// the LearnDash content sits inside a bordered card, under a centered
-// eyebrow + title + meta bar. Ported from the classic single-course layout.
-.sb-course-card {
-  padding: clamp(1.5rem, 4vw, 2.5rem);
-  background-color: var(--wp--preset--color--base);
-  border: 1px solid var(--wp--preset--color--border);
-  border-radius: 8px;
-  box-shadow: var(--wp--preset--shadow--soft);
+// Course-detail header band (block template single-sfwd-courses.html): a
+// full-width mint band carries the eyebrow, title, star summary, stat bar, and
+// breadcrumb; the LearnDash course body flows below on cream. `.sb-course-card`
+// stays as the body's scoping hook for the LD reskins further down — the old
+// bordered-card chrome is retired in favour of the band + flowing sections.
+.sb-course-band {
+  text-align: center;
+
+  .sb-course-eyebrow {
+    margin-bottom: 0.75rem;
+  }
+
+  // Tighten the title against its neighbours inside the band.
+  .wp-block-post-title {
+    margin-block: 0;
+  }
+
+  // Sit flush against the course body below, overriding the site-wide
+  // block flow gap (:where(.wp-site-blocks) > * { margin-block-start }).
+  & + .sb-course-card {
+    margin-block-start: 0;
+  }
 }
 
 .sb-course-eyebrow {
@@ -21,6 +34,9 @@
   a {
     color: inherit;
     text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -36,11 +52,65 @@
     font-size: 0.8rem;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: var(--wp--preset--color--muted);
+    color: var(--wp--preset--color--brand);
     & + .cm::before {
       content: "\00B7";
       margin-right: 0.35rem;
     }
+  }
+}
+
+// Star summary (★ avg · N reviews) — sits below the title, above the stat bar.
+// Stars fill to the rounded average; empty stars fade back.
+.sb-course-stars {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem auto 0;
+  font-family: var(--wp--preset--font-family--eyebrow);
+
+  &__icons {
+    letter-spacing: 0.1em;
+    color: var(--wp--preset--color--muted); // fallback
+    color: color-mix(in srgb, var(--wp--preset--color--brand) 25%, transparent);
+  }
+  .sb-course-star.is-filled {
+    color: var(--wp--preset--color--brand); // fallback
+    color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+  }
+  &__score {
+    font-weight: 700;
+    color: var(--wp--preset--color--brand); // fallback
+    color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+  }
+  &__count {
+    font-size: 0.9rem;
+    color: var(--wp--preset--color--muted);
+  }
+}
+
+// Breadcrumb — "Courses / <course>" at the foot of the header band.
+.sb-course-breadcrumb {
+  margin-top: 1.25rem;
+  font-family: var(--wp--preset--font-family--body);
+  font-size: var(--wp--preset--font-size--medium);
+  letter-spacing: 0.05em;
+  color: var(--wp--preset--color--muted);
+
+  a {
+    color: var(--wp--preset--color--brand);
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  &__sep {
+    color: var(--wp--preset--color--muted);
+  }
+  &__current {
+    color: var(--wp--preset--color--contrast);
   }
 }
 
@@ -273,10 +343,73 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
-// Course overview only (not lessons/topics/quizzes) — center the progress bar.
+// Course progress bar (enrolled, course overview only): a rounded card on a
+// subtle surface, carrying the "COURSE PROGRESS" label, the meter + step count,
+// and the last-activity note in one row.
 .sb-course-card .learndash-wrapper--course {
   .ld-progress-bar {
-    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+    padding: 1.1rem 1.5rem;
+    background-color: var(--wp--preset--color--surface-2);
+    border: 1px solid var(--wp--preset--color--border);
+    border-radius: 8px;
+
+    // "COURSE PROGRESS 9%"
+    .ld-progress-bar__label--progress {
+      flex: 0 0 auto;
+      margin: 0;
+      font-family: var(--wp--preset--font-family--eyebrow);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--wp--preset--color--brand); // fallback
+      color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+    }
+
+    // Track + fill + step count, laid out inline.
+    .ld-progress-bar__meter {
+      flex: 1 1 12rem;
+      min-width: 8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .ld-progress-bar__meter-background {
+      flex: 1 1 auto;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid var(--wp--preset--color--border);
+      box-shadow: 0 0 1px var(--wp--preset--color--border);
+      background-color: var(--wp--preset--color--base);
+      overflow: hidden;
+    }
+    .ld-progress-bar__meter-foreground {
+      height: 100%;
+      border-radius: 999px;
+      background-color: var(--wp--preset--color--brand);
+    }
+    .ld-progress-bar__meter-label {
+      flex: 0 0 auto;
+      font-family: var(--wp--preset--font-family--eyebrow);
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--wp--preset--color--muted);
+    }
+
+    // "Last activity: …"
+    .ld-progress-bar__last-activity {
+      flex: 0 0 auto;
+      margin-inline-start: auto;
+      font-family: var(--wp--preset--font-family--body);
+      font-size: 0.85rem;
+      color: var(--wp--preset--color--muted);
+    }
   }
 }
 
@@ -373,10 +506,108 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
-// Featured image rounded corners
+// Course body layout: space the header/content/sidebar rows with a spacing
+// preset instead of LD's --ld-spacer-6.
+.sb-course-card {
+  .ld-layout__content {
+    gap: var(--wp--preset--spacing--50);
+  }
+}
+
+// Featured image: rounded corners + breathing room before the course content.
 .sb-course-card {
   .ld-tab-bar__panel .ld-featured-image {
     border-radius: 8px;
+    margin-bottom: var(--wp--preset--spacing--50);
+  }
+}
+
+// Course Content accordion — light pass over LD's modern accordion: token type,
+// heading-style lesson titles, brand accents, and a green completion state. The
+// full rebuild-from-steps (and the guest lock/sample states) is Phase 3; this
+// only reskins LD's existing markup so it reads in our system.
+.sb-course-card {
+  .ld-accordion--course {
+    // Curriculum card: white panel, a touch more rounding than LD's inline 8px
+    // (which sits in element.style, so !important is needed to beat it).
+    .ld-accordion__section {
+      background-color: var(--wp--preset--color--base) !important;
+      border-radius: 12px !important;
+    }
+
+    // "Course Content" heading — flush on top, spaced off the list below.
+    .ld-accordion__heading {
+      margin-top: 0;
+      margin-bottom: var(--wp--preset--spacing--50);
+    }
+
+    // Grouped-section label (e.g. "LESSONS") reads as an eyebrow.
+    .ld-accordion__subheading {
+      font-family: var(--wp--preset--font-family--eyebrow);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--wp--preset--color--muted);
+    }
+
+    // Lesson / quiz titles: heading font, no link underline, brand on hover.
+    .ld-accordion__item-title {
+      a {
+        font-family: var(--wp--preset--font-family--heading);
+        color: var(--wp--preset--color--contrast) !important;
+        text-decoration: none !important;
+
+        &:hover {
+          color: var(--wp--preset--color--brand) !important;
+        }
+      }
+    }
+
+    // Attribute labels (topic / quiz counts): small eyebrow, muted.
+    .ld-accordion__item-attribute-label {
+      font-family: var(--wp--preset--font-family--eyebrow);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--wp--preset--color--muted);
+    }
+    // Completion state → brand green (lesson "Complete" label + its check, and
+    // the per-step topic/quiz completion checks).
+    .ld-accordion__item-attribute--progress {
+      color: var(--wp--preset--color--brand);
+
+      .ld-accordion__item-attribute-label {
+        color: inherit;
+      }
+      // The check icon carries its own LD colour (var(--ld-color-brand-primary));
+      // override it to our brand rather than let it inherit.
+      .ld-accordion__item-attribute-icon--progress {
+        color: var(--wp--preset--color--brand);
+      }
+    }
+    .ld-accordion__item-icon--progress {
+      color: var(--wp--preset--color--brand);
+    }
+
+    // Expand-all + per-lesson expand buttons and their carets → brand.
+    .ld-accordion__expand-button {
+      color: var(--wp--preset--color--brand);
+
+      // Override LD's default hover underline (var(--ld-color-brand-primary)) —
+      // LD draws it on the button and on the inner text span via a deep
+      // breakpoint-scoped selector, so !important is needed to win.
+      &:hover {
+        border-bottom-color: var(--wp--preset--color--brand) !important;
+
+        .ld-accordion__expand-button-text {
+          border-bottom-color: var(--wp--preset--color--brand) !important;
+        }
+      }
+    }
+    .ld-accordion__expand-button-icon {
+      color: currentColor;
+    }
   }
 }
 
@@ -385,24 +616,54 @@ body.woocommerce-account .learndash-wrapper {
 // block theme doesn't produce). Raw hex/rgba swapped for theme tokens; LD-blue
 // accents swapped for brand.
 .sb-course-card {
+  // Space between the tab nav and its panel, replacing LD's --ld-spacer-1 /
+  // --ld-spacer-3. Wider screens (plain .ld-tab-bar) get preset 40; the narrow
+  // .ld-breakpoint--small variant opens up to preset 50.
+  .ld-tab-bar {
+    gap: var(--wp--preset--spacing--40);
+  }
+  .ld-tab-bar.ld-breakpoint--small {
+    gap: var(--wp--preset--spacing--50);
+  }
+
   // Tab nav (Course | Reviews).
   .ld-tab-bar__tabs {
+    display: flex;
+    gap: 0.5rem;
     border-bottom: 1px solid var(--wp--preset--color--border);
   }
   .ld-tab-bar__tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.1rem;
     background: transparent;
     border: 0;
-    border-bottom: 4px solid transparent;
+    border-bottom: 3px solid transparent;
     box-shadow: none;
-    color: inherit;
     outline: none;
     position: relative;
+    // Nudge the row down so its underline sits on the nav's bottom rule.
+    margin-bottom: -1px;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--muted);
+    transition: color 150ms ease, border-color 150ms ease;
+
+    // Icon inherits the tab's colour and scales with the label.
+    .ld-svgicon {
+      width: 1.15em;
+      height: 1.15em;
+      color: currentColor;
+    }
 
     &:hover,
-    &:focus,
-    &:focus-visible {
+    &:focus {
       background: transparent;
-      color: inherit;
+      color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
     }
     &::before,
     &::after {
@@ -428,6 +689,8 @@ body.woocommerce-account .learndash-wrapper {
       justify-content: flex-start;
       align-items: center;
       column-gap: 1rem;
+      // Replace LD's 2rem with a spacing preset.
+      margin-bottom: var(--wp--preset--spacing--50);
 
       .learndash-course-reviews-review-stars {
         font-size: 1.9rem;
@@ -529,7 +792,7 @@ body.woocommerce-account .learndash-wrapper {
         .grid-container.full {
           display: flex !important;
           flex-direction: column;
-          gap: var(--wp--preset--spacing--50);
+          gap: var(--wp--preset--spacing--40);
         }
         .grid-x .cell {
           display: flex;
@@ -548,7 +811,7 @@ body.woocommerce-account .learndash-wrapper {
     }
 
     .reviews-list {
-      margin-bottom: 4rem;
+      margin-bottom: var(--wp--preset--spacing--50);
 
       .ld_review {
         padding: 0;
