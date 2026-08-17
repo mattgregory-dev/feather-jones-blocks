@@ -61,7 +61,7 @@
     margin-block: 0.5rem 0;
     font-family: var(--wp--preset--font-family--heading);
     font-size: var(--wp--preset--font-size--xx-large);
-    line-height: 1.15;
+    line-height: 1.2;
   }
   &__summary {
     margin-block: 1.25rem 0;
@@ -961,7 +961,13 @@ body.woocommerce-account .learndash-wrapper {
 
       .ld_review {
         padding: 0;
-        margin-bottom: 2rem;
+        margin-bottom: var(--wp--preset--spacing--50);
+        border-bottom: 0;
+
+        // LD gives the author line a 1em bottom margin; the card gap handles it.
+        .learndash-course-reviews-author {
+          margin-bottom: 0;
+        }
 
         .learndash-course-reviews-body {
           background: var(--wp--preset--color--base);
@@ -1000,6 +1006,9 @@ body.woocommerce-account .learndash-wrapper {
             font-size: 1rem;
             color: var(--wp--preset--color--contrast-2);
 
+            p:first-child {
+              margin-top: 0;
+            }
             p:last-child {
               margin-bottom: 0;
             }
