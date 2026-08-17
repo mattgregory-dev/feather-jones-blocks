@@ -22,6 +22,13 @@
     margin-bottom: 0.75rem;
   }
 
+  // Contrast score/count against the mint band (the muted default reads too
+  // light here); the guest cream header keeps the muted default.
+  .sb-course-stars__score,
+  .sb-course-stars__count {
+    color: var(--wp--preset--color--contrast);
+  }
+
   // Sit flush against the course body below, overriding the site-wide
   // block flow gap (:where(.wp-site-blocks) > * { margin-block-start }).
   & + .sb-course-card {
@@ -160,6 +167,50 @@ body.sb-course--guest {
   .ld-tab-bar--no-access .ld-tab-bar__tabs {
     display: none;
   }
+  // Curriculum links point at gated pages for guests, so mute the hover (LD
+  // defaults to its dark brand-primary blue) — they shouldn't read as active.
+  .ld-accordion__item-title:hover {
+    color: var(--wp--preset--color--muted);
+  }
+}
+
+// Guest reviews section ([sb_course_reviews]): the approved review list (styled
+// by the shared review-card rules) under a heading, with a "Log in to leave a
+// review" prompt in place of the submit form enrolled users get.
+.sb-course-reviews {
+  margin-top: var(--wp--preset--spacing--60);
+
+  &__heading {
+    margin-block: 0 var(--wp--preset--spacing--50);
+    font-family: var(--wp--preset--font-family--heading);
+    font-size: var(--wp--preset--font-size--xx-large);
+    line-height: 1.2;
+  }
+
+  &__prompt {
+    margin-top: var(--wp--preset--spacing--40);
+    font-family: var(--wp--preset--font-family--body);
+    text-align: center;
+
+    a {
+      color: var(--wp--preset--color--link);
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--wp--preset--color--link-hover);
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// LearnDash's review walker + wpautop scatter empty <p></p> tags through the
+// markup (re-inserted at render, so CSS is the reliable catch); hide them so
+// they don't add stray vertical gaps — guest section and enrolled tab alike.
+.sb-course-card .ld_review p:empty,
+.sb-course-card .learndash-course-reviews-container p:empty {
+  display: none;
 }
 
 .sb-course-eyebrow {
@@ -201,16 +252,17 @@ body.sb-course--guest {
   }
 }
 
-// Star summary (★ avg · N reviews) — sits below the title, above the stat bar.
-// Stars fill to the rounded average; empty stars fade back.
+// Star summary (★ avg · N reviews) — a link to the reviews, below the title.
+// inline-flex keeps the hit area to the content; the band centers it via its
+// own text-align. Stars fill to the rounded average; empty stars fade back.
 .sb-course-stars {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: center;
-  margin: 1rem auto 0;
+  margin-top: 1rem;
   font-family: var(--wp--preset--font-family--body);
   font-size: var(--wp--preset--font-size--medium);
+  text-decoration: none;
 
   &__icons {
     letter-spacing: 0.1em;
@@ -230,6 +282,10 @@ body.sb-course--guest {
   &__count {
     font-size: 0.9rem;
     color: var(--wp--preset--color--muted);
+  }
+  // Affordance: underline the review count on hover.
+  &:hover .sb-course-stars__count {
+    text-decoration: underline;
   }
 }
 
@@ -674,6 +730,7 @@ body.woocommerce-account .learndash-wrapper {
     // (which sits in element.style, so !important is needed to beat it).
     .ld-accordion__section {
       background-color: var(--wp--preset--color--base) !important;
+      border-color: var(--wp--preset--color--border);
       border-radius: 12px !important;
     }
 
@@ -974,7 +1031,6 @@ body.woocommerce-account .learndash-wrapper {
           border: 1px solid var(--wp--preset--color--border);
           border-radius: 1rem;
           padding: 1.25rem 1.5rem;
-          box-shadow: var(--wp--preset--shadow--soft);
           display: grid;
           gap: 0.75rem;
 
@@ -1003,13 +1059,17 @@ body.woocommerce-account .learndash-wrapper {
             line-height: 1;
           }
           .learndash-course-reviews-content {
-            font-size: 1rem;
+            font-size: var(--wp--preset--font-size--medium);
             color: var(--wp--preset--color--contrast-2);
 
             p:first-child {
               margin-top: 0;
             }
-            p:last-child {
+            // Zero the closing paragraph's margin. LD often trails the real
+            // paragraph with empty (hidden) <p>s, so :last-child lands on those;
+            // :has(+ p:empty) catches the real one before a trailing empty.
+            p:last-child,
+            p:not(:empty):has(+ p:empty) {
               margin-bottom: 0;
             }
           }
