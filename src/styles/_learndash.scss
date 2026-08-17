@@ -509,10 +509,13 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
-// Course progress bar (enrolled, course overview only): a rounded card on a
-// subtle surface, carrying the "COURSE PROGRESS" label, the meter + step count,
-// and the last-activity note in one row.
-.sb-course-card .learndash-wrapper--course {
+// Progress bar (enrolled): the shared LD component styled as a rounded card —
+// the "<context> PROGRESS" label, the meter + step count, and the last-activity
+// note in one row. Applies on the course overview and on lesson / topic pages,
+// which reuse the same markup (only the label text — LESSON PROGRESS, etc. —
+// and the calculation differ).
+.sb-course-card
+  :is(.learndash-wrapper--course, .learndash-wrapper--lesson, .learndash-wrapper--topic) {
   .ld-progress-bar {
     display: flex;
     flex-wrap: wrap;
@@ -523,7 +526,18 @@ body.woocommerce-account .learndash-wrapper {
     border: 1px solid var(--wp--preset--color--border);
     border-radius: 8px;
 
-    // "COURSE PROGRESS 9%"
+    // No last-activity yet (e.g. 0% progress): centre the label + meter so the
+    // bar doesn't sit lonely on the left. Capping the meter gives it room to
+    // centre into (it grows full-width when the last-activity note is present).
+    &:not(:has(.ld-progress-bar__last-activity)) {
+      justify-content: center;
+
+      .ld-progress-bar__meter {
+        flex: 0 1 24rem;
+      }
+    }
+
+    // e.g. "LESSON PROGRESS 40%"
     .ld-progress-bar__label--progress {
       flex: 0 0 auto;
       margin: 0;
@@ -579,6 +593,84 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
+// Step navigation (Previous / Next / Back to Course / Mark Complete): reskin
+// LearnDash's blue-button defaults to our button tokens. Nav links take the
+// brand outline (fills on hover); Mark Complete takes the brand fill as the
+// primary progress action. Icons ride currentColor. Scoped to our card wrapper
+// to beat LD's `.learndash-wrapper` rules.
+.sb-course-card .ld-navigation {
+  // Centre the Mark Complete button (LD left-aligns its column).
+  .ld-navigation__progress {
+    align-items: center;
+  }
+
+  .ld-navigation__previous-link,
+  .ld-navigation__next-link,
+  .ld-navigation__back-to-course-link,
+  .ld-navigation__progress-mark-complete-button {
+    border-radius: 5px;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+
+  // Navigation → brand outline, fills in on hover.
+  .ld-navigation__previous-link,
+  .ld-navigation__next-link,
+  .ld-navigation__back-to-course-link {
+    background-color: transparent;
+    color: var(--wp--preset--color--brand);
+    border: 2px solid var(--wp--preset--color--brand);
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--wp--preset--color--brand);
+      color: var(--wp--preset--color--base);
+      border-color: var(--wp--preset--color--brand);
+    }
+  }
+
+  // Mark Complete → brand fill, deepens on hover.
+  .ld-navigation__progress-mark-complete-button {
+    background-color: var(--wp--preset--color--brand);
+    color: var(--wp--preset--color--base);
+    border: 2px solid var(--wp--preset--color--brand);
+
+    &:hover,
+    &:focus-visible {
+      background-color: color-mix(in srgb, var(--wp--preset--color--brand) 85%, black);
+      border-color: color-mix(in srgb, var(--wp--preset--color--brand) 85%, black);
+      color: var(--wp--preset--color--base);
+    }
+  }
+
+  // Small screens: LD's 2-column grid drops Previous/Next into opposite columns
+  // with a wide gap (reads as spread-apart). Re-lay it out with content-width
+  // columns and a tight gap — Mark Complete on top, Previous + Next together in
+  // a centered row, Back to Course below.
+  @media (max-width: 767px) {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-areas:
+      "progress progress"
+      "previous next"
+      "back-to-course back-to-course";
+    justify-content: center;
+    gap: 0.75rem;
+
+    .ld-navigation__progress {
+      grid-area: progress;
+    }
+    .ld-navigation__previous {
+      grid-area: previous;
+    }
+    .ld-navigation__next {
+      grid-area: next;
+    }
+    .ld-navigation__back-to-course {
+      grid-area: back-to-course;
+    }
+  }
+}
+
 // LearnDash's own breadcrumbs are suppressed in favour of our [sb_ld_header]
 // band breadcrumb: the modern one via the learndash_template_views_breadcrumbs
 // filter (empties it at the source), and the legacy quiz markup hidden here.
@@ -605,12 +697,12 @@ body.woocommerce-account .learndash-wrapper {
   }
 }
 
-// Course Content accordion — light pass over LD's modern accordion: token type,
-// heading-style lesson titles, brand accents, and a green completion state. The
-// full rebuild-from-steps (and the guest lock/sample states) is Phase 3; this
-// only reskins LD's existing markup so it reads in our system.
+// Course / lesson accordion — light pass over LD's modern accordion: token
+// type, heading-style titles, brand accents, and a green completion state.
+// Reskins LD's existing markup (course overview + the lesson page's topic/quiz
+// list) so it reads in our system.
 .sb-course-card {
-  .ld-accordion--course {
+  :is(.ld-accordion--course, .ld-accordion--lesson) {
     // Curriculum card: white panel, a touch more rounding than LD's inline 8px
     // (which sits in element.style, so !important is needed to beat it).
     .ld-accordion__section {
@@ -988,9 +1080,27 @@ body.woocommerce-account .learndash-wrapper {
 
       .wpProQuiz_questionList[data-type="multiple"],
       .wpProQuiz_questionList[data-type="single"] {
+        // Answer options: white cards with a 1px token border.
+        .wpProQuiz_questionListItem label {
+          background-color: var(--wp--preset--color--base);
+          border: 1px solid var(--wp--preset--color--border);
+        }
         .wpProQuiz_questionListItem:hover label {
           cursor: pointer;
           background-color: color-mix(in srgb, var(--wp--preset--color--brand) 8%, var(--wp--preset--color--base));
+        }
+        // Selected / focused option: swap LD's blue outline for our form-input
+        // focus treatment — a brand border with a soft mint (surface-3) ring.
+        .wpProQuiz_questionListItem label.is-selected,
+        .wpProQuiz_questionListItem label:focus-within {
+          border-color: var(--wp--preset--color--brand) !important;
+          box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+        }
+        // The checked radio / checkbox is painted in the browser's native
+        // accent-color (LD sets no rule — why it's invisible in devtools);
+        // point it at brand.
+        .wpProQuiz_questionInput {
+          accent-color: var(--wp--preset--color--brand);
         }
       }
     }
