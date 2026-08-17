@@ -62,4 +62,15 @@
   .wp-block-navigation-item:focus-within > .wp-block-navigation-item__content {
     background-color: var(--wp--preset--color--surface-2);
   }
+
+  // Current page: keep the item lit so you always know where you are.
+  .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content {
+    background-color: var(--wp--preset--color--surface-2);
+  }
+  // Hovering the current item deepens it a touch, so it still reads as
+  // interactive rather than looking stuck.
+  .wp-block-navigation-item.current-menu-item:hover > .wp-block-navigation-item__content,
+  .wp-block-navigation-item.current-menu-item:focus-within > .wp-block-navigation-item__content {
+    background-color: color-mix(in srgb, var(--wp--preset--color--surface-2) 85%, var(--wp--preset--color--contrast));
+  }
 }
