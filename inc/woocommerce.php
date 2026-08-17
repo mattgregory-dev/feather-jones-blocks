@@ -218,3 +218,16 @@ function sb_disable_woocommerce_cart_fragments_data( $params, $handle ) {
 	return 'wc-cart-fragments' === $handle ? null : $params;
 }
 add_filter( 'woocommerce_get_script_data', 'sb_disable_woocommerce_cart_fragments_data', 10, 2 );
+
+/**
+ * Output a real <h1> title above the my-account login form. WooCommerce's
+ * template hard-codes an <h2>Login</h2>; we hide that (in _woocommerce.scss) and
+ * print our own semantic page title here. Scoped to the guest account page so it
+ * never fires on the checkout login form.
+ */
+function sb_woocommerce_login_title() {
+	if ( function_exists( 'is_account_page' ) && is_account_page() && ! is_user_logged_in() ) {
+		echo '<h1 class="my-account-login__title">' . esc_html__( 'Log in to your account', 'fj-blocks' ) . '</h1>';
+	}
+}
+add_action( 'woocommerce_before_customer_login_form', 'sb_woocommerce_login_title' );
