@@ -55,6 +55,10 @@ values, keep roles.
   variations (`is-style-*`) → `src/style.scss` (escape hatch only: pseudo-
   elements, `:has()`, keyframes, JS-state classes). The SCSS layer always
   references tokens and never redefines one.
+- **Units:** spacing (padding/margin/gap) uses a `--wp--preset--spacing--*`
+  preset or rem, never raw px; px is reserved for borders, radii, shadows,
+  transforms, and fixed media dimensions. Details in
+  [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#units-spacing-preset-vs-rem-vs-px).
 - **A SCSS partial rides with its feature.** New block/variation/pattern → its
   stylesheet and a matching `@use` line land in the same change.
 - Run `npm run lint` (eslint + stylelint + phpcs + block-grammar audit) before
@@ -77,6 +81,31 @@ editing surface). See [docs/PIPELINE.md](docs/PIPELINE.md), Stage 4.
   why or a gotcha) — no filler bodies.
 - **No em dashes in marketing prose.** Docs, docblocks, and pattern descriptions
   may use them freely; visitor-facing copy may not.
+
+## Editing page content (this deployment)
+
+Deployment-specific (the fj Docker/WordPress environment), not a starter-blocks
+convention. Page **content** lives in the database, edited in the block editor.
+To read or write it programmatically:
+
+- **Only ever go through `wp/sb-pull.php` and `wp/sb-push.php`. NEVER raw
+  `wp post update` / `wp_update_post`.** Same wp-cli-in-Docker transport, but the
+  scripts add load-bearing guards that raw commands skip:
+  - **Stale-push guard** — `sb-push` aborts (no override) if the page changed in
+    the DB since the last `sb-pull`, so it can't clobber the user's live editor
+    work. Baseline auto-refreshes on push, so back-to-back solo edits are fine.
+  - **Fidelity** — `sb-push` runs as an admin with `unfiltered_html`; raw wp-cli
+    runs as user 0 with kses ACTIVE and silently strips `<iframe>`/`<script>`/
+    inline SVG. It also `wp_slash`es for byte-exactness.
+  - **Backup** — every push copies the current DB content to `.work/backups/`.
+- **Flow:** `wp eval-file sb-pull.php <id> > wp/.work/<slug>.html` (arms the
+  baseline) → edit the `.work` file → `wp eval-file sb-push.php <slug>`.
+- **Re-pull before editing every time — even for a page I authored this session.**
+  The user may be editing it in the block editor in parallel; the DB is the only
+  source of truth. Do not regenerate a page from an in-context/local copy.
+- Run all tooling through WSL / `docker compose` (see the project-root
+  `AGENTS.md`); `npm run build:*` fails over the `\\wsl.localhost` UNC path, so
+  build inside WSL.
 
 ## Where things live
 
