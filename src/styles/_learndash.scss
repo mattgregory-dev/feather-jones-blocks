@@ -695,6 +695,10 @@ body.woocommerce-account .learndash-wrapper {
       .learndash-course-reviews-review-stars {
         font-size: 1.9rem;
       }
+      // Tighten LD's 1.5 line-height on the "Average Review Score:" label.
+      .average-review-label {
+        line-height: 1.2;
+      }
     }
     .notices-container {
       display: none;
