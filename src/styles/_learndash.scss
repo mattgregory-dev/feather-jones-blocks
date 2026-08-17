@@ -427,11 +427,11 @@ body.learndash-cpt .learndash-wrapper {
       border-color: var(--wp--preset--color--surface-dark-2) !important;
       color: var(--wp--preset--color--base) !important;
     }
-    &:focus,
+    // Keyboard focus only, matching the global blue ring (LD's high-specificity
+    // CSS needs !important to beat, so we re-assert the same treatment here).
     &:focus-visible {
-      outline: 3px solid var(--wp--preset--color--surface-3) !important;
+      outline: 2px solid var(--wp--preset--color--link) !important;
       outline-offset: 2px !important;
-      box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3) !important;
     }
   }
 }
@@ -446,17 +446,25 @@ body.learndash-cpt .learndash-wrapper .wpProQuiz_content
   color: var(--wp--preset--color--base) !important;
 
   &:hover,
-  &:focus,
   &:active {
     background-color: var(--wp--preset--color--surface-dark-2) !important;
     border-color: var(--wp--preset--color--surface-dark-2) !important;
     color: var(--wp--preset--color--base) !important;
   }
-  &:focus,
+  // Keyboard focus only, matching the global blue ring.
   &:focus-visible {
-    outline: 3px solid var(--wp--preset--color--surface-3) !important;
+    outline: 2px solid var(--wp--preset--color--link) !important;
     outline-offset: 2px !important;
-    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3) !important;
+  }
+
+  // Mobile: LD unfloats the buttons (Back/Check/Next) but leaves them
+  // left-aligned and cramped. Stack them centered instead.
+  @media (max-width: 640px) {
+    float: none !important;
+    display: block !important;
+    width: fit-content !important;
+    margin-inline: auto !important;
+    text-align: center;
   }
 }
 
@@ -480,10 +488,27 @@ body.woocommerce-account .learndash-wrapper {
     border-color: var(--wp--preset--color--brand) !important;
 
     &:hover,
-    &:focus,
     &:active {
       background-color: var(--wp--preset--color--surface-dark-2) !important;
       border-color: var(--wp--preset--color--surface-dark-2) !important;
+    }
+  }
+
+  // The mobile "alternate" toggle is a different beast: LD renders it as a
+  // transparent button with #235af3 text and a #235af3 circular arrow icon.
+  // Keep it transparent (override the brand fill above) and brand the text +
+  // icon — a white arrow on a brand circle.
+  .ld-expand-button.ld-button-alternate {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: var(--wp--preset--color--brand) !important;
+
+    .ld-text {
+      color: var(--wp--preset--color--brand) !important;
+    }
+    .ld-icon {
+      background-color: var(--wp--preset--color--brand) !important;
+      color: var(--wp--preset--color--base) !important;
     }
   }
 
@@ -610,6 +635,16 @@ body.woocommerce-account .learndash-wrapper {
   .ld-navigation__progress-mark-complete-button {
     border-radius: 5px;
     transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+    // LD paints a light-blue outline on :focus (mouse included) that out-specs
+    // the global ring; drop it, and use our blue ring on keyboard focus only.
+    &:focus {
+      outline: none;
+    }
+    &:focus-visible {
+      outline: 2px solid var(--wp--preset--color--link);
+      outline-offset: 2px;
+    }
   }
 
   // Navigation → brand outline, fills in on hover.
@@ -678,6 +713,24 @@ body.woocommerce-account .learndash-wrapper {
   .ld-breadcrumbs,
   .ld-breadcrumbs-segments {
     display: none;
+  }
+}
+
+// Unified keyboard focus for LearnDash controls. LD scatters its own :focus /
+// :focus-visible outlines (var(--ld-color-brand-primary), #235af3, #d6defb) and
+// base `outline: none`s across nav, accordion titles/expanders, tabs, and the
+// account-page course widget — all out-specifying the site-wide :where() ring.
+// Scoped to `.learndash-wrapper` (LD's own wrapper, present wherever it renders)
+// so it catches them everywhere. Normalize: nothing on a plain mouse click, our
+// blue ring on keyboard focus. !important beats LD's own rules. (Form fields keep
+// their brand-border + mint-ring treatment; not targeted here.)
+.learndash-wrapper {
+  :is(a, button, summary, [tabindex]):focus:not(:focus-visible) {
+    outline: none;
+  }
+  :is(a, button, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--wp--preset--color--link) !important;
+    outline-offset: 2px !important;
   }
 }
 
@@ -845,13 +898,6 @@ body.woocommerce-account .learndash-wrapper {
     &::after {
       content: none;
     }
-    &:focus {
-      box-shadow: none;
-    }
-    &:focus-visible {
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--wp--preset--color--brand) 30%, transparent);
-      border-radius: 6px;
-    }
     &[aria-selected="true"] {
       color: var(--wp--preset--color--brand);
       border-bottom-color: var(--wp--preset--color--brand);
@@ -924,7 +970,7 @@ body.woocommerce-account .learndash-wrapper {
       &:focus-visible {
         outline: none;
         border-color: var(--wp--preset--color--brand);
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--wp--preset--color--brand) 25%, transparent);
+        box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
       }
     }
     textarea {

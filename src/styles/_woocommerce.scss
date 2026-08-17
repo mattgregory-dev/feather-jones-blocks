@@ -29,12 +29,6 @@
     border-radius: 8px;
     box-shadow: var(--wp--preset--shadow--soft);
 
-    @media (max-width: 768px) {
-      margin: 0;
-      border: none;
-      border-radius: 0;
-      box-shadow: none;
-    }
   }
 
   // Let the account content fill the card. The entry-content is a constrained
@@ -103,13 +97,52 @@
     }
   }
 
+  // Form fields — our input focus treatment (brand border + mint ring), matching
+  // Forminator / the search bar / reviews, so text fields never wear the blue
+  // *button* ring. Woo's block fields carry the border on the wrapper, so ring
+  // that on :focus-within; the raw controls just drop the global outline (which
+  // browsers show on text fields even on mouse click).
+  // Round the wrapper so the border and the mint ring aren't square-cornered.
+  .wc-block-components-text-input,
+  .wc-block-components-textarea {
+    border-radius: 4px;
+  }
+  .wc-block-components-text-input:focus-within,
+  .wc-block-components-textarea:focus-within {
+    border-color: var(--wp--preset--color--brand);
+    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+  }
+  // Text-like controls drop the blue button outline (the field/wrapper shows the
+  // ring). Radios/checkboxes are excluded — they keep the global blue ring.
+  input:not([type="radio"]):not([type="checkbox"]):focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: none;
+  }
+
+  // Payment / shipping radios: Woo paints them in currentColor (the black text),
+  // so point that at brand — the selected dot and ring go green. Keep the global
+  // blue keyboard ring; drop Woo's currentColor outline on plain mouse focus.
+  .wc-block-components-radio-control__input {
+    accent-color: var(--wp--preset--color--brand);
+    color: var(--wp--preset--color--brand);
+
+    &:focus:not(:focus-visible) {
+      outline: none;
+    }
+  }
+  // Classic (non-block) Woo fields put the border on the control itself.
+  .input-text:focus,
+  input.input-text:focus,
+  form select:focus,
+  form textarea:focus {
+    outline: none;
+    border-color: var(--wp--preset--color--brand);
+    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+  }
+
   // Cart (WooCommerce block cart).
   &.woocommerce-cart {
-    @media (max-width: 800px) {
-      .wc-block-cart-item__total {
-        display: none;
-      }
-    }
 
     table.wc-block-cart-items {
       td.wc-block-cart-item__image img {
@@ -129,6 +162,18 @@
     // Empty-cart "browse" button.
     .browse-retreats {
       margin: 1rem 0;
+    }
+
+    // Empty-cart "Your cart is currently empty." message at our medium size.
+    // First paragraph only — the second wraps the Browse Courses button.
+    .wp-block-woocommerce-empty-cart-block > p:first-of-type {
+      font-size: var(--wp--preset--font-size--medium);
+    }
+
+    // "Cart" title sits after the store-notices block, which adds a block-gap
+    // margin on top. Zero it so the title sits flush to the top of the content.
+    .wp-block-post-title {
+      margin-top: 0;
     }
   }
 
@@ -187,13 +232,6 @@
       margin: 0;
       padding: 0;
 
-      @media (min-width: 1001px) {
-        width: 25%;
-      }
-      @media (max-width: 1000px) {
-        float: none;
-        width: 100%;
-      }
 
       ul {
         list-style: none;
@@ -249,13 +287,6 @@
     }
 
     .woocommerce-MyAccount-content {
-      @media (max-width: 1000px) {
-        float: none;
-        width: 100%;
-        margin-top: 2rem;
-        border-top: 1px solid var(--wp--preset--color--border);
-        padding-top: 2rem;
-      }
 
       h2 {
         font-size: 1.4rem;
@@ -345,12 +376,41 @@
     color: var(--wp--preset--color--base);
 
     &:hover,
-    &:focus,
-    &:active {
+    &:active,
+    &:focus-visible {
       background-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
       border-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
       color: var(--wp--preset--color--base);
     }
+    // Keyboard focus ring: Woo's own high-specificity :focus rule (outline:none
+    // + box-shadow) beats the global :where() ring on a real Tab, so re-assert
+    // our blue ring here and drop Woo's box-shadow.
+    &:focus {
+      box-shadow: none;
+    }
+    &:focus-visible {
+      outline: 2px solid var(--wp--preset--color--link);
+      outline-offset: 2px;
+    }
+  }
+
+  // Empty-cart "Browse Courses" is a plain core link (no Woo button class), so
+  // the primary rule above only gives it the black fill — it still needs the
+  // button SHAPE and TYPOGRAPHY. Match the theme's button style (Montserrat
+  // eyebrow, uppercase, tracked) and give it a padded pill.
+  .browse-retreats {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    border: 2px solid var(--wp--preset--color--black);
+    border-radius: 0.3125rem;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-size: var(--wp--preset--font-size--x-small);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
   }
 }
 
@@ -370,6 +430,23 @@
   .wc-block-components-totals-item__label,
   .wc-block-components-totals-item__value {
     font-size: var(--wp--preset--font-size--medium) !important;
+  }
+
+  // Empty-cart "Browse Courses" — black primary (it's a plain
+  // `.wc-block-components-button`, so it'd otherwise take the theme.json accent
+  // style). Matches the cart-page button and the drawer's checkout button.
+  .wc-block-mini-cart__shopping-button {
+    background-color: var(--wp--preset--color--black);
+    border: 1px solid var(--wp--preset--color--black);
+    color: var(--wp--preset--color--base);
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+      border-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base));
+      color: var(--wp--preset--color--base);
+    }
   }
 
   .wc-block-mini-cart__footer-actions {
