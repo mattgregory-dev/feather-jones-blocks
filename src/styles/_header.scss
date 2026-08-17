@@ -1,8 +1,9 @@
 // ---------------------------------------------------------------------------
 // Site header — a full-width bar: logo left, primary nav in the middle, and the
 // cart/account icons right, distributed with space-between so the two gaps
-// (logo↔nav and nav↔icons) stay even. Wraps on narrow screens; the Navigation
-// block brings its own mobile overlay.
+// (logo↔nav and nav↔icons) stay even. At ≤940px the horizontal nav is replaced
+// by a custom off-canvas drawer (the hamburger toggle + .mobile-drawer below);
+// markup in parts/header.html, behaviour in src/scripts/mobile-menu.js.
 // ---------------------------------------------------------------------------
 
 .site-header {
@@ -45,32 +46,451 @@
     }
   }
 
-  // Nav items as pills: bold, rounded, transparent until hover/focus.
-  .wp-block-navigation-item__content {
-    padding: 8px 24px;
-    border-radius: 5px;
+  // Hamburger toggle — hidden on desktop; the mobile switch (≤940px) reveals it.
+  .site-header__toggle {
+    display: none;
+    align-items: center;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--wp--preset--color--contrast);
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--wp--preset--color--brand);
+    }
+    svg {
+      display: block;
+    }
+  }
+
+  // Desktop nav pills — scoped to .sb-desktop-nav so none of this reaches the
+  // drawer's Navigation block (which renders full-width rows instead).
+  .sb-desktop-nav {
+    // Nav items as pills: bold, rounded, transparent until hover/focus.
+    .wp-block-navigation-item__content {
+      padding: 8px 24px;
+      border-radius: 5px;
+      font-weight: 700;
+      transition: background-color 0.2s ease;
+    }
+
+    // Pill fills on hover/focus. Scoping to the item (<li>) rather than the
+    // anchor keeps the parent lit while the pointer or keyboard focus is inside
+    // its open submenu — the submenu <li> is a descendant of the parent item, so
+    // the parent stays :hover / :focus-within. The child combinator limits the
+    // fill to that item's own anchor, so each submenu link still lights alone.
+    .wp-block-navigation-item:hover > .wp-block-navigation-item__content,
+    .wp-block-navigation-item:focus-within > .wp-block-navigation-item__content {
+      background-color: var(--wp--preset--color--surface-2);
+    }
+
+    // Current page: keep the item lit so you always know where you are.
+    .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content {
+      background-color: var(--wp--preset--color--surface-2);
+    }
+    // Hovering the current item deepens it a touch, so it still reads as
+    // interactive rather than looking stuck.
+    .wp-block-navigation-item.current-menu-item:hover > .wp-block-navigation-item__content,
+    .wp-block-navigation-item.current-menu-item:focus-within > .wp-block-navigation-item__content {
+      background-color: color-mix(in srgb, var(--wp--preset--color--surface-2) 85%, var(--wp--preset--color--contrast));
+    }
+  }
+}
+
+// Header tightening through the tablet band: progressively shrink the logo, nav
+// pill padding, and the header's side padding + gaps so the full horizontal nav
+// keeps fitting on one row down to the mobile-menu switch (940px). Scoped to
+// .sb-desktop-nav so the drawer's nav is untouched.
+@media (max-width: 1220px) {
+  .site-header {
+    gap: var(--wp--preset--spacing--30);
+    padding-inline: var(--wp--preset--spacing--40) !important;
+
+    .wp-block-site-logo img {
+      max-width: 230px;
+    }
+    .sb-desktop-nav .wp-block-navigation-item__content {
+      padding: 7px 14px;
+    }
+
+    // Shorten two long labels so the row keeps fitting: "Live Group Classes" →
+    // "Group Classes", "Study With Feather" → "Private Classes". The real label
+    // stays in the DOM (font-size:0) for screen readers; the pseudo shows the
+    // short form and inherits the nav's uppercase transform. (Content is
+    // hard-coded, so update here if these menu items are renamed/reordered.)
+    .sb-desktop-nav .wp-block-navigation-item:nth-child(2) .wp-block-navigation-item__label {
+      font-size: 0;
+      letter-spacing: 0;
+
+      &::after {
+        content: "Group Classes";
+        font-size: var(--wp--preset--font-size--x-small);
+        letter-spacing: 0.05em;
+      }
+    }
+    .sb-desktop-nav .wp-block-navigation-item:nth-child(3) .wp-block-navigation-item__label {
+      font-size: 0;
+      letter-spacing: 0;
+
+      &::after {
+        content: "Private Classes";
+        font-size: var(--wp--preset--font-size--x-small);
+        letter-spacing: 0.05em;
+      }
+    }
+  }
+}
+
+// Tighter step (≤1018px): drop the nav to x-small, squeeze the pills + logo,
+// and pull the gap between items in. (The two long labels already shortened at
+// ≤1220px.)
+@media (max-width: 1018px) {
+  .site-header {
+    gap: 0.75rem;
+
+    .wp-block-site-logo img {
+      max-width: 200px;
+    }
+    .sb-desktop-nav {
+      font-size: var(--wp--preset--font-size--x-small);
+    }
+    // Tighten the space between nav items so the row keeps fitting.
+    .sb-desktop-nav .wp-block-navigation__container {
+      gap: 3px;
+    }
+    .sb-desktop-nav .wp-block-navigation-item__content {
+      padding: 6px 11px;
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Mobile-menu switch (≤940px) — hide the inline desktop nav and reveal the
+// hamburger toggle, which opens the custom .mobile-drawer. The account icon is
+// dropped here (Login lives in the drawer footer); the actions group carries
+// margin-left:auto so cart + hamburger sit flush to the right edge.
+// ---------------------------------------------------------------------------
+@media (max-width: 940px) {
+  .site-header {
+    > .sb-desktop-nav {
+      display: none;
+    }
+    .site-header__toggle {
+      display: inline-flex;
+    }
+    .site-header__actions {
+      margin-left: auto;
+    }
+    .site-header__action--account {
+      display: none;
+    }
+  }
+}
+
+// Through the mobile band (480–940px) open the header's flex gap to spacing 60
+// so the cart and hamburger aren't crowded once the inline nav is gone.
+@media (min-width: 480px) and (max-width: 940px) {
+  .site-header {
+    gap: var(--wp--preset--spacing--60);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Mobile drawer — off-canvas panel that slides in from the left over a dimmed
+// backdrop. Structure (parts/header.html): branded header (wordmark + tagline +
+// close), a "Learn" eyebrow, the Navigation block as full-width rows, then a
+// footer with Cart/Login buttons and social circles. Open/close + dialog
+// semantics: src/scripts/mobile-menu.js (toggles .is-open, locks body scroll).
+// ---------------------------------------------------------------------------
+
+.mobile-drawer__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+
+  &.is-open {
+    opacity: 1;
+  }
+}
+
+// Lock the page behind the open drawer.
+body.is-drawer-open {
+  overflow: hidden;
+}
+
+// When the WP admin bar is present, start the drawer below it so the branded
+// header isn't tucked under the bar. WP's bar is 32px wide-screen, 46px at
+// ≤782px — match both. (The backdrop stays full-height under the bar.)
+.admin-bar .mobile-drawer {
+  top: 32px;
+}
+@media (max-width: 782px) {
+  .admin-bar .mobile-drawer {
+    top: 46px;
+  }
+}
+
+.mobile-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  width: min(375px, 88vw);
+  margin: 0;
+  background: var(--wp--preset--color--surface-1);
+  border-top: 3px solid var(--wp--preset--color--brand);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.25);
+  // Vertical scroll only when the content is genuinely taller than the panel;
+  // never a horizontal bar (the hover box-shadow bleed must not trigger one).
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  // Off-screen (to the right) + non-interactive until opened; JS flips .is-open.
+  visibility: hidden;
+  transform: translateX(100%);
+  transition: transform 0.28s ease, visibility 0s linear 0.28s;
+
+  &.is-open {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 0.28s ease;
+  }
+
+  // The block group adds its own vertical rhythm; neutralise so our padding
+  // rules govern the layout.
+  > * {
+    margin-block: 0;
+  }
+
+  // --- Branded header -----------------------------------------------------
+  .mobile-drawer__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid var(--wp--preset--color--border);
+  }
+  .mobile-drawer__brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .mobile-drawer__wordmark {
+    font-family: var(--wp--preset--font-family--heading);
+    font-size: 1.5rem;
+    line-height: 1.1;
+    color: var(--wp--preset--color--contrast-2);
+  }
+  .mobile-drawer__tagline {
+    margin-top: 4px;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 600;
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--brand);
+  }
+  .mobile-drawer__close {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--wp--preset--color--border);
+    background: var(--wp--preset--color--base);
+    color: var(--wp--preset--color--muted);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--wp--preset--color--brand);
+      color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+    }
+    svg {
+      display: block;
+    }
+  }
+
+  // --- Section eyebrow ("Learn" / "Find Feather") -------------------------
+  .mobile-drawer__eyebrow {
+    margin: 0;
+    padding: 20px 24px 4px;
+    font-family: var(--wp--preset--font-family--eyebrow);
     font-weight: 700;
-    transition: background-color 0.2s ease;
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--muted);
+  }
+  .mobile-drawer__eyebrow--footer {
+    padding: 0 0 12px;
   }
 
-  // Pill fills on hover/focus. Scoping to the item (<li>) rather than the anchor
-  // keeps the parent lit while the pointer or keyboard focus is inside its open
-  // submenu — the submenu <li> is a descendant of the parent item, so the parent
-  // stays :hover / :focus-within. The child combinator limits the fill to that
-  // item's own anchor, so each submenu link still lights independently.
-  .wp-block-navigation-item:hover > .wp-block-navigation-item__content,
-  .wp-block-navigation-item:focus-within > .wp-block-navigation-item__content {
-    background-color: var(--wp--preset--color--surface-2);
+  // --- Nav (Navigation block, vertical) -----------------------------------
+  // WP copies the block className onto BOTH the <nav> and its <ul>, so anchor
+  // the horizontal inset to the <nav> only (a direct child of the panel) — if
+  // the bare .mobile-drawer__nav carried the padding it would apply twice and
+  // push the rows past the panel edge.
+  > .mobile-drawer__nav {
+    padding: 0 24px;
+  }
+  .mobile-drawer__nav {
+    .wp-block-navigation__container {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      width: 100%;
+      // Own padding/margin zeroed so the row width equals the nav content box
+      // exactly (no overflow regardless of box-sizing).
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .wp-block-navigation-item {
+      width: 100%;
+      border-bottom: 1px solid var(--wp--preset--color--border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    // Each link is a full-width row: label left, chevron right.
+    .wp-block-navigation-item__content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      padding: 15px 0;
+      font-family: var(--wp--preset--font-family--eyebrow);
+      font-weight: 700;
+      font-size: 0.8125rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--wp--preset--color--contrast-2);
+      transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+
+      // Chevron cue, brand-coloured.
+      &::after {
+        content: "\203A";
+        margin-left: auto;
+        color: var(--wp--preset--color--brand);
+        font-size: 1rem;
+        line-height: 1;
+      }
+
+      // Full-row hover: linen fill bled to the panel edges via box-shadow, so
+      // the 24px text inset and the hairlines stay put.
+      &:hover,
+      &:focus-visible {
+        color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+        background: var(--wp--preset--color--surface-2);
+        box-shadow: -24px 0 0 var(--wp--preset--color--surface-2), 24px 0 0 var(--wp--preset--color--surface-2);
+      }
+    }
+    // The current page stays lit.
+    .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content {
+      color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+      background: var(--wp--preset--color--surface-2);
+      box-shadow: -24px 0 0 var(--wp--preset--color--surface-2), 24px 0 0 var(--wp--preset--color--surface-2);
+    }
   }
 
-  // Current page: keep the item lit so you always know where you are.
-  .wp-block-navigation-item.current-menu-item > .wp-block-navigation-item__content {
-    background-color: var(--wp--preset--color--surface-2);
+  // --- Footer (anchored to the bottom) ------------------------------------
+  .mobile-drawer__footer {
+    margin-top: auto;
+    padding: 24px 24px 26px;
   }
-  // Hovering the current item deepens it a touch, so it still reads as
-  // interactive rather than looking stuck.
-  .wp-block-navigation-item.current-menu-item:hover > .wp-block-navigation-item__content,
-  .wp-block-navigation-item.current-menu-item:focus-within > .wp-block-navigation-item__content {
-    background-color: color-mix(in srgb, var(--wp--preset--color--surface-2) 85%, var(--wp--preset--color--contrast));
+  .mobile-drawer__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+  .mobile-drawer__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 0;
+    border-radius: 6px;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+    svg {
+      display: block;
+    }
+  }
+  // Outlined brand cart.
+  .mobile-drawer__btn--cart {
+    border: 2px solid var(--wp--preset--color--brand);
+    background: transparent;
+    color: var(--wp--preset--color--brand);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--wp--preset--color--brand);
+      color: var(--wp--preset--color--base);
+    }
+  }
+  // Filled brand login.
+  .mobile-drawer__btn--login {
+    padding: 15px 0;
+    border: 2px solid var(--wp--preset--color--brand);
+    background: var(--wp--preset--color--brand);
+    color: var(--wp--preset--color--base);
+
+    &:hover,
+    &:focus-visible {
+      background: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+      border-color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+    }
+  }
+
+  // --- Social circles -----------------------------------------------------
+  .mobile-drawer__socials {
+    display: flex;
+    gap: 12px;
+  }
+  .mobile-drawer__social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--wp--preset--color--border);
+    background: var(--wp--preset--color--base);
+    color: var(--wp--preset--color--brand);
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--wp--preset--color--brand);
+      border-color: var(--wp--preset--color--brand);
+      color: var(--wp--preset--color--base);
+    }
+    svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
   }
 }
