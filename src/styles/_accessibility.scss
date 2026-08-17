@@ -42,9 +42,11 @@
   outline-offset: 2px;
 }
 
-// Consistent, clearly visible keyboard focus ring on interactive elements.
-// :focus-visible only fires for keyboard / assistive tech, so mouse users are
-// unaffected. :where() keeps specificity at 0 so blocks can still override.
+// Consistent, clearly visible keyboard focus ring on interactive elements — one
+// on-brand green ring everywhere. :focus-visible only fires for keyboard /
+// assistive tech, so mouse users aren't rung on click. :where() keeps
+// specificity at 0 so components can still opt into their own treatment (form
+// fields swap this for a brand border + mint ring).
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--wp--preset--color--link);
   outline-offset: 2px;

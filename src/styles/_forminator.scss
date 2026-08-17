@@ -108,10 +108,18 @@
     cursor: pointer;
     transition: background-color 0.15s ease, border-color 0.15s ease;
 
-    &:hover,
-    &:focus {
+    &:hover {
       background-color: var(--wp--preset--color--accent-strong);
       border-color: var(--wp--preset--color--accent-strong);
+    }
+    // Keyboard focus: the hover fill + our brand ring. Forminator's plugin CSS
+    // forces outline:none on its buttons, so re-assert it here with real
+    // specificity (the global :where() ring can't beat it).
+    &:focus-visible {
+      background-color: var(--wp--preset--color--accent-strong);
+      border-color: var(--wp--preset--color--accent-strong);
+      outline: 2px solid var(--wp--preset--color--link);
+      outline-offset: 2px;
     }
   }
 
