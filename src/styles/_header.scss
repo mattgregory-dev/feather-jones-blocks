@@ -27,12 +27,22 @@
     height: auto;
   }
 
-  // The Woo account block renders as a link (or a dropdown toggle), so it takes
-  // the global blue link colour; recolour it — and its currentColor SVG icon —
-  // to contrast so it matches the cart icon beside it.
-  .wc-block-customer-account__link,
-  .wc-block-customer-account__toggle {
+  // Cart + account are plain SVG icon links (no WooCommerce blocks, so Woo's
+  // assets can be offloaded off the store pages). Contrast at rest, brand on
+  // hover; the icon rides currentColor.
+  .site-header__action {
+    display: inline-flex;
+    align-items: center;
     color: var(--wp--preset--color--contrast);
+    transition: color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--wp--preset--color--brand);
+    }
+    svg {
+      display: block;
+    }
   }
 
   // Nav items as pills: bold, rounded, transparent until hover/focus.

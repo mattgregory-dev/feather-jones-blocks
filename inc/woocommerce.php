@@ -98,3 +98,123 @@ function sb_mini_cart_shopping_label( $translation, $text, $domain ) {
 	return $translation;
 }
 add_filter( 'gettext', 'sb_mini_cart_shopping_label', 10, 3 );
+
+/**
+ * WooCommerce asset offload
+ * -------------------------
+ * The store funnels through LearnDash: the path to purchase is enroll →
+ * /checkout/, and the header cart/account are plain icon links (no Woo blocks).
+ * So WooCommerce's CSS/JS is only needed on the actual store pages. Everywhere
+ * else — home, courses, all LearnDash, landing, contact, terms, regular pages —
+ * we shut its assets off. Cart fragments (the live cart-count AJAX) are dropped
+ * everywhere since nothing on the front end shows a live cart.
+ */
+
+/**
+ * Is the current request a page that legitimately needs WooCommerce assets?
+ * Product / shop / category (is_woocommerce), plus cart, checkout, and account.
+ *
+ * @return bool
+ */
+function sb_is_woocommerce_asset_context() {
+	if ( is_admin() || wp_doing_ajax() || ! function_exists( 'WC' ) ) {
+		return true;
+	}
+
+	return ( function_exists( 'is_woocommerce' ) && is_woocommerce() )
+		|| ( function_exists( 'is_cart' ) && is_cart() )
+		|| ( function_exists( 'is_checkout' ) && is_checkout() )
+		|| ( function_exists( 'is_account_page' ) && is_account_page() );
+}
+
+/**
+ * Stop WooCommerce loading its block JS/CSS bundles off the store pages.
+ *
+ * @param bool $should_load Whether WooCommerce would load block assets/styles.
+ * @return bool
+ */
+function sb_woocommerce_should_load_block_assets( $should_load ) {
+	return sb_is_woocommerce_asset_context() ? $should_load : false;
+}
+add_filter( 'woocommerce_should_load_block_assets', 'sb_woocommerce_should_load_block_assets' );
+add_filter( 'woocommerce_should_load_block_styles', 'sb_woocommerce_should_load_block_assets' );
+
+/**
+ * Drop the classic WooCommerce stylesheets (general / layout / smallscreen) off
+ * the store pages.
+ *
+ * @param array $styles WooCommerce's registered style handles.
+ * @return array
+ */
+function sb_filter_woocommerce_enqueue_styles( $styles ) {
+	return sb_is_woocommerce_asset_context() ? $styles : array();
+}
+add_filter( 'woocommerce_enqueue_styles', 'sb_filter_woocommerce_enqueue_styles' );
+
+/**
+ * Dequeue any WooCommerce styles/scripts that slipped past the filters, and drop
+ * cart fragments everywhere (no live mini-cart to feed).
+ */
+function sb_dequeue_woocommerce_offscreen_assets() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	// No live cart-count anywhere on the front end.
+	wp_dequeue_script( 'wc-cart-fragments' );
+
+	if ( sb_is_woocommerce_asset_context() ) {
+		return;
+	}
+
+	$style_handles = array(
+		'woocommerce-general',
+		'woocommerce-layout',
+		'woocommerce-smallscreen',
+		'woocommerce-block-style',
+		'wc-block-style',
+		'wc-blocks-style',
+		'wc-blocks-vendors-style',
+		'woocommerce-blocktheme',
+		'wc-stripe-blocks-checkout-style',
+		'wc-stripe-upe-blocks',
+	);
+	foreach ( $style_handles as $handle ) {
+		wp_dequeue_style( $handle );
+	}
+
+	$script_handles = array(
+		'woocommerce',
+		'wc-add-to-cart',
+		'wc-add-to-cart-variation',
+		'wc-single-product',
+		'wc-cart',
+		'wc-checkout',
+		'wc-jquery-blockui',
+		'wc-js-cookie',
+		// Order-attribution marketing tracking — dropped off the store pages.
+		'wc-order-attribution',
+		'sourcebuster-js',
+	);
+	foreach ( $script_handles as $handle ) {
+		wp_dequeue_script( $handle );
+	}
+}
+// Woo enqueues some block styles late (during block render, printed in the
+// footer), so run at enqueue, head-print, and early-footer time to catch them.
+add_action( 'wp_enqueue_scripts', 'sb_dequeue_woocommerce_offscreen_assets', 100 );
+add_action( 'wp_print_styles', 'sb_dequeue_woocommerce_offscreen_assets', 100 );
+add_action( 'wp_print_scripts', 'sb_dequeue_woocommerce_offscreen_assets', 100 );
+add_action( 'wp_footer', 'sb_dequeue_woocommerce_offscreen_assets', 5 );
+
+/**
+ * Null out the cart-fragments script data so nothing tries to revive it.
+ *
+ * @param array|null $params Localized script params.
+ * @param string     $handle Script handle.
+ * @return array|null
+ */
+function sb_disable_woocommerce_cart_fragments_data( $params, $handle ) {
+	return 'wc-cart-fragments' === $handle ? null : $params;
+}
+add_filter( 'woocommerce_get_script_data', 'sb_disable_woocommerce_cart_fragments_data', 10, 2 );
