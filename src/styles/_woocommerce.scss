@@ -31,6 +31,123 @@
 
   }
 
+  // Cart + checkout — beige page like the account dashboard: strip the shared
+  // white main card and let the totals/summary widget carry its own card.
+  &.woocommerce-cart,
+  &.woocommerce-checkout {
+    background-color: var(--wp--preset--color--surface-1);
+
+    // Drop the card visuals but keep the shared rule's max-width + padding (the
+    // padding is the page gutter, incl. on mobile) so the content sits on the
+    // beige page.
+    main {
+      background-color: transparent;
+      border: 0;
+      box-shadow: none;
+    }
+
+    // Totals (cart) / order summary (checkout) widget → white card. Both block
+    // layouts use .wc-block-components-sidebar; align-self keeps it hugging its
+    // content instead of stretching to the form column's height.
+    .wc-block-components-sidebar {
+      align-self: start;
+      padding: clamp(1.25rem, 3vw, 1.75rem);
+      background: var(--wp--preset--color--base);
+      border: 1px solid var(--wp--preset--color--border);
+      border-radius: 8px;
+      box-shadow: var(--wp--preset--shadow--soft);
+    }
+
+    // Proceed-to-checkout button — drop the wrapper's bottom margin (Woo sets
+    // `margin: 0 0 16px` on .wc-block-cart__submit) and the shared button margin
+    // so it sits flush at the bottom of the totals card. (Cart only.)
+    .wc-block-cart__submit,
+    .wc-block-cart__submit-button {
+      margin-bottom: 0;
+    }
+
+    // Quantity selector — explicit white fill. It's transparent by default, so
+    // now that the cart items sit on the beige page (not a white card) the
+    // "− 1 +" control needs its own background to read as a field. (Cart only.)
+    .wc-block-components-quantity-selector {
+      background-color: var(--wp--preset--color--base);
+    }
+
+    // Checkout order-summary ships as its own bordered card. Drop its border /
+    // radius / shadow so it doesn't double-wrap inside the outer sidebar card.
+    .wp-block-woocommerce-checkout-order-summary-block {
+      border: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+    }
+    // On mobile WooCommerce renders the summary as a "fill" outside the sidebar
+    // card; give that a white background so it reads against the beige page.
+    // (On desktop the summary sits inside the white sidebar card already.)
+    .checkout-order-summary-block-fill {
+      background-color: var(--wp--preset--color--base) !important;
+    }
+
+    // Order-summary line item — stack the thumbnail above the description; the
+    // description drops its side padding and takes a small top gap under the
+    // image.
+    .wc-block-components-order-summary-item {
+      flex-direction: column;
+    }
+    .wc-block-components-order-summary-item__description {
+      padding-inline: 0;
+      padding-top: 10px;
+    }
+
+    // On stacked layouts the checkout shows two order summaries: the collapsible
+    // one at the top (kept) and a second full copy — the "fill" block — stacked
+    // right before the Place Order button. Hide that redundant bottom copy on
+    // every non-two-column layout (Woo only uses the 2-col sidebar at .is-large;
+    // .is-medium / .is-small / .is-mobile all stack and show the fill).
+    .wc-block-checkout:not(.is-large) .checkout-order-summary-block-fill-wrapper {
+      display: none;
+    }
+
+    // Payment method options (checkout only) — white cards on the beige page.
+    // They were transparent (only looked white on the removed card); also
+    // override WooCommerce's blue "highlight-checked" fill/ring with white +
+    // a brand accent.
+    .wc-block-checkout__payment-method {
+      .wc-block-components-radio-control-accordion-option {
+        background-color: var(--wp--preset--color--base) !important;
+        border-radius: 6px;
+      }
+      .wc-block-components-radio-control-accordion-option--checked-option-highlighted::after {
+        border-color: var(--wp--preset--color--brand) !important;
+      }
+    }
+
+    // Cart items on mobile (cart only) — WooCommerce's is-mobile layout still
+    // lays each row out as a cramped 2-column grid, squeezing the long product
+    // title. Stack the row (image, details, total) vertically instead. The
+    // `table.wc-block-cart-items` prefix out-specifies Woo's `.is-mobile` grid.
+    @media (max-width: 600px) {
+      table.wc-block-cart-items .wc-block-cart-items__row {
+        display: flex;
+        flex-direction: column;
+      }
+      // Cap the thumbnail so it doesn't blow up to the full row width once the
+      // row stacks.
+      .wc-block-cart-item__image img {
+        max-width: 100px;
+      }
+    }
+  }
+
+  // Order-confirmation (thank-you) page — it's the checkout endpoint, so it
+  // gets the beige background too. The totals table and billing-address box
+  // render as bordered boxes with a transparent fill (showing the beige
+  // through); give them a white fill so they read as cards.
+  .wc-block-order-confirmation-totals__table,
+  .wc-block-order-confirmation-billing-address,
+  .wc-block-order-confirmation-shipping-address {
+    background-color: var(--wp--preset--color--base);
+  }
+
   // Let the account content fill the card. The entry-content is a constrained
   // layout, which caps its direct child (`.my-account-login`) to contentSize —
   // un-constrain it so the 2-col account layout fills the card width.
@@ -40,7 +157,8 @@
   }
   // The account entry-content carries `has-global-padding`, which adds root
   // padding inside the card (doubling up). Zero it — the card supplies padding.
-  &.woocommerce-account .entry-content {
+  &.woocommerce-account .entry-content,
+  &.woocommerce-checkout .entry-content {
     padding-inline: 0;
   }
 
@@ -304,10 +422,13 @@
         min-width: 0;
       }
 
-      // Stack the columns on narrower screens.
+      // Stack the columns on narrower screens. Switch align-items to stretch so
+      // the content wrapper fills the width (the base flex-start would keep it at
+      // its content width once the axis is vertical, scrunching the table).
       @media (max-width: 768px) {
         .my-account-login > .woocommerce {
           flex-direction: column;
+          align-items: stretch;
         }
         .woocommerce-MyAccount-navigation {
           flex: 0 0 auto;
@@ -452,6 +573,10 @@
 
     .woocommerce-MyAccount-navigation {
       margin: 0;
+      // Include the padding in the width so the card doesn't overflow its column
+      // when stretched to 100% on mobile (which pushed the active item past the
+      // edge).
+      box-sizing: border-box;
       // Sidebar card — white panel for the left rail.
       background: var(--wp--preset--color--base);
       border: 1px solid var(--wp--preset--color--border);
@@ -517,6 +642,13 @@
       h2 {
         font-size: 1.4rem;
         margin: 0.6rem 0;
+      }
+      // Orders / downloads tables are bordered but transparent; give them a
+      // white fill so they read as cards on the beige account page. Same for the
+      // customer-details address box on the view-order page.
+      .shop_table,
+      .woocommerce-customer-details address {
+        background-color: var(--wp--preset--color--base);
       }
       .woocommerce-info {
         border-top-color: var(--wp--preset--color--contrast);
