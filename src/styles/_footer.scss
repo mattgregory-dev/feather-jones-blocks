@@ -25,6 +25,24 @@
     margin-inline: 0.6rem;
   }
 
+  // Footer nav links get a pill on hover/focus, echoing the top nav — a mint
+  // (surface-3) fill with dark text so it reads on the deep-green footer. The
+  // keyboard focus lands on the same pill.
+  &__nav a {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transition: background-color 0.2s ease, color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      background-color: var(--wp--preset--color--surface-3);
+      color: var(--wp--preset--color--surface-dark);
+    }
+  }
+
   // Brand eyebrow: uppercase, tracked-out, slightly dimmed off the light tone.
   &__tagline {
     text-transform: uppercase;
@@ -41,16 +59,27 @@
   .wp-block-social-links.is-style-logos-only {
     color: var(--wp--preset--color--surface-3);
 
+    // Zero the list-item padding; the circle now lives on the anchor instead of
+    // the <li> so the keyboard focus ring (which lands on the <a>) wraps the
+    // whole circle rather than just the icon.
     .wp-social-link {
+      padding: 0;
+    }
+    .wp-block-social-link-anchor {
       padding: 8px;
       border-radius: 50%;
       border: 1px solid var(--wp--preset--color--surface-3);
       border: 1px solid color-mix(in srgb, var(--wp--preset--color--surface-3) 50%, transparent);
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, background-color 0.2s ease, color 0.15s ease;
 
+      // Fill mint with a dark icon on hover/focus, matching the footer nav pills
+      // (the logos-only icon rides currentColor, so recolouring the anchor flips
+      // it).
       &:hover,
-      &:focus-within {
+      &:focus-visible {
         border-color: var(--wp--preset--color--surface-3);
+        background-color: var(--wp--preset--color--surface-3);
+        color: var(--wp--preset--color--surface-dark);
       }
     }
   }
