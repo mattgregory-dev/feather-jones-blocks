@@ -69,8 +69,22 @@ if ( $hero_image_id ) {
 // message.
 $hero_bg_band = '';
 if ( $hero_bg_url ) {
+	// The hero background is the LCP element, so load it eagerly with high
+	// priority (and skip the async decode) rather than lazily — lazy-loading it
+	// is what deprioritised the LCP paint.
 	$hero_bg_band = '<figure class="hero__bg-band">'
-		. wp_get_attachment_image( $hero_bg_id, 'full', false, array( 'alt' => '', 'class' => 'hero__bg-image', 'loading' => 'lazy' ) )
+		. wp_get_attachment_image(
+			$hero_bg_id,
+			'full',
+			false,
+			array(
+				'alt'           => '',
+				'class'         => 'hero__bg-image',
+				'loading'       => 'eager',
+				'fetchpriority' => 'high',
+				'decoding'      => 'async',
+			)
+		)
 		. '</figure>';
 }
 

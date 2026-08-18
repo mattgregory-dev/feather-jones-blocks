@@ -92,3 +92,47 @@ function sb_force_main_module_tag( $tag, $handle, $src ) {
 	return '<script type="module" src="' . esc_url( $src ) . '"></script>';
 }
 add_filter( 'script_loader_tag', 'sb_force_main_module_tag', 20, 3 );
+
+/**
+ * Preload the two above-the-fold font faces (Lora for headings, Lato regular for
+ * body) so the browser fetches them immediately rather than after it parses the
+ * stylesheet — cutting the delay before the hero heading + copy can paint. Other
+ * weights/styles load on demand via the theme.json @font-face rules.
+ */
+function sb_preload_critical_fonts() {
+	$fonts = array( 'lora.woff2', 'lato-400-regular.woff2' );
+	$base  = get_template_directory_uri() . '/assets/fonts/';
+	foreach ( $fonts as $font ) {
+		printf(
+			'<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
+			esc_url( $base . $font )
+		);
+	}
+}
+add_action( 'wp_head', 'sb_preload_critical_fonts', 1 );
+
+/**
+ * Defer render-blocking front-end scripts — Forminator's bundle (front.multi,
+ * the form + validation scripts) and jQuery/jquery-migrate — so they leave the
+ * critical render path (Lighthouse flagged ~990ms). Uses WordPress's
+ * dependency-aware `strategy` API (6.3+): a script is only actually deferred
+ * when every dependent (including inline `after` scripts) is defer/async-safe,
+ * so Forminator's inline config can't be left stranded. Admin is untouched.
+ */
+function sb_defer_front_scripts() {
+	if ( is_admin() ) {
+		return;
+	}
+	foreach ( wp_scripts()->registered as $handle => $script ) {
+		$src = is_string( $script->src ) ? $script->src : '';
+		$defer =
+			false !== strpos( $src, 'forminator' ) ||
+			false !== strpos( $src, 'jquery.validate' ) ||
+			'jquery-core' === $handle ||
+			'jquery-migrate' === $handle;
+		if ( $defer ) {
+			wp_script_add_data( $handle, 'strategy', 'defer' );
+		}
+	}
+}
+add_action( 'wp_enqueue_scripts', 'sb_defer_front_scripts', 100 );
