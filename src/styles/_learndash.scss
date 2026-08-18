@@ -512,6 +512,51 @@ body.woocommerce-account .learndash-wrapper {
     }
   }
 
+  // "Search Your Courses" submit — LD renders it in its primary blue (#235af3)
+  // with a matching blue :focus outline. Repaint it black (the neighbouring
+  // actions are brand/black) and give it our focus convention: no ring on mouse
+  // focus, the blue --link ring on keyboard focus.
+  .ld-item-search .ld-item-search-submit .ld-button {
+    background-color: var(--wp--preset--color--black) !important;
+    border-color: var(--wp--preset--color--black) !important;
+    color: var(--wp--preset--color--base) !important;
+
+    &:hover,
+    &:active {
+      background-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base)) !important;
+      border-color: color-mix(in srgb, var(--wp--preset--color--black) 82%, var(--wp--preset--color--base)) !important;
+    }
+    &:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    &:focus-visible {
+      outline: 2px solid var(--wp--preset--color--link) !important;
+      outline-offset: 2px !important;
+    }
+  }
+
+  // "Course Name" search field — restyle LD's square 2px-bordered box to our
+  // input convention: white, 1px rounded border, body font, with the brand
+  // border + mint focus ring.
+  .ld-item-search .ld-item-search-name input[type="text"] {
+    height: auto !important;
+    padding: 0.6rem 0.85rem !important;
+    background: var(--wp--preset--color--base) !important;
+    border: 1px solid var(--wp--preset--color--border) !important;
+    border-radius: 8px !important;
+    color: var(--wp--preset--color--contrast-2) !important;
+    font-family: var(--wp--preset--font-family--body) !important;
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+
+    &:focus {
+      outline: none !important;
+      border-color: var(--wp--preset--color--brand) !important;
+      box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3) !important;
+    }
+  }
+
   // Expanded course body — LD pads it a generous `2em 4.125em`. Tighten to a
   // spacing token. Mirror LD's full selector chain — .ld-item-list-item-expanded
   // is a CHILD of .ld-item-list-item (descendant combinators, not compound), so
