@@ -73,7 +73,8 @@
   // Centre the copy; the form fields stay full-width (align-items: stretch).
   text-align: center;
   padding: clamp(1.25rem, 4vw, 1.75rem);
-  background: var(--wp--preset--color--surface-1);
+  // surface-2 so the card stands out against the surface-1 page background.
+  background: var(--wp--preset--color--surface-2);
   border: 1px solid var(--wp--preset--color--border);
   border-radius: 12px;
 

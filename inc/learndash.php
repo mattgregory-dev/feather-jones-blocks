@@ -376,8 +376,9 @@ add_shortcode( 'sb_ld_header', 'sb_ld_header_shortcode' );
 add_filter( 'learndash_template_views_breadcrumbs', '__return_empty_array' );
 
 /**
- * Category eyebrow — the course's `ld_course_category` term name(s), linked, as
- * the small brand kicker above the title. Shared by both header layouts.
+ * Category eyebrow — the course's `ld_course_category` term name(s) as the small
+ * brand kicker above the title. Shared by both header layouts. Rendered as plain
+ * text (not linked): the course-category archives aren't styled and add no value.
  *
  * @param int $course_id Course post ID.
  * @return string  <p class="sb-course-eyebrow"> markup, or '' with no terms.
@@ -388,19 +389,12 @@ function sb_course_category_eyebrow( $course_id ) {
 		return '';
 	}
 
-	$links = array();
+	$names = array();
 	foreach ( $terms as $term ) {
-		$link = get_term_link( $term );
-		if ( is_wp_error( $link ) ) {
-			continue;
-		}
-		$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a>';
-	}
-	if ( empty( $links ) ) {
-		return '';
+		$names[] = esc_html( $term->name );
 	}
 
-	return '<p class="sb-course-eyebrow">' . implode( ', ', $links ) . '</p>';
+	return '<p class="sb-course-eyebrow">' . implode( ', ', $names ) . '</p>';
 }
 
 /**
