@@ -42,14 +42,16 @@
     pointer-events: none;
   }
 
-  // Keyboard focus lands on the radio; surface it as the same soft surface-3
-  // ring the search and Forminator inputs use. Keyed on :focus-visible, which a
-  // radio only matches for keyboard focus — so selecting a card by mouse shows
-  // just its clean brand border (no second hard outline), while keyboard users
-  // still get a clear ring. Only the ring, not a border recolour, so focus stays
-  // distinct from the selected state.
+  // Keyboard focus lands on the radio; surface it on the card. Use an OUTLINE,
+  // not a box-shadow: tabbing into a radio group focuses the checked radio, so a
+  // focused card is almost always also the selected one — and the selected
+  // state's box-shadow would override a box-shadow ring, hiding focus entirely.
+  // An outline layers on top of the shadow. Keyed on :focus-visible (keyboard
+  // only), and the blue --link ring matches the site's focus convention, staying
+  // distinct from the brand selected border.
   &:has(input:focus-visible) {
-    box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
+    outline: 2px solid var(--wp--preset--color--link);
+    outline-offset: 2px;
   }
 }
 
