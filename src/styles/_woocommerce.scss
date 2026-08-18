@@ -337,6 +337,14 @@
     .wp-block-post-title {
       margin-top: 0;
     }
+
+    // Hide the "Cart" title when the cart is empty — WooCommerce hydrates to just
+    // the empty-cart block (dropping the filled block), so match on the empty
+    // block present without the filled one (the extra :not guard also avoids a
+    // flash during the pre-hydration phase when both blocks are in the DOM).
+    &:has(.wp-block-woocommerce-empty-cart-block):not(:has(.wp-block-woocommerce-filled-cart-block)) .wp-block-post-title {
+      display: none;
+    }
   }
 
   // Coupon form — appears on BOTH cart and checkout, so scoped at page level.
