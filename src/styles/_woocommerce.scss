@@ -98,6 +98,11 @@
       padding-top: 10px;
     }
 
+    // Soften the product thumbnail to the theme's button/card radius.
+    .wc-block-components-order-summary-item__image img {
+      border-radius: 5px;
+    }
+
     // On stacked layouts the checkout shows two order summaries: the collapsible
     // one at the top (kept) and a second full copy — the "fill" block — stacked
     // right before the Place Order button. Hide that redundant bottom copy on
@@ -164,6 +169,16 @@
 
   // Checkout tweaks.
   &.woocommerce-checkout {
+    // Tighten the order-summary card from 700px up, where it sits in the narrow
+    // sidebar column beside the form (the width Woo itself switches the two-
+    // column layout on). Below that the summary spans the page and keeps the
+    // wider shared padding, as does the cart's totals widget at every width.
+    @media (min-width: 700px) {
+      .wc-block-components-sidebar {
+        padding: var(--wp--preset--spacing--30);
+      }
+    }
+
     .wc-block-components-payment-methods__save-card-info {
       margin-top: 1.2rem;
     }

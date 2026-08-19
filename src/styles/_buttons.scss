@@ -32,3 +32,84 @@
     }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Mobile (<=700px): call-to-action buttons go full width, label centred.
+// Three button systems land on a page — core blocks, WooCommerce, and
+// LearnDash — so each needs its own selector list, but they share one rule:
+// a button that is an ACTION stretches; a button that is an inline CONTROL
+// (sits beside a field, inside a table row, or pairs with a sibling in one
+// row) keeps its intrinsic width and is listed as an exception under its
+// group.
+//
+// The core/Woo groups are scoped to `main`, which keeps the header actions,
+// mobile-drawer buttons, and footer out of it for free. LearnDash keeps the
+// `body.learndash-cpt .learndash-wrapper` anchor used further up the theme,
+// which scopes it the same way.
+// ---------------------------------------------------------------------------
+@media (max-width: 700px) {
+  .wp-site-blocks main {
+    // Core Buttons block. The width goes on the wrapper (the flex item) as well
+    // as the link, so a button in a multi-button row stretches instead of
+    // shrink-wrapping. `sb-btn-auto` on the button block opts a one-off out.
+    .wp-block-buttons > .wp-block-button:not(.sb-btn-auto) {
+      width: 100%;
+    }
+
+    .wp-block-button:not(.sb-btn-auto) .wp-block-button__link {
+      width: 100%;
+      text-align: center;
+    }
+
+    // WooCommerce — classic markup plus the cart/checkout block buttons, which
+    // are flex containers, so their label centres with justify-content.
+    .woocommerce a.button,
+    .woocommerce button.button,
+    .woocommerce input.button,
+    .woocommerce-Button.button,
+    .wc-block-components-button {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    // Woo exceptions — controls that belong beside their field or row, and the
+    // notice-banner action, which is an inline link inside a sentence.
+    .woocommerce .coupon .button,
+    .woocommerce .actions .button,
+    .wc-block-components-totals-coupon__button,
+    .wc-block-components-button--text,
+    .wc-block-components-notice-banner a.button,
+    .wc-block-components-notice-banner .wc-block-components-button,
+    .woocommerce-message a.button,
+    .woocommerce-info a.button,
+    .woocommerce-error a.button {
+      width: auto;
+    }
+  }
+
+  // LearnDash. Course/step actions and the login submit stretch.
+  body.learndash-cpt .learndash-wrapper {
+    .ld-button,
+    a.ld-button,
+    .btn-join,
+    #btn-join,
+    .learndash_mark_complete_button,
+    .wpProQuiz_button,
+    .wpProQuiz_button2,
+    a#quiz_continue_link,
+    form#loginform input[type="submit"] {
+      width: 100%;
+      text-align: center;
+    }
+
+    // LD exceptions: the lesson/topic step navigation is a Back/Next pair that
+    // reads as one row, and the course-list search submit sits beside its
+    // field. The review-form submit is absent on purpose — LearnDash already
+    // ships it full width (`.expanded`), so it needs nothing from us.
+    .ld-navigation .learndash_mark_complete_button,
+    .ld-item-search .ld-item-search-submit .ld-button {
+      width: auto;
+    }
+  }
+}

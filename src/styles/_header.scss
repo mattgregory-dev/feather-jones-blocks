@@ -29,9 +29,11 @@
   }
 
   // Cart + account are plain SVG icon links (no WooCommerce blocks, so Woo's
-  // assets can be offloaded off the store pages). Contrast at rest, brand on
-  // hover; the icon rides currentColor.
-  .site-header__action {
+  // assets can be offloaded off the store pages); the hamburger is a <button>.
+  // All three share one icon-button treatment: contrast at rest, brand on hover,
+  // the icon riding currentColor.
+  .site-header__action,
+  .site-header__toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -52,24 +54,15 @@
     }
   }
 
-  // Hamburger toggle — hidden on desktop; the mobile switch (≤940px) reveals it.
+  // Hamburger toggle — a <button>, so it also clears the UA chrome. Hidden on
+  // desktop; the mobile switch (≤940px) reveals it. Its icon is 24px against the
+  // links' 22px, so a 1px tighter pad keeps every circle the same diameter.
   .site-header__toggle {
     display: none;
-    align-items: center;
-    padding: 0;
+    padding: 0.6875rem;
     background: none;
     border: 0;
-    color: var(--wp--preset--color--contrast);
     cursor: pointer;
-    transition: color 0.15s ease;
-
-    &:hover,
-    &:focus-visible {
-      color: var(--wp--preset--color--brand);
-    }
-    svg {
-      display: block;
-    }
   }
 
   // Desktop nav pills — scoped to .sb-desktop-nav so none of this reaches the
@@ -201,6 +194,16 @@
 @media (min-width: 480px) and (max-width: 940px) {
   .site-header {
     gap: var(--wp--preset--spacing--60);
+  }
+}
+
+// Smallest phones (≤360px): shrink the logo so it, the cart, and the hamburger
+// still share one row without wrapping.
+@media (max-width: 360px) {
+  .site-header {
+    .wp-block-site-logo img {
+      max-width: 175px;
+    }
   }
 }
 
@@ -340,8 +343,10 @@ body.is-drawer-open {
     text-transform: uppercase;
     color: var(--wp--preset--color--muted);
   }
+  // The footer eyebrow labels the centred social row, so it centres with it.
   .mobile-drawer__eyebrow--footer {
     padding: 0 0 12px;
+    text-align: center;
   }
 
   // --- Nav (Navigation block, vertical) -----------------------------------
@@ -473,6 +478,7 @@ body.is-drawer-open {
   // --- Social circles -----------------------------------------------------
   .mobile-drawer__socials {
     display: flex;
+    justify-content: center;
     gap: 12px;
   }
   .mobile-drawer__social {
