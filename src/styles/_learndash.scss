@@ -146,6 +146,13 @@
     background-color: color-mix(in srgb, var(--wp--preset--color--accent) 85%, black);
     color: var(--wp--preset--color--base);
   }
+
+  // Full width on phones, matching the site's mobile button treatment.
+  @media (max-width: 700px) {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 }
 
 // Guest state: suppress the LearnDash chrome our sales header replaces.
@@ -663,6 +670,11 @@ body.woocommerce-account .learndash-wrapper {
       color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
     }
 
+    // Completion check — LD paints it in its own primitive blue; brand it.
+    .ld-progress-bar__label-icon--complete {
+      color: var(--wp--preset--color--brand);
+    }
+
     // Track + fill + step count, laid out inline.
     .ld-progress-bar__meter {
       flex: 1 1 12rem;
@@ -715,6 +727,19 @@ body.woocommerce-account .learndash-wrapper {
   // Centre the Mark Complete button (LD left-aligns its column).
   .ld-navigation__progress {
     align-items: center;
+  }
+
+  // "Lesson Marked Complete" — LD paints the row in its own primitive blue.
+  // Take it to contrast-2: this is a status note, not an action, so it sits
+  // back from the brand-green buttons around it. The icon needs its own line:
+  // LD colours the <svg> directly (a per-step `--lesson-complete` /
+  // `--topic-complete` modifier), so it never inherits from the row. Matching
+  // the base `__icon` class covers every step type; the paths ride
+  // currentColor from there.
+  .ld-navigation__progress-completed,
+  .ld-navigation__progress-completed-action,
+  .ld-navigation__progress-completed .ld-navigation__icon {
+    color: var(--wp--preset--color--contrast-2);
   }
 
   .ld-navigation__previous-link,
@@ -782,11 +807,18 @@ body.woocommerce-account .learndash-wrapper {
     .ld-navigation__progress {
       grid-area: progress;
     }
+    // The "Back to Course" row spans both columns, so it can size them wider
+    // than the Back/Next links themselves. Pull each link toward the centre
+    // line of the grid so the pair stays tight instead of drifting apart.
     .ld-navigation__previous {
       grid-area: previous;
+      display: flex;
+      justify-content: flex-end;
     }
     .ld-navigation__next {
       grid-area: next;
+      display: flex;
+      justify-content: flex-start;
     }
     .ld-navigation__back-to-course {
       grid-area: back-to-course;
