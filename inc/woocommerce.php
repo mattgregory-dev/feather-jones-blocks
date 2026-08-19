@@ -242,3 +242,26 @@ add_action( 'woocommerce_before_customer_login_form', 'sb_woocommerce_login_titl
  * is ever re-enabled.
  */
 add_filter( 'wc_add_to_cart_message_html', '__return_empty_string' );
+
+/**
+ * Flag a non-empty cart on the <body>.
+ *
+ * Lets the mobile drawer's Cart button flip to the filled treatment when there
+ * is something waiting to be checked out. Presentation only — no cart contents
+ * or counts reach the markup, so this stays a pure CSS concern and needs none
+ * of WooCommerce's front-end assets. `WC()->cart` is populated on front-end
+ * requests only, hence the instance guard. Note the class is baked into the
+ * page, so full-page caching would serve a stale state; the site runs
+ * uncached.
+ *
+ * @param string[] $classes Body classes.
+ * @return string[]
+ */
+function sb_cart_state_body_class( $classes ) {
+	if ( function_exists( 'WC' ) && WC()->cart instanceof WC_Cart && ! WC()->cart->is_empty() ) {
+		$classes[] = 'sb-cart-has-items';
+	}
+
+	return $classes;
+}
+add_filter( 'body_class', 'sb_cart_state_body_class' );
