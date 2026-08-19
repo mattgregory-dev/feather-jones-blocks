@@ -556,3 +556,56 @@ function sb_course_price( $course_id ) {
 
 	return '$' . number_format( $amount, 0 );
 }
+
+/**
+ * Mobile-drawer footer: the Cart + account buttons, then the social circles.
+ *
+ * This lives in PHP rather than in the header template part because the account
+ * button is auth-aware: logged out it offers Login, logged in it becomes Logout,
+ * and a logout URL carries a per-user nonce that static block markup cannot
+ * hold. Everything else is the markup the template part used to carry, moved
+ * verbatim so the drawer keeps one source of truth. Styling and the state
+ * treatments (filled/outlined) live in _header.scss.
+ *
+ * @return string Footer markup.
+ */
+function sb_drawer_footer_shortcode() {
+	if ( is_user_logged_in() ) {
+		$account_url   = wp_logout_url( home_url( '/' ) );
+		$account_label = __( 'Logout', 'fj-blocks' );
+	} else {
+		$account_url   = home_url( '/account/' );
+		$account_label = __( 'Login', 'fj-blocks' );
+	}
+
+	$cart_icon = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
+
+	$socials = <<<'HTML'
+<p class="mobile-drawer__eyebrow mobile-drawer__eyebrow--footer">Find Feather</p>
+<div class="mobile-drawer__socials">
+<a class="mobile-drawer__social" href="https://www.facebook.com/profile.php?id=100064034190506" aria-label="Facebook" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+</a>
+<a class="mobile-drawer__social" href="https://www.instagram.com/jones.feather/" aria-label="Instagram" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.31-1.46.72-2.13 1.38C1.35 2.68.94 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.31.79.72 1.46 1.38 2.13.67.66 1.34 1.07 2.13 1.38.76.3 1.64.5 2.91.56 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.31 1.46-.72 2.13-1.38.66-.67 1.07-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.31-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.94 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zm0 10.15A3.99 3.99 0 1 1 16 12a3.99 3.99 0 0 1-4 3.99zm7.85-10.4a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44z"/></svg>
+</a>
+<a class="mobile-drawer__social" href="https://www.youtube.com/@featherjonescanyonspiritbo5336" aria-label="YouTube" target="_blank" rel="noopener">
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81zM9.55 15.57V8.43L15.82 12z"/></svg>
+</a>
+</div>
+HTML;
+
+	return sprintf(
+		'<div class="mobile-drawer__footer"><div class="mobile-drawer__actions">' .
+		'<a class="mobile-drawer__btn mobile-drawer__btn--cart" href="%1$s">%2$s<span>%3$s</span></a>' .
+		'<a class="mobile-drawer__btn mobile-drawer__btn--login" href="%4$s">%5$s</a>' .
+		'</div>%6$s</div>',
+		esc_url( home_url( '/cart/' ) ),
+		$cart_icon,
+		esc_html__( 'Cart', 'fj-blocks' ),
+		esc_url( $account_url ),
+		esc_html( $account_label ),
+		$socials
+	);
+}
+add_shortcode( 'sb_drawer_footer', 'sb_drawer_footer_shortcode' );

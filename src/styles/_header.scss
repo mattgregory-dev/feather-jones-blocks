@@ -475,6 +475,34 @@ body.is-drawer-open {
     }
   }
 
+  // Both buttons swap treatments once their state makes them the live action:
+  // a cart carrying items fills in, and Login empties out once you are already
+  // logged in. Hover swaps with them, so the pointer always changes the button.
+  // `sb-cart-has-items` comes from inc/woocommerce.php; `logged-in` is core's.
+  body.sb-cart-has-items & .mobile-drawer__btn--cart {
+    background: var(--wp--preset--color--brand);
+    color: var(--wp--preset--color--base);
+
+    &:hover,
+    &:focus-visible {
+      background: transparent;
+      color: var(--wp--preset--color--brand);
+    }
+  }
+
+  body.logged-in & .mobile-drawer__btn--login {
+    background: transparent;
+    border-color: var(--wp--preset--color--brand);
+    color: var(--wp--preset--color--brand);
+
+    &:hover,
+    &:focus-visible {
+      background: var(--wp--preset--color--brand);
+      border-color: var(--wp--preset--color--brand);
+      color: var(--wp--preset--color--base);
+    }
+  }
+
   // --- Social circles -----------------------------------------------------
   .mobile-drawer__socials {
     display: flex;
