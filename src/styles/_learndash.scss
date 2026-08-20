@@ -198,8 +198,15 @@ body.sb-course--guest {
 
   &__prompt {
     margin-top: var(--wp--preset--spacing--40);
+    margin-bottom: 0;
     font-family: var(--wp--preset--font-family--body);
-    text-align: center;
+    text-align: right;
+
+    // Right-aligned it reads as a quiet trailing action; on the narrowest
+    // screens that puts it adrift from the reviews above, so it goes left.
+    @media (max-width: 400px) {
+      text-align: left;
+    }
 
     a {
       color: var(--wp--preset--color--link);
