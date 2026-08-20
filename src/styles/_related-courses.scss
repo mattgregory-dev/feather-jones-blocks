@@ -1,0 +1,207 @@
+// ---------------------------------------------------------------------------
+// "Keep Exploring" — the related-course grid at the foot of a single course
+// page ([sb_related_courses], inc/shortcodes.php). Four whole-card links under
+// a ruled section header; the catalog's rows are wide and detailed, these are
+// compact and photo-led, so they carry their own markup rather than reusing
+// .sb-course-row. Columns step 4 → 2 → 1.
+// ---------------------------------------------------------------------------
+
+// Enrolled students get no upsell: the shortcode returns nothing for them, so
+// only the band wrapper is left to hide — otherwise its padding would leave a
+// blank strip above the footer. Same access state, via the body class from
+// inc/learndash.php.
+body.sb-course--enrolled .sb-related-band {
+  display: none;
+}
+
+.sb-related {
+  // Header: title left, "All Courses" right, sharing the brand rule beneath.
+  &__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--wp--preset--spacing--40);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.125rem;
+    border-bottom: 2px solid var(--wp--preset--color--brand);
+  }
+
+  &__title {
+    margin: 0;
+    font-family: var(--wp--preset--font-family--heading);
+    font-size: var(--wp--preset--font-size--xx-large);
+    color: var(--wp--preset--color--contrast-2);
+  }
+
+  // The after-the-cards copy of the link only appears on the narrowest screens.
+  &__all-wrap--foot {
+    display: none;
+  }
+
+  &__all {
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: var(--wp--preset--font-size--x-small);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--brand);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      color: color-mix(in srgb, var(--wp--preset--color--brand) 78%, black);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--wp--preset--spacing--40);
+  }
+}
+
+// Whole-card link. The lift on hover is the only motion; reduced-motion
+// neutralises the transition globally in _accessibility.scss.
+.sb-related-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--wp--preset--color--base);
+  border: 1px solid var(--wp--preset--color--border);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--wp--preset--color--brand);
+    box-shadow: var(--wp--preset--shadow--soft);
+  }
+
+  &__photo {
+    display: block;
+    height: 120px;
+    overflow: hidden;
+    background: var(--wp--preset--color--surface-2);
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  // Column so the footer rule can be pushed to the bottom of the shortest card,
+  // keeping prices aligned across the row.
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 1rem 1.125rem 1.125rem;
+  }
+
+  &__series {
+    margin-bottom: 0.4375rem;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: var(--wp--preset--font-size--xx-small);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--brand);
+  }
+
+  &__title {
+    margin: 0 0 0.5rem;
+    font-family: var(--wp--preset--font-family--heading);
+    font-size: var(--wp--preset--font-size--small);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--wp--preset--color--contrast-2);
+  }
+
+  &__stats {
+    margin-bottom: 0.875rem;
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 600;
+    font-size: var(--wp--preset--font-size--xx-small);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wp--preset--color--muted);
+  }
+
+  &__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--wp--preset--spacing--30);
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--wp--preset--color--border);
+  }
+
+  &__price {
+    font-family: var(--wp--preset--font-family--heading);
+    font-size: var(--wp--preset--font-size--medium);
+    color: var(--wp--preset--color--contrast-2);
+  }
+
+  &__cta {
+    font-family: var(--wp--preset--font-family--eyebrow);
+    font-weight: 700;
+    font-size: var(--wp--preset--font-size--xx-small);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--wp--preset--color--brand);
+  }
+}
+
+// 4-up → 2-up. The photo grows with the wider column so the card keeps its
+// proportions.
+@media (max-width: 999px) {
+  .sb-related__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sb-related-card__photo {
+    height: 150px;
+  }
+}
+
+@media (max-width: 619px) {
+  .sb-related__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sb-related-card__photo {
+    height: 170px;
+  }
+
+  // The heading steps down a size once it has the narrow column to itself.
+  .sb-related__title {
+    font-size: var(--wp--preset--font-size--x-large);
+  }
+}
+
+// Smallest phones: the title and the link stop sharing a row, so the link moves
+// under the cards — a full-width tap target that follows the list it opens up.
+@media (max-width: 400px) {
+  .sb-related__all-wrap {
+    display: none;
+  }
+
+  .sb-related__all-wrap--foot {
+    display: block;
+    margin-top: var(--wp--preset--spacing--40);
+    padding-top: 0.75rem;
+    border-top: 2px solid var(--wp--preset--color--brand);
+    text-align: center;
+  }
+}
