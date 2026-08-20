@@ -442,10 +442,12 @@ function sb_course_thumb_html( $course_id ) {
  * The stat line for a course — time (hours/minutes), lessons, topics, quizzes —
  * spelled out and pluralized, joined by " · ". Any zero/empty segment is omitted.
  *
- * @param int $course_id Course post ID.
+ * @param int  $course_id Course post ID.
+ * @param bool $compact   Stop after lessons — for the narrow related-course
+ *                        cards, where the full line wraps to three lines.
  * @return string
  */
-function sb_course_stat_line( $course_id ) {
+function sb_course_stat_line( $course_id, $compact = false ) {
 	$parts = array();
 
 	$hours   = function_exists( 'get_field' ) ? max( 0, (int) get_field( 'sb_course_hours', $course_id ) ) : 0;
@@ -469,6 +471,9 @@ function sb_course_stat_line( $course_id ) {
 	$counts = sb_course_step_counts( $course_id );
 	if ( $counts['lessons'] > 0 ) {
 		$parts[] = $counts['lessons'] . ' ' . _n( 'lesson', 'lessons', $counts['lessons'], 'fj-blocks' );
+	}
+	if ( $compact ) {
+		return implode( ' · ', $parts );
 	}
 	if ( $counts['topics'] > 0 ) {
 		$parts[] = $counts['topics'] . ' ' . _n( 'topic', 'topics', $counts['topics'], 'fj-blocks' );
@@ -609,3 +614,107 @@ HTML;
 	);
 }
 add_shortcode( 'sb_drawer_footer', 'sb_drawer_footer_shortcode' );
+
+/**
+ * "Keep Exploring" — a 4-up grid of other courses, for the foot of a single
+ * course page.
+ *
+ * The selection is random on every load and carries no relatedness logic: with
+ * a catalog this size any other course is a reasonable next step, and rotating
+ * them gives every course exposure. Only the course being viewed is excluded.
+ * Cards reuse the catalog's field helpers (thumbnail, stats, price) so the two
+ * listings can never disagree about a course.
+ *
+ * @return string Section markup, or '' outside a single course / with nothing to show.
+ */
+function sb_related_courses_shortcode() {
+	if ( ! is_singular( 'sfwd-courses' ) ) {
+		return '';
+	}
+
+	// Guests and logged-in visitors without access see this; someone already
+	// enrolled is here to study, not to shop, so it renders nothing for them
+	// (and skips the query). The band wrapper is hidden alongside it in
+	// _related-courses.scss, keyed off the same access state.
+	if ( function_exists( 'sfwd_lms_has_access' )
+		&& sfwd_lms_has_access( get_the_ID(), get_current_user_id() ) ) {
+		return '';
+	}
+
+	$courses = get_posts(
+		array(
+			'post_type'        => 'sfwd-courses',
+			'post_status'      => 'publish',
+			'posts_per_page'   => 4,
+			'post__not_in'     => array( get_the_ID() ),
+			'orderby'          => 'rand',
+			'suppress_filters' => false,
+		)
+	);
+	if ( empty( $courses ) ) {
+		return '';
+	}
+
+	// The "All Courses" link is emitted twice: beside the heading on wider
+	// screens, and after the cards on the narrowest ones, where it no longer
+	// fits on the heading row. Exactly one is visible at any width (see
+	// _related-courses.scss), so the hidden copy is inert for assistive tech.
+	$all_link = '<a class="sb-related__all" href="' . esc_url( home_url( '/courses/' ) ) . '">'
+		. esc_html__( 'All Courses', 'fj-blocks' ) . ' &rarr;</a>';
+
+	$out  = '<section class="sb-related" aria-label="' . esc_attr__( 'Related courses', 'fj-blocks' ) . '">';
+	$out .= '<div class="sb-related__header">';
+	$out .= '<h2 class="sb-related__title">' . esc_html__( 'Keep Exploring', 'fj-blocks' ) . '</h2>';
+	$out .= '<div class="sb-related__all-wrap">' . $all_link . '</div>';
+	$out .= '</div>';
+
+	$out .= '<div class="sb-related__grid">';
+	foreach ( $courses as $course ) {
+		$out .= sb_related_course_card( $course );
+	}
+	$out .= '</div>';
+
+	$out .= '<div class="sb-related__all-wrap sb-related__all-wrap--foot">' . $all_link . '</div>';
+	$out .= '</section>';
+
+	return $out;
+}
+add_shortcode( 'sb_related_courses', 'sb_related_courses_shortcode' );
+
+/**
+ * One related-course card: whole-card link, thumbnail over series / title /
+ * compact stats, with price and a View cue on the footer rule.
+ *
+ * @param WP_Post $course Course post.
+ * @return string
+ */
+function sb_related_course_card( $course ) {
+	$course_id = $course->ID;
+	$stats     = sb_course_stat_line( $course_id, true );
+	$price     = sb_course_price( $course_id );
+	$terms     = get_the_terms( $course_id, 'ld_course_category' );
+	$series    = ( $terms && ! is_wp_error( $terms ) ) ? $terms[0]->name : '';
+
+	$card  = '<a class="sb-related-card" href="' . esc_url( get_permalink( $course_id ) ) . '">';
+	$card .= '<span class="sb-related-card__photo">' . sb_course_thumb_html( $course_id ) . '</span>';
+
+	$card .= '<span class="sb-related-card__body">';
+	if ( '' !== $series ) {
+		$card .= '<span class="sb-related-card__series">' . esc_html( $series ) . '</span>';
+	}
+	$card .= '<span class="sb-related-card__title">' . esc_html( get_the_title( $course_id ) ) . '</span>';
+	if ( '' !== $stats ) {
+		$card .= '<span class="sb-related-card__stats">' . esc_html( $stats ) . '</span>';
+	}
+
+	$card .= '<span class="sb-related-card__foot">';
+	if ( '' !== $price ) {
+		$card .= '<span class="sb-related-card__price">' . esc_html( $price ) . '</span>';
+	}
+	$card .= '<span class="sb-related-card__cta">' . esc_html__( 'View', 'fj-blocks' ) . ' &rarr;</span>';
+	$card .= '</span>';
+
+	$card .= '</span></a>';
+
+	return $card;
+}

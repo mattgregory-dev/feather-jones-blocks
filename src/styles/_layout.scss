@@ -29,6 +29,13 @@
   margin-block: 0;
 }
 
+// The same seam one level up: a band placed directly in a block template (the
+// single-course page stacks two) is a child of .wp-site-blocks, so it takes the
+// root blockGap instead of post-content's and needs zeroing on its own.
+.wp-site-blocks > .sb-band {
+  margin-block: 0;
+}
+
 // When the page ends in a full-width band, drop main's bottom padding so the band
 // meets the footer flush — the band brings its own bottom padding and color to the
 // seam. :has() keeps prose-ending pages (no trailing band) padded as normal. This

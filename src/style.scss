@@ -81,4 +81,5 @@
 @use "./styles/single-post"; // Single blog post — band header, pagination, author bio
 
 @use "./styles/learndash"; // LearnDash course pages (ported from fj)
+@use "./styles/related-courses"; // "Keep Exploring" grid at the foot of a course
 @use "./styles/woocommerce"; // WooCommerce cart / checkout / account (ported from fj)
