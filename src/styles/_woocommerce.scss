@@ -893,3 +893,18 @@
     text-decoration: underline;
   }
 }
+
+// A product with no linked course resolves to an empty permalink
+// (inc/course-links.php), but Woo's ProductName renders an anchor either way —
+// and `href=""` reloads the current page. It only renders a <span> for its own
+// `disabled` prop, which the cart never sets, so neutralising the anchor is a
+// CSS job. Covers the name and the thumbnail, which is a second empty link.
+.woocommerce-page,
+.wc-block-mini-cart__drawer {
+  a.wc-block-components-product-name[href=""],
+  .wc-block-cart-item__image a[href=""] {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+  }
+}
