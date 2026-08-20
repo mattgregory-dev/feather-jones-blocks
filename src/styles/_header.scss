@@ -103,7 +103,7 @@
 // pill padding, and the header's side padding + gaps so the full horizontal nav
 // keeps fitting on one row down to the mobile-menu switch (940px). Scoped to
 // .sb-desktop-nav so the drawer's nav is untouched.
-@media (max-width: 1220px) {
+@media (max-width: 1250px) {
   .site-header {
     gap: var(--wp--preset--spacing--30);
     padding-inline: var(--wp--preset--spacing--40) !important;
@@ -145,7 +145,7 @@
 
 // Tighter step (≤1018px): drop the nav to x-small, squeeze the pills + logo,
 // and pull the gap between items in. (The two long labels already shortened at
-// ≤1220px.)
+// ≤1250px.)
 @media (max-width: 1018px) {
   .site-header {
     gap: 0.75rem;
