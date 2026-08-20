@@ -21,6 +21,7 @@ require_once $theme_inc . '/images.php';
 require_once $theme_inc . '/attachments.php';
 require_once $theme_inc . '/scroll-top.php';
 require_once $theme_inc . '/branding.php';
+require_once $theme_inc . '/admin.php';
 require_once $theme_inc . '/cpt.php';
 require_once $theme_inc . '/heartbeat.php';
 require_once $theme_inc . '/security.php';
