@@ -624,3 +624,24 @@ function sb_learndash_currency_symbol_fallback( $symbol ) {
 	return 'USD' === $currency_code ? '$' : $symbol;
 }
 add_filter( 'learndash_currency_symbol', 'sb_learndash_currency_symbol_fallback' );
+
+/**
+ * Drop LearnDash's unused "Focus Mode Dropdown" nav-menu location.
+ *
+ * Registering any location adds `menus` theme support, and that alone makes
+ * wp-admin show Appearance → Menus — a dead second place to edit navigation
+ * beside the Site Editor (this theme's menus are `wp_navigation` posts).
+ *
+ * Undone after the fact because LearnDash attaches later than the theme, so a
+ * `remove_action()` finds nothing to remove. Priority 99 lands after that,
+ * still before `admin_menu` builds the sidebar.
+ */
+function sb_drop_learndash_nav_menu_location() {
+	unregister_nav_menu( 'ld30_focus_mode' );
+
+	// Keep the screen for anything that registers a location it really uses.
+	if ( ! get_registered_nav_menus() ) {
+		remove_theme_support( 'menus' );
+	}
+}
+add_action( 'init', 'sb_drop_learndash_nav_menu_location', 99 );
