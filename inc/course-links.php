@@ -1,11 +1,12 @@
 <?php
 /**
- * Product → linked-course/event resolution (ported from the classic fj theme).
+ * Product → linked-course resolution (ported from the classic fj theme).
  *
- * WooCommerce products are sold as enrolment into a LearnDash course (or, legacy,
- * an event). These helpers resolve the linked content and repoint cart/checkout
- * item links at the course/event page instead of the bare product page, so a
- * shopper clicking a cart item lands on the course they're buying.
+ * WooCommerce products are sold as enrolment into a LearnDash course. These
+ * helpers resolve the linked course and repoint cart/checkout item links at its
+ * page instead of the bare product page, so a shopper clicking a cart item lands
+ * on the course they're buying. A product with no linked course renders
+ * unlinked — this store has no product pages.
  *
  * @package fj-blocks
  */
@@ -102,7 +103,7 @@ function sb_get_product_linked_course_id( $product_id ) {
 }
 
 /**
- * The preferred front-end URL for a product: its linked course, else a legacy event, else ''.
+ * The front-end URL for a product: its linked course, else '' (no link).
  */
 function sb_get_product_linked_frontend_url( $product_id ) {
 	if ( $product_id <= 0 ) {
@@ -110,25 +111,13 @@ function sb_get_product_linked_frontend_url( $product_id ) {
 	}
 
 	$course_id = sb_get_product_linked_course_id( $product_id );
-	if ( $course_id > 0 ) {
-		$course_url = get_permalink( $course_id );
-		if ( $course_url ) {
-			return $course_url;
-		}
+	if ( $course_id <= 0 ) {
+		return '';
 	}
 
-	// Legacy fallback: linked event page.
-	if ( function_exists( 'get_field' ) ) {
-		$event_id = sb_resolve_linked_post_id( get_field( 'event_post', $product_id ) );
-		if ( $event_id > 0 ) {
-			$event_url = get_permalink( $event_id );
-			if ( $event_url ) {
-				return $event_url;
-			}
-		}
-	}
+	$course_url = get_permalink( $course_id );
 
-	return '';
+	return $course_url ? $course_url : '';
 }
 
 /**
@@ -146,27 +135,36 @@ function sb_cart_item_linked_url( $cart_item ) {
 }
 
 /**
- * Cart/checkout: point item links at the linked course/event page, not the product.
+ * Cart/checkout: point item links at the linked course page, not the product.
+ *
+ * With no linked course the item goes unlinked rather than falling back to the
+ * product page: single-product pages are not part of this store (LearnDash's
+ * add-to-cart sends buyers straight to checkout), so that fallback would drop a
+ * shopper on a page the theme never designed. Returning an empty permalink is
+ * WooCommerce's own signal for "render the name as plain text", honoured by the
+ * classic templates and by the Store API (CartItemSchema applies this filter),
+ * so it covers the cart and checkout blocks as well.
  */
 function sb_cart_item_permalink_linked_content( $permalink, $cart_item, $cart_item_key ) {
-	$linked_url = sb_cart_item_linked_url( $cart_item );
-	return '' !== $linked_url ? $linked_url : $permalink;
+	return sb_cart_item_linked_url( $cart_item );
 }
 add_filter( 'woocommerce_cart_item_permalink', 'sb_cart_item_permalink_linked_content', 10, 3 );
 
 /**
- * Safety net: if the cart item name already contains an anchor, force its href.
+ * Safety net for templates that build the name markup themselves: rewrite an
+ * existing anchor to the linked content, or unwrap it when there is none.
  */
 function sb_cart_item_name_linked_content( $product_name, $cart_item, $cart_item_key ) {
-	$linked_url = sb_cart_item_linked_url( $cart_item );
-	if ( '' === $linked_url ) {
+	if ( false === stripos( $product_name, '<a ' ) ) {
 		return $product_name;
 	}
 
-	if ( false !== stripos( $product_name, '<a ' ) ) {
-		$product_name = preg_replace( '/href=(["\']).*?\1/i', 'href="' . esc_url( $linked_url ) . '"', $product_name, 1 );
+	$linked_url = sb_cart_item_linked_url( $cart_item );
+
+	if ( '' === $linked_url ) {
+		return preg_replace( '#<a\b[^>]*>(.*?)</a>#is', '$1', $product_name, 1 );
 	}
 
-	return $product_name;
+	return preg_replace( '/href=(["\']).*?\1/i', 'href="' . esc_url( $linked_url ) . '"', $product_name, 1 );
 }
 add_filter( 'woocommerce_cart_item_name', 'sb_cart_item_name_linked_content', 10, 3 );
