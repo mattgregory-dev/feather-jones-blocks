@@ -1,6 +1,6 @@
 # FJ Blocks
 
-A bespoke **Full Site Editing** WordPress theme for Feather Jones,
+A bespoke **Full Site Editing** WordPress theme for [Feather Jones](https://featherjones.com),
 bringing online courses, classes, events, and a store together under one
 block-native design system. Built the modern way — **design tokens in `theme.json`, page
 sections as block patterns, pages as block templates** — on top of the
