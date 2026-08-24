@@ -31,6 +31,10 @@ catalog.
   database, not hardcoded in templates.
 - **LearnDash LMS.** Courses, lessons, quizzes, and topics, styled to the theme
   with lean custom templates so LearnDash does the heavy lifting.
+- **Course metadata via ACF.** LearnDash owns the curriculum; a small set of
+  fields supplies what the catalog and course header need on top of it — a short
+  summary, run time, sort order and a featured flag, and a shortened title so a
+  long course name doesn't overrun the breadcrumb trail.
 - **WooCommerce store.** Products, cart, and checkout, built on WooCommerce's own
   blocks and templates so the shop stays first-class and upgrade-safe.
 - **A hand-built Vite + SCSS pipeline** — autoprefixed, minified, HMR in dev.
@@ -47,8 +51,8 @@ catalog.
 ## Tech stack
 
 WordPress (Full Site Editing) · `theme.json` v3 · custom blocks
-(`@wordpress/scripts`) · LearnDash · WooCommerce · PHP · SCSS · Vite ·
-JavaScript (ES modules) · stylelint / eslint / phpcs
+(`@wordpress/scripts`) · LearnDash · WooCommerce · Advanced Custom Fields · PHP ·
+SCSS · Vite · JavaScript (ES modules) · stylelint / eslint / phpcs
 
 ## Quick start
 
