@@ -27,7 +27,12 @@ if ( ! defined( 'SB_POPUP_FORM_ID' ) ) {
 	define( 'SB_POPUP_FORM_ID', 2573 );
 }
 if ( ! defined( 'SB_POPUP_DELAY' ) ) {
-	define( 'SB_POPUP_DELAY', 8000 );
+	define( 'SB_POPUP_DELAY', 15000 );
+}
+
+// Master switch. TEMPORARILY OFF.
+if ( ! defined( 'SB_POPUP_ENABLED' ) ) {
+	define( 'SB_POPUP_ENABLED', false );
 }
 
 /**
@@ -37,6 +42,10 @@ if ( ! defined( 'SB_POPUP_DELAY' ) ) {
  * @return bool
  */
 function sb_popup_is_target() {
+	// TEMPORARILY OFF — flip SB_POPUP_ENABLED back to true to restore it.
+	if ( ! SB_POPUP_ENABLED ) {
+		return false;
+	}
 	if ( is_admin() ) {
 		return false;
 	}
