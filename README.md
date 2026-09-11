@@ -84,3 +84,11 @@ The engineering detail lives in [`docs/`](docs/):
 
 Design & development by Matthew Gregory. Built for Feather Jones on the
 starter-blocks foundation.
+
+## License
+
+The theme is GPLv2 or later — see [LICENSE](LICENSE).
+
+The bundled fonts carry their own license. They are under the SIL Open Font
+License 1.1, whose terms require the license to ship alongside the font files;
+it is in [assets/fonts/OFL.txt](assets/fonts/OFL.txt).
