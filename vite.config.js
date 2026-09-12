@@ -24,7 +24,7 @@ export default defineConfig({
     // Local dev server port.
     port: 5175,
     strictPort: true,
-    // The WordPress front end (localhost:8080) loads these assets cross-origin
+    // The WordPress front end (localhost:8100) loads these assets cross-origin
     // from the dev server, so allow CORS and pin the HMR websocket to the dev
     // host/port. Without this the client can't infer the socket across origins
     // and CSS edits only apply on a manual refresh instead of hot-swapping.
