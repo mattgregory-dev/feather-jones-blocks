@@ -163,3 +163,28 @@ self-heals the moment the file exists).
 `placeholder-vertical.webp` to the media library once per environment (via the
 admin, or `wp media import`). This is the one manual seeding step a fresh clone
 needs; see [BUILD.md](BUILD.md#first-run-setup).
+
+---
+
+## 7. `refs/replace` makes a history rewrite look like a no-op
+
+**Symptom:** a second `git filter-repo` pass runs, reports success, and changes
+nothing. Restoring the pre-rewrite history from a backup bundle does not fix it
+— the head sha and tree hash come back correct, yet `git log` still shows the
+rewritten messages.
+
+**Root cause:** `filter-repo` writes a `refs/replace/*` entry for every commit
+it rewrites, and git follows those transparently on read. The original commits
+are still in the object store, but every command that walks history — including
+the `fast-export` that feeds the next filter run — is handed the rewritten ones
+instead. A callback keyed on the original shas matches nothing.
+
+**Fix:** clear the replace refs and the stale commit-map before any re-run.
+
+```
+git replace -l | while read -r r; do git replace -d "$r"; done
+rm -rf .git/filter-repo
+```
+
+`filter-repo` also strips `origin` on every run — re-add it afterward — and
+`git bundle create <file> --all` before starting is the only undo there is.
