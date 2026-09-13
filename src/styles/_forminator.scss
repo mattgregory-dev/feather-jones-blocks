@@ -131,7 +131,7 @@
 
   // Small screens: the field and button each take the full width — the button
   // drops below the input, both fully rounded, with a gap between them.
-  @media (width <= 600px) {
+  @media (max-width: 600px) {
     > .forminator-row,
     > .forminator-row.forminator-row-last {
       flex: 1 1 100%;

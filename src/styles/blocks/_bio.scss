@@ -72,7 +72,7 @@
 
 // 800–1120px: equal-width columns (50/50), top-aligned — otherwise the shorter
 // column floats in the extra space.
-@media (width <= 1120px) {
+@media (max-width: 1120px) {
   .wp-block-starter-blocks-bio {
     .bio__inner { align-items: flex-start; }
 
@@ -85,7 +85,7 @@
 // is text-then-media, so column-reverse lifts the media above the text. The
 // doubled block class (0,3,0) outranks the desktop is-position-left row-reverse
 // (also 0,3,0) on source order, so image-left bios stack image-first too.
-@media (width <= 800px) {
+@media (max-width: 800px) {
   .wp-block-starter-blocks-bio.wp-block-starter-blocks-bio .bio__inner {
     flex-direction: column-reverse;
   }

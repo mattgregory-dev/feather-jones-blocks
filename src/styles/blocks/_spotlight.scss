@@ -124,7 +124,7 @@
 
 // 800–1160px: equal-width columns (50/50), top-aligned — otherwise the shorter
 // column floats in the extra space.
-@media (width <= 1120px) {
+@media (max-width: 1120px) {
   .wp-block-starter-blocks-spotlight {
     .spotlight__inner { align-items: flex-start; }
 
@@ -148,7 +148,7 @@
 // properties (defaults 3:2 / center). The crop applies to the mobile image too:
 // when it already matches the ratio the crop is a no-op, otherwise a safety net —
 // so the ratio/focal controls keep working whether or not a mobile image is set.
-@media (width <= 800px) {
+@media (max-width: 800px) {
   .wp-block-starter-blocks-spotlight .spotlight__media img {
     aspect-ratio: var(--sb-spot-ratio, 3 / 2);
     object-fit: cover;
@@ -169,7 +169,7 @@
 // The doubled block class (0,3,0) outranks the desktop is-position-left
 // row-reverse (also 0,3,0) on source order, so image-left variants stack
 // image-first too — no separate override needed.
-@media (width <= 800px) {
+@media (max-width: 800px) {
   .wp-block-starter-blocks-spotlight.wp-block-starter-blocks-spotlight .spotlight__inner {
     flex-direction: column-reverse;
   }

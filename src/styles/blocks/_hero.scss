@@ -226,7 +226,7 @@
 
   // Desktop: near-opaque cream on the text side fading to transparent, so the
   // background image reads on the right.
-  @media (width >= 801px) {
+  @media (min-width: 801px) {
     &::before {
       background: linear-gradient(90deg, var(--wp--preset--color--surface-1) 0%, var(--wp--preset--color--surface-1) 45%, transparent 85%); // fallback
       background: linear-gradient(
@@ -243,7 +243,7 @@
 // copy to two-thirds and extends the overlay's opaque reach to match, so the
 // text keeps its contrast and ~1/3 stays clear background (no full-width copy
 // bleeding over the faded side).
-@media (width <= 1120px) {
+@media (max-width: 1120px) {
   // Split hero (has a column image): equal columns, top-aligned.
   .wp-block-starter-blocks-hero:not(.has-no-media) {
     .hero__inner { align-items: flex-start; }
@@ -266,7 +266,7 @@
 // <= 800px: split heroes stack image-first (the cover hero holds its extended
 // two-thirds layout down to 700). Scoped to split heroes so a cover hero's copy
 // isn't forced full-width here.
-@media (width <= 800px) {
+@media (max-width: 800px) {
   .wp-block-starter-blocks-hero:not(.has-no-media) {
     // The :not() adds a class of specificity (0,3,0), matching — and, by later
     // source order, beating — the desktop is-position-left row-reverse, so
@@ -289,7 +289,7 @@
 // cream panel, copy below. The band is flush to the top (no section padding
 // there); the copy goes full-width with a small gap under the fade. !important
 // beats the background-image render.php sets inline.
-@media (width <= 700px) {
+@media (max-width: 700px) {
   .wp-block-starter-blocks-hero.has-cover-background.has-no-media {
     padding-block: 0 var(--wp--preset--spacing--60);
     background-image: none !important;

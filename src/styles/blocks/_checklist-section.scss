@@ -44,7 +44,7 @@
 // Collapse to a single column on narrow screens (core's columns breakpoint).
 // Drop the column gap and any list margin so the two stacked lists butt together
 // as one continuous list.
-@media (width <= 781px) {
+@media (max-width: 781px) {
   .wp-block-starter-blocks-checklist-section .checklist-section__lists {
     grid-template-columns: 1fr;
     gap: 0;
