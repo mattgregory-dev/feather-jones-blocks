@@ -64,7 +64,7 @@ function sb_woo_account_menu_items( $items ) {
 	unset( $items['downloads'] );
 
 	if ( isset( $items['dashboard'] ) ) {
-		$items['dashboard'] = __( 'My Courses', 'starter-blocks' );
+		$items['dashboard'] = __( 'My Courses', 'fj-blocks' );
 	}
 
 	return $items;
@@ -109,7 +109,7 @@ add_filter( 'page_link', 'sb_shop_page_link_to_courses', 10, 2 );
  */
 function sb_mini_cart_shopping_label( $translation, $text, $domain ) {
 	if ( 'woocommerce' === $domain && 'Start shopping' === $text ) {
-		return __( 'Browse Courses', 'starter-blocks' );
+		return __( 'Browse Courses', 'fj-blocks' );
 	}
 
 	return $translation;
