@@ -72,6 +72,27 @@ function sb_woo_account_menu_items( $items ) {
 add_filter( 'woocommerce_account_menu_items', 'sb_woo_account_menu_items', 20 );
 
 /**
+ * Complete an order as soon as its payment clears.
+ *
+ * WooCommerce holds a paid order in "processing" unless every line item is both
+ * virtual AND downloadable — its proxy for "nothing is left to ship". Course
+ * tuition and event seats are virtual but carry no file, so they fail that test
+ * and every order lands in a fulfillment queue nobody works. There is nothing to
+ * fulfill: LearnDash grants course access on payment, and the customer gets the
+ * "processing" email instead of the completed one that confirms it.
+ *
+ * @param string   $status   Status WooCommerce chose for the paid order.
+ * @param int      $order_id Order ID.
+ * @param WC_Order $order    Order object.
+ * @return string
+ */
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- every parameter is unused here, but woocommerce_payment_complete_order_status passes three arguments and the signature has to match.
+function sb_payment_complete_order_status( $status, $order_id, $order ) {
+	return 'completed';
+}
+add_filter( 'woocommerce_payment_complete_order_status', 'sb_payment_complete_order_status', 10, 3 );
+
+/**
  * Point the WooCommerce "shop" page permalink at the courses archive.
  *
  * The store funnels through LearnDash courses, not a product catalog, so every
