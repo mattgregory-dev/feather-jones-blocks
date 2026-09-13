@@ -16,6 +16,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Declare WooCommerce support.
+ *
+ * WooCommerce infers that a block theme handles its own layout, so the classic
+ * content wrapper stays away and the gallery features are on either way.
+ * Declaring it states that intent rather than resting on the inference, and
+ * keeps WooCommerce → Status from reporting an error that sends the next person
+ * auditing the site chasing a theme problem that is not there.
+ *
+ * The `wc-product-gallery-*` supports stay undeclared — already active, and
+ * asking for them would change which scripts load on a live store.
+ */
+function sb_woocommerce_theme_support() {
+	add_theme_support( 'woocommerce' );
+}
+add_action( 'after_setup_theme', 'sb_woocommerce_theme_support' );
+
+/**
  * Drop WooCommerce's auto-inserted header blocks (Mini-Cart, Customer Account).
  *
  * @param string[] $hooked_block_types Block types WordPress will auto-insert at
