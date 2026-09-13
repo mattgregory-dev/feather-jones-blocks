@@ -12,8 +12,6 @@
   <exclude-pattern>*/build/*</exclude-pattern>
   <exclude-pattern>*/languages/*</exclude-pattern>
   <exclude-pattern>*/src/public/*</exclude-pattern>
-  <!-- CLI tooling run through wp eval-file, not theme runtime code. -->
-  <exclude-pattern>*/scripts/*</exclude-pattern>
 
   <!-- PHP files only. -->
   <arg name="extensions" value="php"/>
@@ -81,4 +79,37 @@
 
   <!-- Targets the "deprecated since" checks. -->
   <config name="minimum_supported_wp_version" value="6.5"/>
+  <!--
+    scripts/ holds WP-CLI tooling run via `wp eval-file`, never loaded by
+    WordPress. Its `echo` is a terminal message, not page output, so the escaping
+    and i18n sniffs don't apply — escaping a status line would corrupt it, and a
+    CLI tool has no translations.
+
+    Excluded per sniff rather than by file, so everything else still applies:
+    an undefined variable or a deprecated call in these scripts is a real bug
+    and should still be reported.
+  -->
+  <rule ref="WordPress.Security.EscapeOutput">
+    <exclude-pattern>*/scripts/*</exclude-pattern>
+  </rule>
+  <rule ref="WordPress.WP.I18n">
+    <exclude-pattern>*/scripts/*</exclude-pattern>
+  </rule>
+  <!--
+    Same reason for the filesystem sniff: WP_Filesystem is not bootstrapped in a
+    `wp eval-file` context, and these scripts read and write local working files,
+    never a remote resource.
+  -->
+  <rule ref="WordPress.WP.AlternativeFunctions">
+    <exclude-pattern>*/scripts/*</exclude-pattern>
+  </rule>
+
+  <!--
+    The prefix sniff is excluded here for a different reason: these scripts are
+    shared tooling with their own `sb_` namespace, identical across every theme.
+    A theme's prefix convention describes the theme's own globals.
+  -->
+  <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+    <exclude-pattern>*/scripts/*</exclude-pattern>
+  </rule>
 </ruleset>
