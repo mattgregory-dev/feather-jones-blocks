@@ -29,7 +29,7 @@ function sb_is_learndash_asset_context() {
 	}
 
 	// The course catalog and every course detail URL.
-	$request_path = trim( (string) parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
+	$request_path = trim( (string) wp_parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH ), '/' );
 	if ( 'courses' === $request_path || 0 === strpos( $request_path, 'courses/' ) ) {
 		return true;
 	}
