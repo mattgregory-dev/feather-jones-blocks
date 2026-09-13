@@ -84,11 +84,12 @@ editing surface). See [docs/PIPELINE.md](docs/PIPELINE.md), Stage 4.
 
 ## Editing page content (this deployment)
 
-Deployment-specific (the fj Docker/WordPress environment), not a starter-blocks
-convention. Page **content** lives in the database, edited in the block editor.
-To read or write it programmatically:
+Page **content** lives in the database, edited in the block editor. The scripts
+ship with the theme — they came from mg-blocks and now live in starter-blocks
+too, so every theme cloned from it inherits them. To read or write content
+programmatically:
 
-- **Only ever go through `wp/sb-pull.php` and `wp/sb-push.php`. NEVER raw
+- **Only ever go through `scripts/sb-pull.php` and `scripts/sb-push.php`. NEVER raw
   `wp post update` / `wp_update_post`.** Same wp-cli-in-Docker transport, but the
   scripts add load-bearing guards that raw commands skip:
   - **Stale-push guard** — `sb-push` aborts (no override) if the page changed in
@@ -98,8 +99,17 @@ To read or write it programmatically:
     runs as user 0 with kses ACTIVE and silently strips `<iframe>`/`<script>`/
     inline SVG. It also `wp_slash`es for byte-exactness.
   - **Backup** — every push copies the current DB content to `.work/backups/`.
-- **Flow:** `wp eval-file sb-pull.php <id> > wp/.work/<slug>.html` (arms the
-  baseline) → edit the `.work` file → `wp eval-file sb-push.php <slug>`.
+- **Flow**, run from the **project root**:
+
+  ```
+  docker compose run --rm -T wpcli wp eval-file \
+    wp-content/themes/fj-blocks/scripts/sb-pull.php <id> > wp/.work/<slug>.html
+
+  # edit wp/.work/<slug>.html
+
+  docker compose run --rm -T wpcli wp eval-file \
+    wp-content/themes/fj-blocks/scripts/sb-push.php <slug>
+  ```
 - **Re-pull before editing every time — even for a page I authored this session.**
   The user may be editing it in the block editor in parallel; the DB is the only
   source of truth. Do not regenerate a page from an in-context/local copy.

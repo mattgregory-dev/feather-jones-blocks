@@ -132,3 +132,32 @@
     transform: none;
   }
 }
+
+// ---------------------------------------------------------------------------
+// A primary button paired above a .sb-reveal toggle, sized to match it, so the
+// two read as one decision with two doors rather than two unrelated controls.
+// Applied via `sb-cta-match` on the Buttons block.
+//
+// The width is set on the button rather than by stretching both: the toggle is
+// absolutely positioned when open, so anything that forces a shared width there
+// also stretches the expanded panel to its content.
+// ---------------------------------------------------------------------------
+.sb-cta-match {
+  // 337px is the rendered width of the "View the Full Curriculum" toggle at its
+  // own font size and padding. It is measured, not chosen — reword either label
+  // and the pairing has to be re-measured.
+  @media (min-width: 721px) {
+    .wp-block-button__link {
+      min-width: 21.0625rem;
+    }
+  }
+
+  // Below 721px the toggle goes full width. Buttons only do so under 700px, so
+  // this covers the 20px band between the two breakpoints as well.
+  @media (max-width: 720px) {
+    .wp-block-button,
+    .wp-block-button__link {
+      width: 100%;
+    }
+  }
+}
