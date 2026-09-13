@@ -2,7 +2,17 @@
   "extends": ["stylelint-config-standard-scss"],
   "rules": {
     "no-descending-specificity": null,
+    "media-feature-range-notation": ["prefix", {
+      "message": "Use max-width/min-width, not range notation. Safari below 16.4 ignores an entire query it cannot parse, so `(width <= 760px)` would drop the mobile layout on those devices rather than degrade."
+    }],
     "no-empty-source": null,
+    "selector-not-notation": ["simple", {
+      "message": "One selector per :not(). A selector list inside :not() needs Safari 16.4; older Safari drops the whole rule rather than the one selector."
+    }],
+    "property-no-vendor-prefix": [true, {
+      "ignoreProperties": ["/^-webkit-mask/"],
+      "message": "The -webkit- mask properties are kept: Safari only dropped the prefix in 15.4, and the unprefixed form alone leaves the icon masks unapplied on older iOS."
+    }],
     "scss/operator-no-newline-after": null,
     "scss/comment-no-empty": null,
     "custom-property-pattern": ["^([a-z][a-z0-9]*)((-{1,2})[a-z0-9]+)*$", {
@@ -15,6 +25,15 @@
       "message": "Class names must be lowercase, may contain digits, hyphens, or underscores (underscores accommodate WordPress core classes like .current_page_item)."
     }]
   },
+  "overrides": [
+    {
+      "files": ["src/styles/_learndash.scss", "src/styles/_woocommerce.scss"],
+      "rules": {
+        "selector-class-pattern": null,
+        "selector-id-pattern": null
+      }
+    }
+  ],
   "ignoreFiles": [
     "dist/**",
     "node_modules/**",

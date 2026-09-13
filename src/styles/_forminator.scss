@@ -47,6 +47,7 @@
     margin: 0;
     padding: 0;
   }
+
   .forminator-col,
   .forminator-field {
     margin: 0;
@@ -59,6 +60,7 @@
   > .forminator-row {
     flex: 0 1 300px;
   }
+
   > .forminator-row.forminator-row-last {
     flex: 0 0 auto;
   }
@@ -82,6 +84,7 @@
       color: var(--wp--preset--color--muted);
       opacity: 1;
     }
+
     &:focus {
       outline: none;
       border-color: var(--wp--preset--color--accent);
@@ -114,6 +117,7 @@
       background-color: var(--wp--preset--color--accent-strong);
       border-color: var(--wp--preset--color--accent-strong);
     }
+
     // Keyboard focus: the hover fill + our brand ring. Forminator's plugin CSS
     // forces outline:none on its buttons, so re-assert it here with real
     // specificity (the global :where() ring can't beat it).
@@ -132,14 +136,17 @@
     > .forminator-row.forminator-row-last {
       flex: 1 1 100%;
     }
+
     // Let the button's column/field span the row so width:100% fills it.
     .forminator-col,
     .forminator-field {
       width: 100%;
     }
+
     .forminator-input {
       border-radius: 6px;
     }
+
     .forminator-button-submit {
       width: 100%;
       border-radius: 6px;
@@ -159,6 +166,7 @@
   flex-direction: column;
   align-items: stretch;
   gap: 0.75rem;
+
   // Undo the inline-signup centering/cap from the shared rule so the form fills
   // the sidebar column edge-to-edge with no stray top/side margin.
   max-width: none;
@@ -176,13 +184,16 @@
     flex: none;
     width: 100%;
   }
+
   .forminator-col,
   .forminator-field {
     width: 100%;
   }
+
   .forminator-input {
     border-radius: 8px;
     border-color: var(--wp--preset--color--border);
+
     // Keep the field's text/placeholder left-aligned even though the card
     // centres its copy.
     text-align: left;
@@ -192,11 +203,13 @@
       box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
     }
   }
+
   .forminator-button-submit {
     width: 100%;
     border-radius: 8px;
     margin-top: 0;
     color: var(--wp--preset--color--base);
+
     // Location label swap — the shared form's real text is "Take Me There".
     font-size: 0;
 
@@ -225,6 +238,7 @@
   .forminator-row {
     margin-bottom: 1.25rem;
   }
+
   .forminator-col {
     min-width: 0;
   }
@@ -242,6 +256,7 @@
     font-size: 0.875rem;
     color: var(--wp--preset--color--contrast-2);
   }
+
   .forminator-required {
     color: var(--wp--preset--color--accent);
   }
@@ -256,6 +271,7 @@
     padding: 0.75rem 1rem;
     background: var(--wp--preset--color--base);
     color: var(--wp--preset--color--contrast-2);
+
     // Form controls don't inherit font-family (textareas default to monospace),
     // so set it explicitly to keep every field on the body font.
     font-family: var(--wp--preset--font-family--body);
@@ -264,16 +280,19 @@
     box-shadow: none;
     transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
   }
+
   .forminator-input::placeholder,
   .forminator-textarea::placeholder {
     color: var(--wp--preset--color--muted);
   }
+
   .forminator-input:hover,
   .forminator-textarea:hover,
   select.forminator-select--field:hover {
     border-color: var(--wp--preset--color--contrast-2);
     background: var(--wp--preset--color--surface-1);
   }
+
   .forminator-input:focus-visible,
   .forminator-textarea:focus-visible,
   select.forminator-select--field:focus-visible {
@@ -282,6 +301,7 @@
     box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
     background: var(--wp--preset--color--surface-1);
   }
+
   .forminator-textarea {
     min-height: 8.75rem;
     resize: vertical;
@@ -302,19 +322,23 @@
     padding: 0.75rem 1rem;
     transition: border-color 200ms ease, box-shadow 200ms ease;
   }
+
   .select2-container--open .select2-selection,
   .select2-container--focus .select2-selection {
     border-color: var(--wp--preset--color--brand);
     box-shadow: 0 0 0 3px var(--wp--preset--color--surface-3);
   }
+
   .select2-container .select2-selection--single .select2-selection__rendered {
     padding: 0;
     line-height: 1.4;
     color: var(--wp--preset--color--contrast-2);
   }
+
   .select2-container .select2-selection__placeholder {
     color: var(--wp--preset--color--muted);
   }
+
   .select2-container .select2-selection--single .select2-selection__arrow {
     height: 100%;
     top: 0;
@@ -327,15 +351,17 @@
     padding: 0.75rem 1rem;
     font-size: 0.875rem;
   }
+
   .forminator-error-message {
     color: #a44b4b;
     font-size: 0.75rem;
     margin-top: 0.375rem;
   }
+
   .forminator-has_error .forminator-input,
   .forminator-has_error .forminator-textarea {
-    border-color: rgba(164, 75, 75, 0.65);
-    box-shadow: 0 0 0 3px rgba(164, 75, 75, 0.18);
+    border-color: rgb(164 75 75 / 65%);
+    box-shadow: 0 0 0 3px rgb(164 75 75 / 18%);
   }
 
   // Submit — black primary, matching the site's Woo/checkout buttons.

@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // LearnDash profile: course list with the completion/points stat bar header.
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- do_blocks() returns rendered block HTML; escaping it would print the markup as text.
 echo do_blocks( '<!-- wp:learndash/ld-profile {"expand_all":false,"profile_link":false,"show_header":true} /-->' );
 
 /**

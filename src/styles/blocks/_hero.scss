@@ -88,6 +88,7 @@
       background: linear-gradient(180deg, transparent 0%, var(--wp--preset--color--surface-1) 100%);
     }
   }
+
   .hero__bg-image {
     display: block;
     width: 100%;
@@ -255,6 +256,7 @@
   .wp-block-starter-blocks-hero.has-no-media .hero__text {
     flex-basis: 66%;
   }
+
   .wp-block-starter-blocks-hero.has-cover-background.has-no-media.has-overlay {
     --hero-overlay-mid: 62%;
     --hero-overlay-end: 92%;

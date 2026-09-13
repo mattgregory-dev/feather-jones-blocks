@@ -80,6 +80,7 @@
   box-shadow: inset 0 0 0 3px var(--wp--preset--color--base);
   transition: background-color 0.15s ease;
 }
+
 .plan-card:has(input:checked) .plan-card__dot,
 .plan-card.is-selected .plan-card__dot {
   background-color: var(--wp--preset--color--brand);
@@ -123,6 +124,7 @@
   color: var(--wp--preset--color--contrast);
   white-space: nowrap;
 }
+
 .plan-card:has(input:checked) .plan-card__pill,
 .plan-card.is-selected .plan-card__pill {
   background-color: var(--wp--preset--color--surface-3);
@@ -148,6 +150,7 @@
     text-align: left;
     padding: 16px;
   }
+
   .plan-card:has(input:checked),
   .plan-card.is-selected {
     padding: 15px;
@@ -159,29 +162,32 @@
     width: 20px;
     height: 20px;
   }
+
   .plan-card__kicker {
     grid-area: kicker;
     margin: 0;
     align-self: end;
   }
+
   .plan-card__total {
     grid-area: total;
     margin: 3px 0 0;
     align-self: start;
   }
+
   .plan-card__price {
     grid-area: price;
     font-size: 24px;
-    justify-self: end;
-    align-self: end;
+    place-self: end end;
   }
+
   .plan-card__per {
     grid-area: per;
     margin: 3px 0 0;
     font-size: 12.5px;
-    justify-self: end;
-    align-self: start;
+    place-self: start end;
   }
+
   .plan-card__pill {
     display: none;
   }

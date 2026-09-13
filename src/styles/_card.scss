@@ -10,6 +10,7 @@
 .sb-card,
 .sb-card-tight {
   background-color: var(--wp--preset--color--base);
+
   // A white panel carries its own dark text, so a card stays readable on any
   // band — including a dark CTA band that sets its own text to a light colour
   // (which the card would otherwise inherit onto its white surface).
@@ -26,6 +27,7 @@
 .sb-card.sb-card {
   padding: var(--wp--preset--spacing--60);
 }
+
 .sb-card-tight.sb-card-tight {
   padding: var(--wp--preset--spacing--40);
 }
@@ -60,6 +62,7 @@
     font-family: var(--wp--preset--font-family--heading);
     font-size: 4rem;
     line-height: 1;
+
     // surface-3 at 70% alpha — solid fallback first, color-mix override second.
     color: var(--wp--preset--color--surface-3);
     color: color-mix(in srgb, var(--wp--preset--color--surface-3) 70%, transparent);
@@ -98,6 +101,7 @@
   margin: 0;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--wp--preset--color--brand);
+
   // Eyebrow (Montserrat) kicker — !important beats the block's
   // has-heading-font-family (which ships !important) so it isn't left serif.
   font-family: var(--wp--preset--font-family--eyebrow) !important;

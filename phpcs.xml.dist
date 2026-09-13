@@ -13,6 +13,13 @@
   <exclude-pattern>*/languages/*</exclude-pattern>
   <exclude-pattern>*/src/public/*</exclude-pattern>
 
+  <!--
+    LearnDash template overrides: the markup, its strings and its text domain
+    are LearnDash's, copied in so the surrounding layout can be adjusted. Held
+    to the plugin's conventions, not the theme's.
+  -->
+  <exclude-pattern>*/learndash/*</exclude-pattern>
+
   <!-- PHP files only. -->
   <arg name="extensions" value="php"/>
 

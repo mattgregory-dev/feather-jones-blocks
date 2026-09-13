@@ -106,6 +106,7 @@ add_action(
 /**
  * Point LearnDash login links at the My Account page.
  */
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- $context and $args are unused here, but learndash_login_url passes them and the signature has to match.
 function sb_learndash_login_url( $login_url, $context, $args ) {
 	if ( 'login' !== $context ) {
 		return $login_url;
@@ -503,7 +504,7 @@ function sb_course_body_class( $classes ) {
 		$course_id  = get_queried_object_id();
 		$has_access = function_exists( 'sfwd_lms_has_access' )
 			&& sfwd_lms_has_access( $course_id, get_current_user_id() );
-		$classes[] = $has_access ? 'sb-course--enrolled' : 'sb-course--guest';
+		$classes[]  = $has_access ? 'sb-course--enrolled' : 'sb-course--guest';
 	}
 	return $classes;
 }
@@ -533,6 +534,7 @@ function sb_clean_review_markup( $html ) {
  * @param int    $user_id   User ID.
  * @return array
  */
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter -- $context, $course_id and $user_id are unused here, but learndash_content_tabs passes them and the signature has to match.
 function sb_clean_reviews_tab( $tabs, $context = '', $course_id = 0, $user_id = 0 ) {
 	if ( ! is_array( $tabs ) ) {
 		return $tabs;

@@ -15,13 +15,13 @@
     gap: 0.5em;
     width: fit-content;
     margin-inline: auto;
+
     // Include the border + padding in any width (e.g. the full-width small-screen
     // state below); otherwise width:100% + 2px border + padding overflows the
     // panel to the right.
     box-sizing: border-box;
     cursor: pointer;
     list-style: none; // Firefox marker
-
     padding: 1.18em 2.65em;
     border: 2px solid var(--wp--preset--color--brand);
     border-radius: 5px;
@@ -52,8 +52,8 @@
       display: inline-block;
       width: 0.45em;
       height: 0.45em;
-      border-right: 2px solid currentColor;
-      border-bottom: 2px solid currentColor;
+      border-right: 2px solid currentcolor;
+      border-bottom: 2px solid currentcolor;
       transform: translateY(-0.12em) rotate(45deg);
       transition: transform 0.2s ease;
     }
@@ -78,6 +78,7 @@
   // the absolute summary lands it exactly where it was when closed.
   &[open] {
     --reveal-btn: 5rem;
+
     position: relative;
     padding: calc(var(--reveal-btn) + var(--wp--preset--spacing--50))
       var(--wp--preset--spacing--60) var(--wp--preset--spacing--60);

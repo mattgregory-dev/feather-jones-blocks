@@ -70,9 +70,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--wp--preset--spacing--30);
+
   // Centre the copy; the form fields stay full-width (align-items: stretch).
   text-align: center;
   padding: clamp(1.25rem, 4vw, 1.75rem);
+
   // surface-2 so the card stands out against the surface-1 page background.
   background: var(--wp--preset--color--surface-2);
   border: 1px solid var(--wp--preset--color--border);
@@ -87,6 +89,7 @@
     text-transform: uppercase;
     color: var(--wp--preset--color--brand);
   }
+
   .sb-sidebar-cta__title {
     margin: 0;
     font-family: var(--wp--preset--font-family--heading);
@@ -95,12 +98,14 @@
     line-height: 1.2;
     color: var(--wp--preset--color--contrast-2);
   }
+
   .sb-sidebar-cta__body {
     margin: 0;
     font-size: var(--wp--preset--font-size--small);
     line-height: 1.55;
     color: var(--wp--preset--color--contrast);
   }
+
   .sb-sidebar-cta__fineprint {
     margin: 0;
     font-size: var(--wp--preset--font-size--xx-small);

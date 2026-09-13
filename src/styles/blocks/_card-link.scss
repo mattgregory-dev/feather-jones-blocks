@@ -11,6 +11,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--wp--preset--spacing--40);
+
   // Cancel the global link blue and underline; inner blocks keep their own
   // colours, and the card itself is a surface, not link-styled text.
   color: inherit;
@@ -40,10 +41,10 @@
   min-height: 0;
 
   > :last-child {
-    margin-block-start: auto;
+    margin-block: auto 0;
+
     // The pinned block (often a paragraph) carries its own bottom margin; drop it
     // so it sits flush on the card's foot padding.
-    margin-block-end: 0;
   }
 }
 
@@ -54,6 +55,7 @@
   align-items: center;
   text-align: center;
 }
+
 .sb-card-link--align-right {
   align-items: flex-end;
   text-align: right;

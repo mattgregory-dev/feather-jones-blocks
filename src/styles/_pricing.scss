@@ -44,6 +44,7 @@
     // border-width.
     border: 2px solid var(--wp--preset--color--border) !important;
     background-color: color-mix(in srgb, var(--wp--preset--color--surface-1) 40%, transparent) !important;
+
     // Half the default card padding — these plan cards hold little content and
     // read tighter. Derived from the token so it tracks the scale.
     padding: calc(var(--wp--preset--spacing--60) / 2);

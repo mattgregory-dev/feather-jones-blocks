@@ -53,12 +53,14 @@
 
 .wp-block-table.is-style-comparison {
   border: 0;
+
   // Scroll the table left-right on narrow screens — it holds a min-width, so
   // rather than squishing the columns it overflows and this wrapper scrolls.
   overflow-x: auto;
 
   table {
     width: 100%;
+
     // Fixed layout so the two option columns are pixel-exact halves (auto layout
     // only approximates). Min-width keeps the columns readable on mobile and
     // makes the horizontal scroll deliberate (not dependent on content length).
@@ -110,6 +112,7 @@
   tbody td {
     border-bottom: 1px solid var(--wp--preset--color--border);
   }
+
   tbody tr:last-child td {
     border-bottom: 0;
   }

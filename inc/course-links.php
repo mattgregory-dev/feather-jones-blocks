@@ -145,6 +145,7 @@ function sb_cart_item_linked_url( $cart_item ) {
  * classic templates and by the Store API (CartItemSchema applies this filter),
  * so it covers the cart and checkout blocks as well.
  */
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter --  is unused here, but woocommerce_cart_item_permalink passes three arguments and the signature has to match.
 function sb_cart_item_permalink_linked_content( $permalink, $cart_item, $cart_item_key ) {
 	return sb_cart_item_linked_url( $cart_item );
 }
@@ -154,6 +155,7 @@ add_filter( 'woocommerce_cart_item_permalink', 'sb_cart_item_permalink_linked_co
  * Safety net for templates that build the name markup themselves: rewrite an
  * existing anchor to the linked content, or unwrap it when there is none.
  */
+// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter --  is unused here, but woocommerce_cart_item_name passes three arguments and the signature has to match.
 function sb_cart_item_name_linked_content( $product_name, $cart_item, $cart_item_key ) {
 	if ( false === stripos( $product_name, '<a ' ) ) {
 		return $product_name;

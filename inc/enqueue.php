@@ -124,7 +124,7 @@ function sb_defer_front_scripts() {
 		return;
 	}
 	foreach ( wp_scripts()->registered as $handle => $script ) {
-		$src = is_string( $script->src ) ? $script->src : '';
+		$src   = is_string( $script->src ) ? $script->src : '';
 		$defer =
 			false !== strpos( $src, 'forminator' ) ||
 			false !== strpos( $src, 'jquery.validate' ) ||

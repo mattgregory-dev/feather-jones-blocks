@@ -47,6 +47,8 @@
 // `body.learndash-cpt .learndash-wrapper` anchor used further up the theme,
 // which scopes it the same way.
 // ---------------------------------------------------------------------------
+/* stylelint-disable selector-class-pattern, selector-id-pattern -- the three
+   button systems below are named by WooCommerce and LearnDash, not by us. */
 @media (max-width: 700px) {
   .wp-site-blocks main {
     // Core Buttons block. The width goes on the wrapper (the flex item) as well
@@ -113,3 +115,4 @@
     }
   }
 }
+/* stylelint-enable selector-class-pattern, selector-id-pattern */

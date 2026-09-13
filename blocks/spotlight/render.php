@@ -21,10 +21,10 @@
  * @var string   $content    Inner blocks markup (.spotlight__body).
  */
 
-$sp_level    = ( isset( $attributes['level'] ) && 'h1' === $attributes['level'] ) ? 'h1' : 'h2';
-$sp_eyebrow  = trim( $attributes['eyebrow'] ?? '' );
-$sp_position = ( isset( $attributes['imagePosition'] ) && 'left' === $attributes['imagePosition'] ) ? 'left' : 'right';
-$sp_valign   = ( isset( $attributes['verticalAlignment'] ) && 'top' === $attributes['verticalAlignment'] ) ? 'top' : 'center';
+$sp_level     = ( isset( $attributes['level'] ) && 'h1' === $attributes['level'] ) ? 'h1' : 'h2';
+$sp_eyebrow   = trim( $attributes['eyebrow'] ?? '' );
+$sp_position  = ( isset( $attributes['imagePosition'] ) && 'left' === $attributes['imagePosition'] ) ? 'left' : 'right';
+$sp_valign    = ( isset( $attributes['verticalAlignment'] ) && 'top' === $attributes['verticalAlignment'] ) ? 'top' : 'center';
 $sp_image_id  = isset( $attributes['imageId'] ) ? (int) $attributes['imageId'] : 0;
 $sp_mobile_id = isset( $attributes['mobileImageId'] ) ? (int) $attributes['mobileImageId'] : 0;
 $sp_alt       = trim( $attributes['imageAlt'] ?? '' );
@@ -38,9 +38,25 @@ $sp_title = trim( $attributes['title'] ?? '' );
 $sp_media = '';
 if ( $sp_image_id ) {
 	$sp_media  = '<figure class="spotlight__media">';
-	$sp_media .= wp_get_attachment_image( $sp_image_id, 'full', false, array( 'alt' => $sp_alt, 'class' => 'spotlight__img spotlight__img--desktop' ) );
+	$sp_media .= wp_get_attachment_image(
+		$sp_image_id,
+		'full',
+		false,
+		array(
+			'alt'   => $sp_alt,
+			'class' => 'spotlight__img spotlight__img--desktop',
+		)
+	);
 	if ( $sp_mobile_id ) {
-		$sp_media .= wp_get_attachment_image( $sp_mobile_id, 'full', false, array( 'alt' => $sp_alt, 'class' => 'spotlight__img spotlight__img--mobile' ) );
+		$sp_media .= wp_get_attachment_image(
+			$sp_mobile_id,
+			'full',
+			false,
+			array(
+				'alt'   => $sp_alt,
+				'class' => 'spotlight__img spotlight__img--mobile',
+			)
+		);
 	}
 	$sp_media .= '</figure>';
 }
@@ -93,7 +109,17 @@ if ( $sp_bg_url ) {
 	}
 }
 ?>
-<section <?php echo get_block_wrapper_attributes( array( 'class' => $sp_classes, 'style' => $sp_style ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core. ?>>
+<section 
+<?php
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by core.
+echo get_block_wrapper_attributes(
+	array(
+		'class' => $sp_classes,
+		'style' => $sp_style,
+	)
+);
+?>
+>
 	<div class="spotlight__inner">
 		<div class="spotlight__text">
 			<?php if ( '' !== $sp_eyebrow ) : ?>
