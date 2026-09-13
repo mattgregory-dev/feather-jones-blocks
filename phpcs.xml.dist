@@ -12,6 +12,8 @@
   <exclude-pattern>*/build/*</exclude-pattern>
   <exclude-pattern>*/languages/*</exclude-pattern>
   <exclude-pattern>*/src/public/*</exclude-pattern>
+  <!-- CLI tooling run through wp eval-file, not theme runtime code. -->
+  <exclude-pattern>*/scripts/*</exclude-pattern>
 
   <!-- PHP files only. -->
   <arg name="extensions" value="php"/>
